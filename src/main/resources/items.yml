@@ -1,0 +1,6271 @@
+#
+#  CustomEconomy  Item Prices (DonutSMP style)
+#
+# Fields:
+#   price        sell price per unit
+#   buy-price    shop buy price per unit (omit = not in shop)
+#   category     CROPS / ORES / MOB_DROPS / NATURAL_ITEMS /
+#                 ARMOR_AND_TOOLS / FISH / ENCHANTED_BOOKS / POTIONS / BLOCKS
+#   xp-per-unit  category XP gained per unit sold
+
+items:
+  #
+  #  CROPS
+  #
+  # Anchor: dirt=$4. Craft rule: processed item <= ingredient cost.
+  # dried_kelp_block=$54 = 9x$6 bidirectional
+  # melon block=$60 < 9x$8=$72 (compression only)
+  # bread=$18 < 3x wheat=$24
+  # cookie: 8 cookies = 2wheat($16)+cocoa($16)=$32 -> 8x$4=$32 break-even
+  # golden_carrot=$40 anchor (user-specified)
+
+  WHEAT:
+    price: 8.0
+    buy-price: 15.0
+    category: CROPS
+    xp-per-unit: 3
+
+  HAY_BLOCK:
+    price: 63.0
+    category: CROPS
+    xp-per-unit: 21
+
+  WHEAT_SEEDS:
+    price: 2.0
+    buy-price: 4.0
+    category: CROPS
+    xp-per-unit: 1
+
+  CARROT:
+    price: 10.0
+    buy-price: 18.0
+    category: CROPS
+    xp-per-unit: 3
+
+  POTATO:
+    price: 8.0
+    buy-price: 15.0
+    category: CROPS
+    xp-per-unit: 3
+
+  BAKED_POTATO:
+    price: 12.0
+    buy-price: 22.0
+    category: CROPS
+    xp-per-unit: 4
+
+  POISONOUS_POTATO:
+    price: 2.0
+    category: CROPS
+    xp-per-unit: 1
+
+  BEETROOT:
+    price: 10.0
+    buy-price: 18.0
+    category: CROPS
+    xp-per-unit: 3
+
+  BEETROOT_SEEDS:
+    price: 2.0
+    buy-price: 4.0
+    category: CROPS
+    xp-per-unit: 1
+
+  MELON_SLICE:
+    price: 8.0
+    buy-price: 15.0
+    category: CROPS
+    xp-per-unit: 3
+
+  # 9 slices -> melon block costs $72; sell block at $60 = loss, no exploit
+  MELON:
+    price: 60.0
+    category: CROPS
+    xp-per-unit: 20
+
+  MELON_SEEDS:
+    price: 4.0
+    buy-price: 7.0
+    category: CROPS
+    xp-per-unit: 1
+
+  PUMPKIN:
+    price: 16.0
+    buy-price: 28.0
+    category: CROPS
+    xp-per-unit: 5
+
+  PUMPKIN_SEEDS:
+    price: 4.0
+    buy-price: 7.0
+    category: CROPS
+    xp-per-unit: 1
+
+  SUGAR_CANE:
+    price: 10.0
+    buy-price: 18.0
+    category: CROPS
+    xp-per-unit: 3
+
+  # sugar < sugar_cane: 1 cane -> 1 sugar, slight loss
+  SUGAR:
+    price: 8.0
+    buy-price: 15.0
+    category: CROPS
+    xp-per-unit: 3
+
+  CACTUS:
+    price: 8.0
+    buy-price: 15.0
+    category: CROPS
+    xp-per-unit: 3
+
+  BAMBOO:
+    price: 4.0
+    buy-price: 7.0
+    category: CROPS
+    xp-per-unit: 1
+
+  # cocoa=$16: 2wheat($16)+1cocoa($16) -> 8 cookies at $4 each = $32 break-even
+  COCOA_BEANS:
+    price: 16.0
+    buy-price: 28.0
+    category: CROPS
+    xp-per-unit: 5
+
+  SWEET_BERRIES:
+    price: 10.0
+    buy-price: 18.0
+    category: CROPS
+    xp-per-unit: 3
+
+  GLOW_BERRIES:
+    price: 16.0
+    buy-price: 28.0
+    category: CROPS
+    xp-per-unit: 5
+
+  NETHER_WART:
+    price: 20.0
+    buy-price: 36.0
+    category: CROPS
+    xp-per-unit: 7
+
+  KELP:
+    price: 4.0
+    buy-price: 7.0
+    category: CROPS
+    xp-per-unit: 1
+
+  # smelted kelp slightly more than raw
+  DRIED_KELP:
+    price: 6.0
+    buy-price: 11.0
+    category: CROPS
+    xp-per-unit: 2
+
+  # 9x$6=$54; bidirectional, exact to prevent loop exploit
+  DRIED_KELP_BLOCK:
+    price: 54.0
+    buy-price: 97.0
+    category: CROPS
+    xp-per-unit: 18
+
+  LILY_PAD:
+    price: 16.0
+    buy-price: 28.0
+    category: CROPS
+    xp-per-unit: 5
+
+  SEA_PICKLE:
+    price: 20.0
+    buy-price: 36.0
+    category: CROPS
+    xp-per-unit: 7
+
+  CHORUS_FRUIT:
+    price: 20.0
+    buy-price: 36.0
+    category: CROPS
+    xp-per-unit: 7
+
+  # smelted > raw
+  POPPED_CHORUS_FRUIT:
+    price: 25.0
+    buy-price: 45.0
+    category: CROPS
+    xp-per-unit: 8
+
+  CHORUS_FLOWER:
+    price: 25.0
+    buy-price: 45.0
+    category: CROPS
+    xp-per-unit: 8
+
+  SPORE_BLOSSOM:
+    price: 40.0
+    buy-price: 72.0
+    category: CROPS
+    xp-per-unit: 13
+
+  # Sniffer-exclusive: very rare
+  PITCHER_PLANT:
+    price: 120.0
+    buy-price: 216.0
+    category: CROPS
+    xp-per-unit: 40
+
+  TORCHFLOWER:
+    price: 150.0
+    buy-price: 270.0
+    category: CROPS
+    xp-per-unit: 50
+
+  TORCHFLOWER_SEEDS:
+    price: 60.0
+    buy-price: 108.0
+    category: CROPS
+    xp-per-unit: 20
+
+  PITCHER_POD:
+    price: 50.0
+    buy-price: 90.0
+    category: CROPS
+    xp-per-unit: 17
+
+  # bread < 3x wheat ($24 cost -> $18 sell)
+  BREAD:
+    price: 18.0
+    buy-price: 32.0
+    category: CROPS
+    xp-per-unit: 6
+
+  # 8 cookies from 2wheat($16)+cocoa($16)=$32 -> 8x$4=$32, break-even
+  COOKIE:
+    price: 4.0
+    buy-price: 7.0
+    category: CROPS
+    xp-per-unit: 1
+
+  CAKE:
+    price: 50.0
+    category: CROPS
+    xp-per-unit: 17
+
+  # pumpkin_pie < pumpkin+sugar+egg ($16+$8+$4=$28 cost)
+  PUMPKIN_PIE:
+    price: 20.0
+    buy-price: 36.0
+    category: CROPS
+    xp-per-unit: 7
+
+  BEETROOT_SOUP:
+    price: 25.0
+    buy-price: 45.0
+    category: CROPS
+    xp-per-unit: 8
+
+  RABBIT_STEW:
+    price: 35.0
+    buy-price: 63.0
+    category: CROPS
+    xp-per-unit: 12
+
+  SUSPICIOUS_STEW:
+    price: 30.0
+    buy-price: 54.0
+    category: CROPS
+    xp-per-unit: 10
+
+  BROWN_MUSHROOM:
+    price: 10.0
+    buy-price: 18.0
+    category: CROPS
+    xp-per-unit: 3
+
+  RED_MUSHROOM:
+    price: 10.0
+    buy-price: 18.0
+    category: CROPS
+    xp-per-unit: 3
+
+  BROWN_MUSHROOM_BLOCK:
+    price: 16.0
+    buy-price: 28.0
+    category: CROPS
+    xp-per-unit: 5
+
+  RED_MUSHROOM_BLOCK:
+    price: 16.0
+    buy-price: 28.0
+    category: CROPS
+    xp-per-unit: 5
+
+  MUSHROOM_STEM:
+    price: 12.0
+    buy-price: 22.0
+    category: CROPS
+    xp-per-unit: 4
+  #
+  #  ORES
+  #
+  # Anchors: cobblestone=$3, iron chain: nugget=$2/ingot=$18/block=$162 (all 9x bidirectional)
+  # gold: nugget=$5/ingot=$45/block=$405. diamond=$250/block=$2250. emerald=$80 (capped).
+  # amethyst: shard=$20/block=$80 (4x bidirectional). netherite_ingot=$12000/block=$108000.
+
+  # - Cobblestone & Stone
+  COBBLESTONE:
+    price: 3.0
+    buy-price: 6.0
+    category: ORES
+    xp-per-unit: 1
+
+  STONE:
+    price: 5.0
+    buy-price: 9.0
+    category: ORES
+    xp-per-unit: 2
+
+  STONE_BRICKS:
+    price: 8.0
+    buy-price: 15.0
+    category: ORES
+    xp-per-unit: 3
+
+  SMOOTH_STONE:
+    price: 6.0
+    buy-price: 10.0
+    category: ORES
+    xp-per-unit: 2
+
+  SMOOTH_STONE_SLAB:
+    price: 3.0
+    buy-price: 5.0
+    category: ORES
+    xp-per-unit: 2
+
+  # - Iron chain (9x bidirectional throughout)
+  IRON_NUGGET:
+    price: 2.0
+    buy-price: 4.0
+    category: ORES
+    xp-per-unit: 1
+
+  IRON_INGOT:
+    price: 18.0
+    buy-price: 32.0
+    category: ORES
+    xp-per-unit: 6
+
+  IRON_BLOCK:
+    price: 162.0
+    buy-price: 291.0
+    category: ORES
+    xp-per-unit: 54
+
+  RAW_IRON:
+    price: 14.0
+    buy-price: 25.0
+    category: ORES
+    xp-per-unit: 5
+
+  # 9x raw_iron=$126; no decraft
+  RAW_IRON_BLOCK:
+    price: 126.0
+    buy-price: 226.0
+    category: ORES
+    xp-per-unit: 42
+
+  # - Gold chain (9x bidirectional throughout)
+  GOLD_NUGGET:
+    price: 5.0
+    buy-price: 9.0
+    category: ORES
+    xp-per-unit: 2
+
+  GOLD_INGOT:
+    price: 45.0
+    buy-price: 81.0
+    category: ORES
+    xp-per-unit: 15
+
+  GOLD_BLOCK:
+    price: 405.0
+    buy-price: 729.0
+    category: ORES
+    xp-per-unit: 135
+
+  RAW_GOLD:
+    price: 35.0
+    buy-price: 63.0
+    category: ORES
+    xp-per-unit: 12
+
+  # 9x raw_gold=$315; no decraft
+  RAW_GOLD_BLOCK:
+    price: 315.0
+    buy-price: 567.0
+    category: ORES
+    xp-per-unit: 105
+
+  # - Copper chain
+  COPPER_BLOCK:
+    price: 96.0
+    category: ORES
+    xp-per-unit: 28
+
+  COPPER_INGOT:
+    price: 12.0
+    buy-price: 22.0
+    category: ORES
+    xp-per-unit: 4
+
+  RAW_COPPER:
+    price: 8.0
+    buy-price: 15.0
+    category: ORES
+    xp-per-unit: 3
+
+  # 9x raw_copper=$72; no decraft
+  RAW_COPPER_BLOCK:
+    price: 72.0
+    buy-price: 129.0
+    category: ORES
+    xp-per-unit: 24
+
+  # - Coal
+  COAL:
+    price: 8.0
+    buy-price: 15.0
+    category: ORES
+    xp-per-unit: 3
+
+  # 9x$8=$72; bidirectional
+  COAL_BLOCK:
+    price: 72.0
+    buy-price: 129.0
+    category: ORES
+    xp-per-unit: 24
+
+  CHARCOAL:
+    price: 8.0
+    buy-price: 15.0
+    category: ORES
+    xp-per-unit: 3
+
+  # - Redstone
+  REDSTONE:
+    price: 8.0
+    buy-price: 15.0
+    category: ORES
+    xp-per-unit: 3
+
+  # 9x$8=$72; bidirectional
+  REDSTONE_BLOCK:
+    price: 72.0
+    buy-price: 129.0
+    category: ORES
+    xp-per-unit: 24
+
+  # - Lapis
+  LAPIS_LAZULI:
+    price: 20.0
+    buy-price: 36.0
+    category: ORES
+    xp-per-unit: 7
+
+  # 9x$20=$180; bidirectional
+  LAPIS_BLOCK:
+    price: 180.0
+    buy-price: 324.0
+    category: ORES
+    xp-per-unit: 60
+
+  # - Quartz
+  QUARTZ:
+    price: 12.0
+    buy-price: 22.0
+    category: ORES
+    xp-per-unit: 4
+
+  # - Diamond
+  DIAMOND:
+    price: 250.0
+    buy-price: 450.0
+    category: ORES
+    xp-per-unit: 83
+
+  # 9x$250=$2250; bidirectional
+  DIAMOND_BLOCK:
+    price: 2250.0
+    buy-price: 4050.0
+    category: ORES
+    xp-per-unit: 750
+
+  # - Emerald (capped to limit villager-trade exploit)
+  EMERALD:
+    price: 80.0
+    buy-price: 144.0
+    category: ORES
+    xp-per-unit: 27
+
+  # 9x$80=$720; bidirectional
+  EMERALD_BLOCK:
+    price: 720.0
+    buy-price: 1296.0
+    category: ORES
+    xp-per-unit: 240
+
+  # - Amethyst (4x bidirectional: 4 shards <-> 1 block)
+  AMETHYST_SHARD:
+    price: 20.0
+    buy-price: 36.0
+    category: ORES
+    xp-per-unit: 7
+
+  # 4x$20=$80; bidirectional
+  AMETHYST_BLOCK:
+    price: 80.0
+    buy-price: 144.0
+    category: ORES
+    xp-per-unit: 27
+
+  BUDDING_AMETHYST:
+    price: 800.0
+    category: ORES
+    xp-per-unit: 267
+
+  AMETHYST_CLUSTER:
+    price: 50.0
+    buy-price: 90.0
+    category: ORES
+    xp-per-unit: 17
+
+  LARGE_AMETHYST_BUD:
+    price: 25.0
+    buy-price: 45.0
+    category: ORES
+    xp-per-unit: 8
+
+  MEDIUM_AMETHYST_BUD:
+    price: 15.0
+    buy-price: 27.0
+    category: ORES
+    xp-per-unit: 5
+
+  SMALL_AMETHYST_BUD:
+    price: 10.0
+    buy-price: 18.0
+    category: ORES
+    xp-per-unit: 3
+
+  # - Netherite (end-game grind)
+  # ancient_debris=$4000 -> netherite_scrap=$3000 (smelting is a loss to prevent exploit)
+  ANCIENT_DEBRIS:
+    price: 4000.0
+    category: ORES
+    xp-per-unit: 1333
+
+  NETHERITE_SCRAP:
+    price: 3000.0
+    category: ORES
+    xp-per-unit: 1000
+
+  # 4 scrap + 4 gold_ingot = $12000+$180 = $12180 cost; ingot sells at $12000
+  NETHERITE_INGOT:
+    price: 12000.0
+    category: ORES
+    xp-per-unit: 4000
+
+  # 9x$12000=$108000; bidirectional
+  NETHERITE_BLOCK:
+    price: 108000.0
+    category: ORES
+    xp-per-unit: 36000
+
+  # - Flint (gravel by-product)
+  FLINT:
+    price: 6.0
+    buy-price: 11.0
+    category: ORES
+    xp-per-unit: 2
+
+  # - Glowstone dust (nether)
+  GLOWSTONE_DUST:
+    price: 15.0
+    buy-price: 27.0
+    category: ORES
+    xp-per-unit: 5
+
+  # 4x$15=$60; bidirectional (4 dust <-> 1 block)
+  GLOWSTONE:
+    price: 60.0
+    buy-price: 108.0
+    category: ORES
+    xp-per-unit: 20
+
+  # - Prismarine crystals & shards
+  PRISMARINE_CRYSTALS:
+    price: 20.0
+    buy-price: 36.0
+    category: ORES
+    xp-per-unit: 7
+
+  PRISMARINE_SHARD:
+    price: 15.0
+    buy-price: 27.0
+    category: ORES
+    xp-per-unit: 5
+
+  #
+  #  MOB DROPS
+  #
+  # bone=$8 -> 3 bone_meal=$6 (crafting loses $2)
+  # bone_block: 9 bone_meal=$18 (compression only, 9x$2)
+  # slime_block=$180 = 9x slimeball=$20 (bidirectional)
+  # honey_block=$120 = 4x honey_bottle=$30 (bidirectional)
+  # honeycomb_block=$90 < 4x honeycomb=$100 (no decraft)
+  # blaze_rod=$30 > 2x blaze_powder=$24
+  # magma_cream=$20 < blaze_powder($12)+slimeball($20)=$32
+  # ender_eye=$45 < ender_pearl($40)+blaze_powder($12)=$52
+  # golden_apple: 8 gold_ingot($360)+apple($6)=$366 cost > sell $300
+  # Raw meat < cooked meat (smelting always rewards)
+
+  ROTTEN_FLESH:
+    price: 2.0
+    buy-price: 4.0
+    category: MOB_DROPS
+    xp-per-unit: 1
+
+  BONE:
+    price: 8.0
+    buy-price: 15.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  # bone -> 3 bone_meal; crafting loses $2
+  BONE_MEAL:
+    price: 2.0
+    buy-price: 4.0
+    category: MOB_DROPS
+    xp-per-unit: 1
+
+  # 9 bone_meal -> bone_block (compression only); 9x$2=$18
+  BONE_BLOCK:
+    price: 18.0
+    category: MOB_DROPS
+    xp-per-unit: 6
+
+  STRING:
+    price: 8.0
+    buy-price: 15.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  SPIDER_EYE:
+    price: 16.0
+    buy-price: 28.0
+    category: MOB_DROPS
+    xp-per-unit: 5
+
+  # spider_eye($16)+sugar($8)+mushroom($10)=$34 cost > sell $20
+  FERMENTED_SPIDER_EYE:
+    price: 20.0
+    category: MOB_DROPS
+    xp-per-unit: 7
+
+  GUNPOWDER:
+    price: 20.0
+    buy-price: 36.0
+    category: MOB_DROPS
+    xp-per-unit: 7
+
+  FEATHER:
+    price: 8.0
+    buy-price: 15.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  LEATHER:
+    price: 16.0
+    buy-price: 28.0
+    category: MOB_DROPS
+    xp-per-unit: 5
+
+  EGG:
+    price: 4.0
+    buy-price: 7.0
+    category: MOB_DROPS
+    xp-per-unit: 1
+
+  RABBIT_HIDE:
+    price: 8.0
+    buy-price: 15.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  RABBIT_FOOT:
+    price: 50.0
+    buy-price: 90.0
+    category: MOB_DROPS
+    xp-per-unit: 17
+
+  # 9 slimeball <-> slime_block; bidirectional: 9x$20=$180
+  SLIMEBALL:
+    price: 20.0
+    buy-price: 36.0
+    category: MOB_DROPS
+    xp-per-unit: 7
+
+  SLIME_BLOCK:
+    price: 180.0
+    category: MOB_DROPS
+    xp-per-unit: 60
+
+  # blaze_rod -> 2 blaze_powder; rod > 2x powder ($30 > $24)
+  BLAZE_ROD:
+    price: 30.0
+    buy-price: 54.0
+    category: MOB_DROPS
+    xp-per-unit: 10
+
+  BLAZE_POWDER:
+    price: 12.0
+    buy-price: 22.0
+    category: MOB_DROPS
+    xp-per-unit: 4
+
+  # blaze_powder($12)+slimeball($20)=$32 cost > sell $20
+  MAGMA_CREAM:
+    price: 20.0
+    buy-price: 36.0
+    category: MOB_DROPS
+    xp-per-unit: 7
+
+  GHAST_TEAR:
+    price: 80.0
+    buy-price: 144.0
+    category: MOB_DROPS
+    xp-per-unit: 27
+
+  ENDER_PEARL:
+    price: 40.0
+    buy-price: 72.0
+    category: MOB_DROPS
+    xp-per-unit: 13
+
+  # ender_pearl($40)+blaze_powder($12)=$52 cost > sell $45
+  ENDER_EYE:
+    price: 45.0
+    buy-price: 81.0
+    category: MOB_DROPS
+    xp-per-unit: 15
+
+  PHANTOM_MEMBRANE:
+    price: 40.0
+    buy-price: 72.0
+    category: MOB_DROPS
+    xp-per-unit: 13
+
+  INK_SAC:
+    price: 8.0
+    buy-price: 15.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  GLOW_INK_SAC:
+    price: 30.0
+    buy-price: 54.0
+    category: MOB_DROPS
+    xp-per-unit: 10
+
+  SPONGE:
+    price: 60.0
+    category: MOB_DROPS
+    xp-per-unit: 20
+
+  WET_SPONGE:
+    price: 40.0
+    category: MOB_DROPS
+    xp-per-unit: 13
+
+  TURTLE_SCUTE:
+    price: 40.0
+    buy-price: 72.0
+    category: MOB_DROPS
+    xp-per-unit: 13
+
+  ARMADILLO_SCUTE:
+    price: 30.0
+    buy-price: 54.0
+    category: MOB_DROPS
+    xp-per-unit: 10
+
+  SHULKER_SHELL:
+    price: 200.0
+    buy-price: 360.0
+    category: MOB_DROPS
+    xp-per-unit: 67
+
+  # 4 honey_bottle <-> honey_block; bidirectional: 4x$30=$120
+  HONEY_BOTTLE:
+    price: 30.0
+    buy-price: 54.0
+    category: MOB_DROPS
+    xp-per-unit: 10
+
+  HONEYCOMB:
+    price: 25.0
+    buy-price: 45.0
+    category: MOB_DROPS
+    xp-per-unit: 8
+
+  # 4 honeycomb -> honeycomb_block (no decraft); 4x$25=$100 > sell $90
+  HONEYCOMB_BLOCK:
+    price: 90.0
+    category: MOB_DROPS
+    xp-per-unit: 30
+
+  HONEY_BLOCK:
+    price: 120.0
+    category: MOB_DROPS
+    xp-per-unit: 40
+
+  WOOL:
+    price: 10.0
+    buy-price: 36.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  ARROW:
+    price: 4.0
+    buy-price: 7.0
+    category: MOB_DROPS
+    xp-per-unit: 1
+
+  SPECTRAL_ARROW:
+    price: 6.0
+    category: MOB_DROPS
+    xp-per-unit: 2
+
+  TIPPED_ARROW:
+    price: 10.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  TRIDENT:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  DRAGON_BREATH:
+    price: 250.0
+    category: MOB_DROPS
+    xp-per-unit: 83
+
+  NETHER_STAR:
+    price: 3000.0
+    category: MOB_DROPS
+    xp-per-unit: 1000
+
+  WITHER_ROSE:
+    price: 60.0
+    category: MOB_DROPS
+    xp-per-unit: 20
+
+  BREEZE_ROD:
+    price: 120.0
+    buy-price: 216.0
+    category: MOB_DROPS
+    xp-per-unit: 40
+
+  WIND_CHARGE:
+    price: 50.0
+    buy-price: 90.0
+    category: MOB_DROPS
+    xp-per-unit: 17
+
+  ECHO_SHARD:
+    price: 250.0
+    category: MOB_DROPS
+    xp-per-unit: 83
+
+  DISC_FRAGMENT_5:
+    price: 150.0
+    category: MOB_DROPS
+    xp-per-unit: 50
+
+  OMINOUS_BOTTLE:
+    price: 50.0
+    category: MOB_DROPS
+    xp-per-unit: 17
+
+  TRIAL_KEY:
+    price: 100.0
+    category: MOB_DROPS
+    xp-per-unit: 33
+
+  OMINOUS_TRIAL_KEY:
+    price: 250.0
+    category: MOB_DROPS
+    xp-per-unit: 83
+
+  HEAVY_CORE:
+    price: 1000.0
+    category: MOB_DROPS
+    xp-per-unit: 333
+
+  CREAKING_HEART:
+    price: 500.0
+    category: MOB_DROPS
+    xp-per-unit: 167
+
+  RESIN_CLUMP:
+    price: 20.0
+    buy-price: 36.0
+    category: MOB_DROPS
+    xp-per-unit: 7
+
+  TOTEM_OF_UNDYING:
+    price: 700.0
+    category: MOB_DROPS
+    xp-per-unit: 233
+
+  # fire_charge: blaze_powder+coal+gunpowder; sell < ingredient cost
+  FIRE_CHARGE:
+    price: 20.0
+    buy-price: 36.0
+    category: MOB_DROPS
+    xp-per-unit: 7
+
+  SNOWBALL:
+    price: 2.0
+    buy-price: 4.0
+    category: MOB_DROPS
+    xp-per-unit: 1
+
+  # Raw meat - cooked version smelted for more value
+  CHICKEN:
+    price: 8.0
+    buy-price: 15.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  COOKED_CHICKEN:
+    price: 14.0
+    buy-price: 25.0
+    category: MOB_DROPS
+    xp-per-unit: 5
+
+  BEEF:
+    price: 12.0
+    buy-price: 22.0
+    category: MOB_DROPS
+    xp-per-unit: 4
+
+  COOKED_BEEF:
+    price: 20.0
+    buy-price: 36.0
+    category: MOB_DROPS
+    xp-per-unit: 7
+
+  PORKCHOP:
+    price: 10.0
+    buy-price: 18.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  COOKED_PORKCHOP:
+    price: 16.0
+    buy-price: 28.0
+    category: MOB_DROPS
+    xp-per-unit: 5
+
+  MUTTON:
+    price: 10.0
+    buy-price: 18.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  COOKED_MUTTON:
+    price: 16.0
+    buy-price: 28.0
+    category: MOB_DROPS
+    xp-per-unit: 5
+
+  RABBIT:
+    price: 8.0
+    buy-price: 15.0
+    category: MOB_DROPS
+    xp-per-unit: 3
+
+  COOKED_RABBIT:
+    price: 14.0
+    buy-price: 25.0
+    category: MOB_DROPS
+    xp-per-unit: 5
+
+  APPLE:
+    price: 6.0
+    buy-price: 11.0
+    category: MOB_DROPS
+    xp-per-unit: 2
+
+  # 8 gold_ingot($360)+apple($6)=$366 cost > sell $300
+  GOLDEN_APPLE:
+    price: 300.0
+    category: MOB_DROPS
+    xp-per-unit: 100
+
+  # Not craftable in survival; chest loot only
+  ENCHANTED_GOLDEN_APPLE:
+    price: 8000.0
+    category: MOB_DROPS
+    xp-per-unit: 2667
+
+  # Music discs - common mob/chest drops
+  MUSIC_DISC_13:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_CAT:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_BLOCKS:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_CHIRP:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_FAR:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_MALL:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_MELLOHI:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_STAL:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_STRAD:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_WARD:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  MUSIC_DISC_WAIT:
+    price: 600.0
+    category: MOB_DROPS
+    xp-per-unit: 200
+
+  # Rarer discs
+  MUSIC_DISC_11:
+    price: 1000.0
+    category: MOB_DROPS
+    xp-per-unit: 333
+
+  MUSIC_DISC_OTHERSIDE:
+    price: 1000.0
+    category: MOB_DROPS
+    xp-per-unit: 333
+
+  MUSIC_DISC_PRECIPICE:
+    price: 1000.0
+    category: MOB_DROPS
+    xp-per-unit: 333
+
+  MUSIC_DISC_CREATOR:
+    price: 1000.0
+    category: MOB_DROPS
+    xp-per-unit: 333
+
+  MUSIC_DISC_CREATOR_MUSIC_BOX:
+    price: 1000.0
+    category: MOB_DROPS
+    xp-per-unit: 333
+
+  # Rarest discs
+  MUSIC_DISC_PIGSTEP:
+    price: 1500.0
+    category: MOB_DROPS
+    xp-per-unit: 500
+
+  MUSIC_DISC_5:
+    price: 2000.0
+    category: MOB_DROPS
+    xp-per-unit: 667
+
+  MUSIC_DISC_RELIC:
+    price: 2000.0
+    category: MOB_DROPS
+    xp-per-unit: 667
+
+  #
+  #  FISH
+  #
+  # Cooked > raw (smelting reward). Nautilus/heart-of-sea keep conduit expensive.
+
+  COD:
+    price: 12.0
+    buy-price: 22.0
+    category: FISH
+    xp-per-unit: 4
+
+  COOKED_COD:
+    price: 18.0
+    buy-price: 32.0
+    category: FISH
+    xp-per-unit: 6
+
+  SALMON:
+    price: 16.0
+    buy-price: 28.0
+    category: FISH
+    xp-per-unit: 5
+
+  COOKED_SALMON:
+    price: 22.0
+    buy-price: 39.0
+    category: FISH
+    xp-per-unit: 7
+
+  TROPICAL_FISH:
+    price: 30.0
+    buy-price: 54.0
+    category: FISH
+    xp-per-unit: 10
+
+  PUFFERFISH:
+    price: 40.0
+    buy-price: 72.0
+    category: FISH
+    xp-per-unit: 13
+
+  NAUTILUS_SHELL:
+    price: 100.0
+    buy-price: 180.0
+    category: FISH
+    xp-per-unit: 33
+
+  # 8 nautilus($800)+heart_of_sea -> conduit sells at $2500 < $3300 cost
+  HEART_OF_THE_SEA:
+    price: 800.0
+    category: FISH
+    xp-per-unit: 267
+  #  NATURAL ITEMS
+  #
+  # Items gathered from the world rather than crafted or smelted.
+  # Logs=$16 anchor. Planks=$4 each (in BLOCKS). 4 planks per log = exact break-even.
+  # ice->packed_ice->blue_ice: compression only (one-way), no loop exploit.
+  # clay_ball=$4; clay block ($16=4x$4) is in BLOCKS.
+
+  # - Logs (common)
+  OAK_LOG:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  SPRUCE_LOG:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  BIRCH_LOG:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  JUNGLE_LOG:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  ACACIA_LOG:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  DARK_OAK_LOG:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  MANGROVE_LOG:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  # - Logs (specialty)
+  CHERRY_LOG:
+    price: 20.0
+    buy-price: 36.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  PALE_OAK_LOG:
+    price: 20.0
+    buy-price: 36.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  # - Nether stems (no decraft, no log equivalent - standalone)
+  CRIMSON_STEM:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  WARPED_STEM:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  # - Stripped logs/wood (slightly above raw log; no profit from stripping)
+  STRIPPED_OAK_LOG:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_SPRUCE_LOG:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_BIRCH_LOG:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_JUNGLE_LOG:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_ACACIA_LOG:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_DARK_OAK_LOG:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_MANGROVE_LOG:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_CHERRY_LOG:
+    price: 22.0
+    buy-price: 40.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 7
+
+  STRIPPED_PALE_OAK_LOG:
+    price: 22.0
+    buy-price: 40.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 7
+
+  STRIPPED_CRIMSON_STEM:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_WARPED_STEM:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  # - Wood blocks (4 logs -> 3 wood; price < log, no strip-and-compress exploit)
+  OAK_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  SPRUCE_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  BIRCH_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  JUNGLE_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  ACACIA_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  DARK_OAK_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  MANGROVE_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  CHERRY_WOOD:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  PALE_OAK_WOOD:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  CRIMSON_HYPHAE:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  WARPED_HYPHAE:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  STRIPPED_OAK_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  STRIPPED_SPRUCE_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  STRIPPED_BIRCH_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  STRIPPED_JUNGLE_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  STRIPPED_ACACIA_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  STRIPPED_DARK_OAK_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  STRIPPED_MANGROVE_WOOD:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  STRIPPED_CHERRY_WOOD:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_PALE_OAK_WOOD:
+    price: 18.0
+    buy-price: 32.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  STRIPPED_CRIMSON_HYPHAE:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  STRIPPED_WARPED_HYPHAE:
+    price: 14.0
+    buy-price: 25.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  # - Saplings (common=$4, specialty=$6-$8)
+  OAK_SAPLING:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  SPRUCE_SAPLING:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  BIRCH_SAPLING:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  JUNGLE_SAPLING:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  ACACIA_SAPLING:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DARK_OAK_SAPLING:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  MANGROVE_PROPAGULE:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  CHERRY_SAPLING:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  PALE_OAK_SAPLING:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  CRIMSON_FUNGUS:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  WARPED_FUNGUS:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  # - Leaves (common=$2, specialty=$4)
+  OAK_LEAVES:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  SPRUCE_LEAVES:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  BIRCH_LEAVES:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  JUNGLE_LEAVES:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  ACACIA_LEAVES:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DARK_OAK_LEAVES:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  MANGROVE_LEAVES:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  AZALEA_LEAVES:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  FLOWERING_AZALEA_LEAVES:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  CHERRY_LEAVES:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  PALE_OAK_LEAVES:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  # - Ground / terrain materials
+  SAND:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  OBSIDIAN:
+    price: 60.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  RED_SAND:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  GRAVEL:
+    price: 5.0
+    buy-price: 9.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DIRT:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  COARSE_DIRT:
+    price: 5.0
+    buy-price: 9.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  ROOTED_DIRT:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  GRASS_BLOCK:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  PODZOL:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  MYCELIUM:
+    price: 10.0
+    buy-price: 18.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 3
+
+  MUD:
+    price: 5.0
+    buy-price: 9.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  CLAY_BALL:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  # - Ice chain (compression only; no loop exploit)
+  ICE:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  PACKED_ICE:
+    price: 40.0
+    buy-price: 72.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 13
+
+  BLUE_ICE:
+    price: 30.0
+    buy-price: 54.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 10
+
+  SNOW_BLOCK:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  POWDER_SNOW_BUCKET:
+    price: 12.0
+    buy-price: 21.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  MAGMA_BLOCK:
+    price: 35.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 7
+
+  # - Plants, vines, and misc naturals
+  VINE:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  GLOW_LICHEN:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  COBWEB:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  MOSS_BLOCK:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  MOSS_CARPET:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  AZALEA:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  FLOWERING_AZALEA:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  FERN:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  LARGE_FERN:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  DEAD_BUSH:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  SHORT_GRASS:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  TALL_GRASS:
+    price: 3.0
+    buy-price: 5.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  SEAGRASS:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  TALL_SEAGRASS:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  # - Flowers (common=$4, uncommon=$6-$8, tall=$8)
+  DANDELION:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  POPPY:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  BLUE_ORCHID:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  ALLIUM:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  AZURE_BLUET:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  RED_TULIP:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  ORANGE_TULIP:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  WHITE_TULIP:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  PINK_TULIP:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  OXEYE_DAISY:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  CORNFLOWER:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  LILY_OF_THE_VALLEY:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  SUNFLOWER:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  LILAC:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  ROSE_BUSH:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  PEONY:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  OPEN_EYEBLOSSOM:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  CLOSED_EYEBLOSSOM:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  # - Sculk (Deep Dark biome; rare to gather)
+  SCULK:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  SCULK_VEIN:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  SCULK_CATALYST:
+    price: 40.0
+    buy-price: 72.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 13
+
+  SCULK_SENSOR:
+    price: 30.0
+    buy-price: 54.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 10
+
+  SCULK_SHRIEKER:
+    price: 80.0
+    buy-price: 144.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 26
+
+  CALIBRATED_SCULK_SENSOR:
+    price: 60.0
+    buy-price: 108.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 20
+
+  # - Nether naturals
+  NETHERRACK:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  SOUL_SAND:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  SOUL_SOIL:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  BASALT:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  BLACKSTONE:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  NETHER_BRICK:
+    price: 5.0
+    buy-price: 9.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  NETHER_BRICKS:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  NETHER_WART_BLOCK:
+    price: 12.0
+    buy-price: 21.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  WARPED_WART_BLOCK:
+    price: 12.0
+    buy-price: 21.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 4
+
+  CRIMSON_NYLIUM:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  WARPED_NYLIUM:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  CRIMSON_ROOTS:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  WARPED_ROOTS:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  NETHER_SPROUTS:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  WEEPING_VINES:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  TWISTING_VINES:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  SHROOMLIGHT:
+    price: 20.0
+    buy-price: 36.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 6
+
+  # - Coral (live: item=$8, fan=$6, block=$16; dead: item=$2, fan=$2, block=$4)
+  TUBE_CORAL:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  BRAIN_CORAL:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  BUBBLE_CORAL:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  FIRE_CORAL:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  HORN_CORAL:
+    price: 8.0
+    buy-price: 14.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  TUBE_CORAL_FAN:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  BRAIN_CORAL_FAN:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  BUBBLE_CORAL_FAN:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  FIRE_CORAL_FAN:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  HORN_CORAL_FAN:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  TUBE_CORAL_BLOCK:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  BRAIN_CORAL_BLOCK:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  BUBBLE_CORAL_BLOCK:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  FIRE_CORAL_BLOCK:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  HORN_CORAL_BLOCK:
+    price: 16.0
+    buy-price: 28.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 5
+
+  DEAD_TUBE_CORAL:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_BRAIN_CORAL:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_BUBBLE_CORAL:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_FIRE_CORAL:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_HORN_CORAL:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_TUBE_CORAL_FAN:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_BRAIN_CORAL_FAN:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_BUBBLE_CORAL_FAN:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_FIRE_CORAL_FAN:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_HORN_CORAL_FAN:
+    price: 2.0
+    buy-price: 3.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_TUBE_CORAL_BLOCK:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_BRAIN_CORAL_BLOCK:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_BUBBLE_CORAL_BLOCK:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_FIRE_CORAL_BLOCK:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  DEAD_HORN_CORAL_BLOCK:
+    price: 4.0
+    buy-price: 7.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  # - Pale Oak / Creaking
+  PALE_HANGING_MOSS:
+    price: 6.0
+    buy-price: 10.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 2
+
+  # - Resin chain (clump=$20 in MOB_DROPS)
+  # resin_brick: smelted from clump. reward: $25 > $20 clump
+  # resin_bricks block: 4x resin_brick. sell=$80 < 4*$25=$100  (no compress exploit)
+  # resin_block: 9x resin_brick. sell=$200 < 9*$25=$225
+  RESIN_BRICK:
+    price: 25.0
+    buy-price: 45.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 8
+
+  RESIN_BRICKS:
+    price: 80.0
+    buy-price: 144.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 26
+
+  RESIN_BLOCK:
+    price: 200.0
+    buy-price: 360.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 66
+  #  ARMOR & TOOLS
+  #
+  # All crafted items sell for less than ingredient cost (no crafting-for-profit).
+  # iron_ingot=$18, gold_ingot=$45, diamond=$250, leather=$16, cobblestone=$3
+  # Netherite gear: diamond gear + netherite_ingot ($12000) upgrade - sell well below total cost.
+  # Chainmail not craftable in survival - priced as rare mob/chest loot.
+
+  # - Leather armor (5/8/7/4 leather=$16; costs $80/$128/$112/$64)
+  LEATHER_HELMET:
+    price: 60.0
+    buy-price: 108.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 20
+
+  LEATHER_CHESTPLATE:
+    price: 100.0
+    buy-price: 180.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 33
+
+  LEATHER_LEGGINGS:
+    price: 88.0
+    buy-price: 158.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 29
+
+  LEATHER_BOOTS:
+    price: 50.0
+    buy-price: 90.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 16
+
+  # - Chainmail armor (not craftable; mob/chest loot only)
+  CHAINMAIL_HELMET:
+    price: 150.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 50
+
+  CHAINMAIL_CHESTPLATE:
+    price: 240.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 80
+
+  CHAINMAIL_LEGGINGS:
+    price: 210.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 70
+
+  CHAINMAIL_BOOTS:
+    price: 120.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 40
+
+  # - Iron armor (5/8/7/4 ingots=$18; costs $90/$144/$126/$72)
+  IRON_HELMET:
+    price: 70.0
+    buy-price: 126.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 23
+
+  IRON_CHESTPLATE:
+    price: 110.0
+    buy-price: 198.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 36
+
+  IRON_LEGGINGS:
+    price: 96.0
+    buy-price: 173.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 32
+
+  IRON_BOOTS:
+    price: 55.0
+    buy-price: 99.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 18
+
+  # - Gold armor (5/8/7/4 ingots=$45; costs $225/$360/$315/$180)
+  GOLDEN_HELMET:
+    price: 175.0
+    buy-price: 315.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 58
+
+  GOLDEN_CHESTPLATE:
+    price: 280.0
+    buy-price: 504.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 93
+
+  GOLDEN_LEGGINGS:
+    price: 245.0
+    buy-price: 441.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 81
+
+  GOLDEN_BOOTS:
+    price: 140.0
+    buy-price: 252.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 46
+
+  # - Diamond armor (5/8/7/4 diamonds=$250; costs $1250/$2000/$1750/$1000)
+  DIAMOND_HELMET:
+    price: 1000.0
+    buy-price: 1800.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 333
+
+  DIAMOND_CHESTPLATE:
+    price: 1600.0
+    buy-price: 2880.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 533
+
+  DIAMOND_LEGGINGS:
+    price: 1400.0
+    buy-price: 2520.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 466
+
+  DIAMOND_BOOTS:
+    price: 800.0
+    buy-price: 1440.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 266
+
+  # - Netherite armor (diamond + $12000 ingot upgrade each; sell well below total cost)
+  NETHERITE_HELMET:
+    price: 2500.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 833
+
+  NETHERITE_CHESTPLATE:
+    price: 3500.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 1166
+
+  NETHERITE_LEGGINGS:
+    price: 3000.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 1000
+
+  NETHERITE_BOOTS:
+    price: 2000.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 666
+
+  # - Special armor
+  # turtle_helmet: 5 turtle_scute ($40x5=$200 cost)
+  TURTLE_HELMET:
+    price: 160.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 53
+
+  # wolf_armor: 6 armadillo_scute ($30x6=$180 cost)
+  WOLF_ARMOR:
+    price: 140.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 46
+
+  # End city chest; not craftable
+  ELYTRA:
+    price: 8000.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 2666
+
+  # - Swords (2 head material + sticks)
+  COPPER_SWORD:
+    price: 12.0
+    buy-price: 20.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 2
+
+  COPPER_PICKAXE:
+    price: 10.0
+    buy-price: 20.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 2
+
+  COPPER_AXE:
+    price: 10.0
+    buy-price: 20.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 2
+
+  COPPER_SHOVEL:
+    price: 4.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 1
+
+  COPPER_HOE:
+    price: 4.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 1
+
+  COPPER_HELMET:
+    price: 65.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 23
+
+  COPPER_CHESTPLATE:
+    price: 105.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 36
+
+  COPPER_LEGGINGS:
+    price: 91.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 32
+
+  COPPER_BOOTS:
+    price: 52.5
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 18
+
+  COPPER_SPEAR:
+    price: 12.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 2
+
+  WOODEN_SPEAR:
+    price: 4.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 2
+
+  IRON_SPEAR:
+    price: 28.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 4
+
+  DIAMOND_SPEAR:
+    price: 120.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 20
+
+  NETHERITE_SPEAR:
+    price: 400.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 66
+
+  WOODEN_SWORD:
+    price: 4.0
+    buy-price: 7.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 1
+
+  STONE_SWORD:
+    price: 10.0
+    buy-price: 18.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 3
+
+  IRON_SWORD:
+    price: 28.0
+    buy-price: 50.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 9
+
+  GOLDEN_SWORD:
+    price: 70.0
+    buy-price: 126.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 23
+
+  DIAMOND_SWORD:
+    price: 400.0
+    buy-price: 720.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 133
+
+  NETHERITE_SWORD:
+    price: 1500.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 500
+
+  # - Pickaxes (3 head material + sticks)
+  WOODEN_PICKAXE:
+    price: 6.0
+    buy-price: 10.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 2
+
+  STONE_PICKAXE:
+    price: 14.0
+    buy-price: 25.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 4
+
+  IRON_PICKAXE:
+    price: 40.0
+    buy-price: 72.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 13
+
+  GOLDEN_PICKAXE:
+    price: 100.0
+    buy-price: 180.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 33
+
+  DIAMOND_PICKAXE:
+    price: 600.0
+    buy-price: 1080.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 200
+
+  NETHERITE_PICKAXE:
+    price: 1800.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 600
+
+  # - Axes (3 head material + sticks)
+  WOODEN_AXE:
+    price: 6.0
+    buy-price: 10.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 2
+
+  STONE_AXE:
+    price: 14.0
+    buy-price: 25.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 4
+
+  IRON_AXE:
+    price: 40.0
+    buy-price: 72.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 13
+
+  GOLDEN_AXE:
+    price: 100.0
+    buy-price: 180.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 33
+
+  DIAMOND_AXE:
+    price: 600.0
+    buy-price: 1080.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 200
+
+  NETHERITE_AXE:
+    price: 1800.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 600
+
+  # - Shovels (1 head material + sticks)
+  WOODEN_SHOVEL:
+    price: 2.0
+    buy-price: 3.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 1
+
+  STONE_SHOVEL:
+    price: 5.0
+    buy-price: 9.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 1
+
+  IRON_SHOVEL:
+    price: 14.0
+    buy-price: 25.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 4
+
+  GOLDEN_SHOVEL:
+    price: 36.0
+    buy-price: 65.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 12
+
+  DIAMOND_SHOVEL:
+    price: 200.0
+    buy-price: 360.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 66
+
+  NETHERITE_SHOVEL:
+    price: 800.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 266
+
+  # - Hoes (2 head material + sticks)
+  WOODEN_HOE:
+    price: 4.0
+    buy-price: 7.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 1
+
+  STONE_HOE:
+    price: 10.0
+    buy-price: 18.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 3
+
+  IRON_HOE:
+    price: 28.0
+    buy-price: 50.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 9
+
+  GOLDEN_HOE:
+    price: 70.0
+    buy-price: 126.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 23
+
+  DIAMOND_HOE:
+    price: 400.0
+    buy-price: 720.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 133
+
+  NETHERITE_HOE:
+    price: 1200.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 400
+
+  # - Ranged / utility tools
+  # bow: 3 string ($8x3=$24 cost)
+  BOW:
+    price: 18.0
+    buy-price: 32.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 6
+
+  # crossbow: iron+3string+tripwire_hook ($18+$24=$42 cost)
+  CROSSBOW:
+    price: 30.0
+    buy-price: 54.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 10
+
+  # shield: 6planks+iron ($24+$18=$42 cost)
+  SHIELD:
+    price: 30.0
+    buy-price: 54.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 10
+
+  # fishing_rod: 3sticks+2string ($16 cost)
+  FISHING_ROD:
+    price: 12.0
+    buy-price: 21.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 4
+
+  # shears: 2 iron ($36 cost)
+  SHEARS:
+    price: 28.0
+    buy-price: 50.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 9
+
+  # flint_and_steel: iron($18)+flint($6)=$24 cost
+  FLINT_AND_STEEL:
+    price: 18.0
+    buy-price: 32.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 6
+
+  CARROT_ON_A_STICK:
+    price: 14.0
+    buy-price: 25.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 4
+
+  WARPED_FUNGUS_ON_A_STICK:
+    price: 14.0
+    buy-price: 25.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 4
+
+  # - Buckets (3 iron=$54 cost)
+  BUCKET:
+    price: 40.0
+    buy-price: 72.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 13
+
+  WATER_BUCKET:
+    price: 42.0
+    buy-price: 76.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 14
+
+  LAVA_BUCKET:
+    price: 50.0
+    buy-price: 90.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 16
+
+  MILK_BUCKET:
+    price: 40.0
+    buy-price: 72.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 13
+
+  # - Navigation / misc tools
+  # compass: 4iron+redstone ($72+$8=$80 cost)
+  COMPASS:
+    price: 60.0
+    buy-price: 108.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 20
+
+  # recovery_compass: 8echo_shard($2000)+compass cost; very rare
+  RECOVERY_COMPASS:
+    price: 800.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 266
+
+  # clock: 4gold_ingot+redstone ($180+$8=$188 cost)
+  CLOCK:
+    price: 140.0
+    buy-price: 252.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 46
+
+  # spyglass: amethyst_shard($20)+2copper_ingot($24)=$44 cost
+  SPYGLASS:
+    price: 34.0
+    buy-price: 61.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 11
+
+  # lead: 4string($32)+slimeball($20)=$52 cost
+  LEAD:
+    price: 40.0
+    buy-price: 72.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 13
+
+  # bundle: string($8)+2rabbit_hide($16)=$24 cost
+  BUNDLE:
+    price: 18.0
+    buy-price: 32.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 6
+
+  NAME_TAG:
+    price: 120.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 40
+
+  # paper: 3sugar_cane($30)->3paper; each paper < $10
+  PAPER:
+    price: 8.0
+    buy-price: 14.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 2
+
+  # book: 3paper($24)+leather($16)=$40 cost
+  BOOK:
+    price: 30.0
+    buy-price: 54.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 10
+
+  WRITABLE_BOOK:
+    price: 36.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 12
+
+  WRITTEN_BOOK:
+    price: 40.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 13
+
+  # - Saddle / horse armor (chest loot only)
+  SADDLE:
+    price: 150.0
+    buy-price: 270.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 50
+
+  IRON_HORSE_ARMOR:
+    price: 100.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 33
+
+  GOLDEN_HORSE_ARMOR:
+    price: 160.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 53
+
+  DIAMOND_HORSE_ARMOR:
+    price: 600.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 200
+
+  # leather_horse_armor: 7leather ($112 cost)
+  LEATHER_HORSE_ARMOR:
+    price: 88.0
+    buy-price: 158.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 29
+
+  # mace: heavy_core($1000)+breeze_rod($120)=$1120 cost
+  MACE:
+    price: 850.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 283
+
+  # - Fireworks
+  # rocket: paper($8)+gunpowder($20)=$28 cost
+  FIREWORK_ROCKET:
+    price: 20.0
+    buy-price: 36.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 6
+
+  # star: gunpowder($20)+dye=$20+ cost
+  FIREWORK_STAR:
+    price: 16.0
+    category: ARMOR_AND_TOOLS
+    xp-per-unit: 5
+
+  #  ENCHANTED BOOKS
+  #  (sell-only  buy requires custom NBT handling)
+  #
+
+  ENCHANTED_BOOK:
+    price: 50.0
+    buy-price: 100.0
+    category: ENCHANTED_BOOKS
+    xp-per-unit: 50
+
+  #  POTIONS
+  #
+  # All POTION/SPLASH_POTION/LINGERING_POTION map by material name only (not NBT),
+  # so one price applies regardless of potion effect type.
+  # Brewed potions sell for less than ingredient cost (no brewing-for-profit).
+  # glass_bottle sell < glass ($8) since 3 glass -> 3 bottles, no compress profit
+  # golden_carrot: 8 gold_nugget($5x8=$40)+carrot($10)=$50 cost > sell $40
+  # glistering_melon: 8 gold_nugget($40)+melon_slice($8)=$48 cost > sell $36
+
+  POTION:
+    price: 16.0
+    buy-price: 28.0
+    category: POTIONS
+    xp-per-unit: 5
+
+  SPLASH_POTION:
+    price: 20.0
+    buy-price: 36.0
+    category: POTIONS
+    xp-per-unit: 6
+
+  LINGERING_POTION:
+    price: 28.0
+    category: POTIONS
+    xp-per-unit: 9
+
+  # glass=$8 -> 3 bottles; glass_bottle sell < glass
+  GLASS_BOTTLE:
+    price: 6.0
+    buy-price: 10.0
+    category: POTIONS
+    xp-per-unit: 2
+
+  # 8 gold_nugget($40)+carrot($10)=$50 cost; sell $40 (user anchor)
+  GOLDEN_CARROT:
+    price: 40.0
+    buy-price: 72.0
+    category: POTIONS
+    xp-per-unit: 13
+
+  # 8 gold_nugget($40)+melon_slice($8)=$48 cost; sell $36
+  GLISTERING_MELON_SLICE:
+    price: 36.0
+    buy-price: 65.0
+    category: POTIONS
+    xp-per-unit: 12
+
+  # Villager trade / fishing loot only; not craftable
+  EXPERIENCE_BOTTLE:
+    price: 24.0
+    buy-price: 43.0
+    category: POTIONS
+    xp-per-unit: 8
+
+  #  BLOCKS - additions
+  #
+  # Planks=$4 each (log=$16 -> 4 planks). Slab=half plank. Stairs~3/4.
+  # Iron-derived blocks scale with iron_ingot=$18. Copper block=9x$12=$108 cost.
+
+  # - Wood planks (log=$16 -> 4 planks; plank=$4)
+  OAK_PLANKS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  SPRUCE_PLANKS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BIRCH_PLANKS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  JUNGLE_PLANKS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ACACIA_PLANKS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  DARK_OAK_PLANKS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MANGROVE_PLANKS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CHERRY_PLANKS:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BAMBOO_PLANKS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BAMBOO_MOSAIC:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CRIMSON_PLANKS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  WARPED_PLANKS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  PALE_OAK_PLANKS:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  # - Wood slabs
+  OAK_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  SPRUCE_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BIRCH_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  JUNGLE_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ACACIA_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  DARK_OAK_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MANGROVE_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CHERRY_SLAB:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BAMBOO_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BAMBOO_MOSAIC_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CRIMSON_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  WARPED_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  PALE_OAK_SLAB:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  # - Wood stairs
+  OAK_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  SPRUCE_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BIRCH_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  JUNGLE_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ACACIA_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  DARK_OAK_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MANGROVE_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CHERRY_STAIRS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BAMBOO_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BAMBOO_MOSAIC_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CRIMSON_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  WARPED_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  PALE_OAK_STAIRS:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  # - Wood fences & gates
+  OAK_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  SPRUCE_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BIRCH_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  JUNGLE_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ACACIA_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  DARK_OAK_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MANGROVE_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CHERRY_FENCE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BAMBOO_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CRIMSON_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  WARPED_FENCE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  PALE_OAK_FENCE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  OAK_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  SPRUCE_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BIRCH_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  JUNGLE_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ACACIA_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  DARK_OAK_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MANGROVE_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CHERRY_FENCE_GATE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BAMBOO_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CRIMSON_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  WARPED_FENCE_GATE:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  PALE_OAK_FENCE_GATE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  # - Wood doors & trapdoors
+  OAK_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SPRUCE_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BIRCH_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  JUNGLE_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  ACACIA_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  DARK_OAK_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MANGROVE_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CHERRY_DOOR:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BAMBOO_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CRIMSON_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  WARPED_DOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PALE_OAK_DOOR:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  IRON_DOOR:
+    price: 28.0
+    category: BLOCKS
+    xp-per-unit: 9
+
+  OAK_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SPRUCE_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BIRCH_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  JUNGLE_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  ACACIA_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  DARK_OAK_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MANGROVE_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CHERRY_TRAPDOOR:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BAMBOO_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CRIMSON_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  WARPED_TRAPDOOR:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PALE_OAK_TRAPDOOR:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  IRON_TRAPDOOR:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  STRIPPED_BAMBOO_BLOCK:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BAMBOO_BLOCK:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  # - Stone derivatives
+  STONE_SLAB:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  STONE_STAIRS:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  COBBLESTONE_SLAB:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  COBBLESTONE_STAIRS:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  COBBLESTONE_WALL:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MOSSY_COBBLESTONE:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MOSSY_COBBLESTONE_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MOSSY_COBBLESTONE_STAIRS:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MOSSY_COBBLESTONE_WALL:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  STONE_BRICK:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  STONE_BRICK_SLAB:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  STONE_BRICK_STAIRS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  STONE_BRICK_WALL:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MOSSY_STONE_BRICK_SLAB:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MOSSY_STONE_BRICK_STAIRS:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  MOSSY_STONE_BRICK_WALL:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  GRANITE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  GRANITE_SLAB:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  GRANITE_STAIRS:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  GRANITE_WALL:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_GRANITE_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_GRANITE_STAIRS:
+    price: 7.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  DIORITE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  DIORITE_SLAB:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  DIORITE_STAIRS:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  DIORITE_WALL:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_DIORITE_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_DIORITE_STAIRS:
+    price: 7.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  ANDESITE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ANDESITE_SLAB:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ANDESITE_STAIRS:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ANDESITE_WALL:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_ANDESITE_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_ANDESITE_STAIRS:
+    price: 7.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SANDSTONE:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SANDSTONE_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  SANDSTONE_STAIRS:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SANDSTONE_WALL:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SMOOTH_SANDSTONE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  SMOOTH_SANDSTONE_SLAB:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  SMOOTH_SANDSTONE_STAIRS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CHISELED_SANDSTONE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CUT_SANDSTONE:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CUT_SANDSTONE_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  RED_SANDSTONE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  RED_SANDSTONE_SLAB:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  RED_SANDSTONE_STAIRS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  RED_SANDSTONE_WALL:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SMOOTH_RED_SANDSTONE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  SMOOTH_RED_SANDSTONE_SLAB:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SMOOTH_RED_SANDSTONE_STAIRS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CHISELED_RED_SANDSTONE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  CUT_RED_SANDSTONE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CUT_RED_SANDSTONE_SLAB:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  NETHER_BRICK_SLAB:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  NETHER_BRICK_STAIRS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  NETHER_BRICK_FENCE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  NETHER_BRICK_WALL:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  RED_NETHER_BRICKS:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  RED_NETHER_BRICK_SLAB:
+    price: 7.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  RED_NETHER_BRICK_STAIRS:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  RED_NETHER_BRICK_WALL:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  CHISELED_NETHER_BRICKS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CRACKED_NETHER_BRICKS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  QUARTZ_BLOCK:
+    price: 24.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  QUARTZ_SLAB:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  QUARTZ_STAIRS:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  QUARTZ_PILLAR:
+    price: 18.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  CHISELED_QUARTZ_BLOCK:
+    price: 22.0
+    category: BLOCKS
+    xp-per-unit: 7
+
+  SMOOTH_QUARTZ_SLAB:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  SMOOTH_QUARTZ_STAIRS:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  END_STONE:
+    price: 2.0
+    category: NATURAL_ITEMS
+    xp-per-unit: 1
+
+  END_STONE_BRICK_SLAB:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  END_STONE_BRICK_STAIRS:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  END_STONE_BRICK_WALL:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  PURPUR_SLAB:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  PURPUR_STAIRS:
+    price: 24.0
+    category: BLOCKS
+    xp-per-unit: 8
+
+  PURPUR_PILLAR:
+    price: 24.0
+    category: BLOCKS
+    xp-per-unit: 8
+
+  DEEPSLATE:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  COBBLED_DEEPSLATE:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  COBBLED_DEEPSLATE_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  COBBLED_DEEPSLATE_STAIRS:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  COBBLED_DEEPSLATE_WALL:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  POLISHED_DEEPSLATE_SLAB:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_DEEPSLATE_STAIRS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  POLISHED_DEEPSLATE_WALL:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  DEEPSLATE_BRICKS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  DEEPSLATE_BRICK_SLAB:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  DEEPSLATE_BRICK_STAIRS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  DEEPSLATE_BRICK_WALL:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CRACKED_DEEPSLATE_BRICKS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CHISELED_DEEPSLATE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  DEEPSLATE_TILES:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  DEEPSLATE_TILE_SLAB:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  DEEPSLATE_TILE_STAIRS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  DEEPSLATE_TILE_WALL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CRACKED_DEEPSLATE_TILES:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLACKSTONE_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BLACKSTONE_STAIRS:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BLACKSTONE_WALL:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  POLISHED_BLACKSTONE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  POLISHED_BLACKSTONE_SLAB:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_BLACKSTONE_STAIRS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  POLISHED_BLACKSTONE_WALL:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  POLISHED_BLACKSTONE_BRICKS:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  POLISHED_BLACKSTONE_BRICK_SLAB:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  POLISHED_BLACKSTONE_BRICK_STAIRS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  POLISHED_BLACKSTONE_BRICK_WALL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CHISELED_POLISHED_BLACKSTONE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  CRACKED_POLISHED_BLACKSTONE_BRICKS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  TUFF:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  TUFF_SLAB:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  TUFF_STAIRS:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  TUFF_WALL:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_TUFF:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  POLISHED_TUFF_SLAB:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_TUFF_STAIRS:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_TUFF_WALL:
+    price: 5.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  TUFF_BRICKS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  TUFF_BRICK_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  TUFF_BRICK_STAIRS:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  TUFF_BRICK_WALL:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CHISELED_TUFF:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CHISELED_TUFF_BRICKS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PACKED_MUD:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MUD_BRICKS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MUD_BRICK_SLAB:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MUD_BRICK_STAIRS:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MUD_BRICK_WALL:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BRICK_SLAB:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BRICK_STAIRS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BRICK_WALL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PRISMARINE_SLAB:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  PRISMARINE_STAIRS:
+    price: 32.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  PRISMARINE_WALL:
+    price: 32.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  PRISMARINE_BRICK_SLAB:
+    price: 24.0
+    category: BLOCKS
+    xp-per-unit: 8
+
+  PRISMARINE_BRICK_STAIRS:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  DARK_PRISMARINE_SLAB:
+    price: 24.0
+    category: BLOCKS
+    xp-per-unit: 8
+
+  DARK_PRISMARINE_STAIRS:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  # - Copper blocks (copper_ingot=$12; 9 per block=$108 cost; sell below cost)
+  EXPOSED_COPPER:
+    price: 70.0
+    category: BLOCKS
+    xp-per-unit: 23
+
+  WEATHERED_COPPER:
+    price: 50.0
+    category: BLOCKS
+    xp-per-unit: 16
+
+  OXIDIZED_COPPER:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  WAXED_COPPER_BLOCK:
+    price: 85.0
+    category: BLOCKS
+    xp-per-unit: 28
+
+  WAXED_EXPOSED_COPPER:
+    price: 72.0
+    category: BLOCKS
+    xp-per-unit: 24
+
+  WAXED_WEATHERED_COPPER:
+    price: 52.0
+    category: BLOCKS
+    xp-per-unit: 17
+
+  WAXED_OXIDIZED_COPPER:
+    price: 32.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  CUT_COPPER:
+    price: 80.0
+    category: BLOCKS
+    xp-per-unit: 26
+
+  CUT_COPPER_SLAB:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  CUT_COPPER_STAIRS:
+    price: 65.0
+    category: BLOCKS
+    xp-per-unit: 21
+
+  EXPOSED_CUT_COPPER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  EXPOSED_CUT_COPPER_SLAB:
+    price: 28.0
+    category: BLOCKS
+    xp-per-unit: 9
+
+  EXPOSED_CUT_COPPER_STAIRS:
+    price: 44.0
+    category: BLOCKS
+    xp-per-unit: 14
+
+  WEATHERED_CUT_COPPER:
+    price: 36.0
+    category: BLOCKS
+    xp-per-unit: 12
+
+  WEATHERED_CUT_COPPER_SLAB:
+    price: 18.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  WEATHERED_CUT_COPPER_STAIRS:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  OXIDIZED_CUT_COPPER:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  OXIDIZED_CUT_COPPER_SLAB:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  OXIDIZED_CUT_COPPER_STAIRS:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  WAXED_CUT_COPPER:
+    price: 82.0
+    category: BLOCKS
+    xp-per-unit: 27
+
+  WAXED_CUT_COPPER_SLAB:
+    price: 41.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  WAXED_CUT_COPPER_STAIRS:
+    price: 66.0
+    category: BLOCKS
+    xp-per-unit: 22
+
+  WAXED_EXPOSED_CUT_COPPER:
+    price: 57.0
+    category: BLOCKS
+    xp-per-unit: 19
+
+  WAXED_EXPOSED_CUT_COPPER_SLAB:
+    price: 29.0
+    category: BLOCKS
+    xp-per-unit: 9
+
+  WAXED_EXPOSED_CUT_COPPER_STAIRS:
+    price: 46.0
+    category: BLOCKS
+    xp-per-unit: 15
+
+  WAXED_WEATHERED_CUT_COPPER:
+    price: 38.0
+    category: BLOCKS
+    xp-per-unit: 12
+
+  WAXED_WEATHERED_CUT_COPPER_SLAB:
+    price: 19.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  WAXED_WEATHERED_CUT_COPPER_STAIRS:
+    price: 31.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  WAXED_OXIDIZED_CUT_COPPER:
+    price: 22.0
+    category: BLOCKS
+    xp-per-unit: 7
+
+  WAXED_OXIDIZED_CUT_COPPER_SLAB:
+    price: 11.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  WAXED_OXIDIZED_CUT_COPPER_STAIRS:
+    price: 18.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  CHISELED_COPPER:
+    price: 80.0
+    category: BLOCKS
+    xp-per-unit: 26
+
+  EXPOSED_CHISELED_COPPER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  WEATHERED_CHISELED_COPPER:
+    price: 36.0
+    category: BLOCKS
+    xp-per-unit: 12
+
+  OXIDIZED_CHISELED_COPPER:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  WAXED_CHISELED_COPPER:
+    price: 82.0
+    category: BLOCKS
+    xp-per-unit: 27
+
+  WAXED_EXPOSED_CHISELED_COPPER:
+    price: 57.0
+    category: BLOCKS
+    xp-per-unit: 19
+
+  WAXED_WEATHERED_CHISELED_COPPER:
+    price: 38.0
+    category: BLOCKS
+    xp-per-unit: 12
+
+  WAXED_OXIDIZED_CHISELED_COPPER:
+    price: 22.0
+    category: BLOCKS
+    xp-per-unit: 7
+
+  COPPER_GRATE:
+    price: 72.0
+    category: BLOCKS
+    xp-per-unit: 24
+
+  EXPOSED_COPPER_GRATE:
+    price: 50.0
+    category: BLOCKS
+    xp-per-unit: 16
+
+  WEATHERED_COPPER_GRATE:
+    price: 32.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  OXIDIZED_COPPER_GRATE:
+    price: 18.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  WAXED_COPPER_GRATE:
+    price: 74.0
+    category: BLOCKS
+    xp-per-unit: 24
+
+  WAXED_EXPOSED_COPPER_GRATE:
+    price: 52.0
+    category: BLOCKS
+    xp-per-unit: 17
+
+  WAXED_WEATHERED_COPPER_GRATE:
+    price: 34.0
+    category: BLOCKS
+    xp-per-unit: 11
+
+  WAXED_OXIDIZED_COPPER_GRATE:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  # - Glass
+  GLASS:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  GLASS_PANE:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  TINTED_GLASS:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  # - All 16 stained glass
+  WHITE_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  ORANGE_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  MAGENTA_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIGHT_BLUE_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  YELLOW_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIME_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PINK_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  GRAY_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIGHT_GRAY_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CYAN_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PURPLE_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLUE_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BROWN_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  GREEN_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  RED_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLACK_STAINED_GLASS:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  WHITE_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ORANGE_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  MAGENTA_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  LIGHT_BLUE_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  YELLOW_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  LIME_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  PINK_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  GRAY_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  LIGHT_GRAY_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  CYAN_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  PURPLE_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BLUE_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BROWN_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  GREEN_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  RED_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BLACK_STAINED_GLASS_PANE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  # - All 16 wools
+  WHITE_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  ORANGE_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  MAGENTA_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIGHT_BLUE_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  YELLOW_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIME_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PINK_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  GRAY_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIGHT_GRAY_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CYAN_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PURPLE_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLUE_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BROWN_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  GREEN_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  RED_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLACK_WOOL:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  # - All 16 carpets (2 wool -> 3 carpet; sell < wool)
+  WHITE_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  ORANGE_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MAGENTA_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  LIGHT_BLUE_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  YELLOW_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  LIME_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PINK_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  GRAY_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  LIGHT_GRAY_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CYAN_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PURPLE_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BLUE_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BROWN_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  GREEN_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  RED_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BLACK_CARPET:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  # - All 16 concretes
+  ORANGE_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  MAGENTA_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIGHT_BLUE_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  YELLOW_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIME_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PINK_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  GRAY_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIGHT_GRAY_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CYAN_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PURPLE_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLUE_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BROWN_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  GREEN_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  RED_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLACK_CONCRETE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  # - All 16 concrete powders
+  ORANGE_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MAGENTA_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  LIGHT_BLUE_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  YELLOW_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  LIME_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PINK_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  GRAY_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  LIGHT_GRAY_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CYAN_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PURPLE_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BLUE_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BROWN_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  GREEN_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  RED_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BLACK_CONCRETE_POWDER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  # - All 16 terracottas
+  WHITE_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  ORANGE_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  MAGENTA_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIGHT_BLUE_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  YELLOW_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIME_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PINK_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  GRAY_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIGHT_GRAY_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  CYAN_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  PURPLE_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLUE_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BROWN_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  GREEN_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  RED_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLACK_TERRACOTTA:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  # - All 16 glazed terracottas
+  WHITE_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  ORANGE_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  MAGENTA_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  LIGHT_BLUE_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  YELLOW_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  LIME_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  PINK_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  GRAY_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  LIGHT_GRAY_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  CYAN_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  PURPLE_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  BLUE_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  BROWN_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  GREEN_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  RED_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  BLACK_GLAZED_TERRACOTTA:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  # - All 16 beds (3 wool+3 planks; cost ~$72)
+  WHITE_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  ORANGE_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  MAGENTA_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  LIGHT_BLUE_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  YELLOW_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  LIME_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  PINK_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  GRAY_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  LIGHT_GRAY_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  CYAN_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  PURPLE_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  BLUE_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  BROWN_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  GREEN_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  RED_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  BLACK_BED:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  # - All 16 candles + generic
+  CANDLE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  WHITE_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  ORANGE_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  MAGENTA_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  LIGHT_BLUE_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  YELLOW_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  LIME_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  PINK_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  GRAY_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  LIGHT_GRAY_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  CYAN_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  PURPLE_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  BLUE_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  BROWN_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  GREEN_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  RED_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  BLACK_CANDLE:
+    price: 12.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  # - All 16 banners (6 wool+stick; cost ~$122)
+  WHITE_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  ORANGE_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  MAGENTA_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  LIGHT_BLUE_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  YELLOW_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  LIME_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  PINK_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  GRAY_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  LIGHT_GRAY_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  CYAN_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  PURPLE_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  BLUE_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  BROWN_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  GREEN_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  RED_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  BLACK_BANNER:
+    price: 55.0
+    category: BLOCKS
+    xp-per-unit: 18
+
+  # - All 16 shulker boxes (chest+2 shulker_shell; cost ~$430)
+  WHITE_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  ORANGE_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  MAGENTA_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  LIGHT_BLUE_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  YELLOW_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  LIME_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  PINK_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  GRAY_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  LIGHT_GRAY_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  CYAN_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  PURPLE_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  BLUE_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  BROWN_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  GREEN_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  RED_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  BLACK_SHULKER_BOX:
+    price: 600.0
+    category: BLOCKS
+    xp-per-unit: 200
+
+  # - Dyes (16 colors)
+  WHITE_DYE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  ORANGE_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MAGENTA_DYE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  LIGHT_BLUE_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  YELLOW_DYE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  LIME_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PINK_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  GRAY_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  LIGHT_GRAY_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CYAN_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PURPLE_DYE:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BLUE_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BROWN_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  GREEN_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  RED_DYE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  BLACK_DYE:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  # - Functional blocks
+  CRAFTING_TABLE:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  FURNACE:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  BLAST_FURNACE:
+    price: 80.0
+    category: BLOCKS
+    xp-per-unit: 26
+
+  SMOKER:
+    price: 60.0
+    category: BLOCKS
+    xp-per-unit: 20
+
+  CAMPFIRE:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  SOUL_CAMPFIRE:
+    price: 38.0
+    category: BLOCKS
+    xp-per-unit: 12
+
+  ENDER_CHEST:
+    price: 130.0
+    category: BLOCKS
+    xp-per-unit: 43
+
+  CHEST:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  TRAPPED_CHEST:
+    price: 36.0
+    category: BLOCKS
+    xp-per-unit: 12
+
+  BARREL:
+    price: 36.0
+    category: BLOCKS
+    xp-per-unit: 12
+
+  HOPPER:
+    price: 90.0
+    category: BLOCKS
+    xp-per-unit: 30
+
+  DROPPER:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  DISPENSER:
+    price: 35.0
+    category: BLOCKS
+    xp-per-unit: 11
+
+  BREWING_STAND:
+    price: 80.0
+    category: BLOCKS
+    xp-per-unit: 26
+
+  CAULDRON:
+    price: 100.0
+    category: BLOCKS
+    xp-per-unit: 33
+
+  COMPOSTER:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  ANVIL:
+    price: 420.0
+    category: BLOCKS
+    xp-per-unit: 140
+
+  CHIPPED_ANVIL:
+    price: 200.0
+    category: BLOCKS
+    xp-per-unit: 66
+
+  DAMAGED_ANVIL:
+    price: 80.0
+    category: BLOCKS
+    xp-per-unit: 26
+
+  GRINDSTONE:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  STONECUTTER:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  SMITHING_TABLE:
+    price: 50.0
+    category: BLOCKS
+    xp-per-unit: 16
+
+  ENCHANTING_TABLE:
+    price: 400.0
+    category: BLOCKS
+    xp-per-unit: 133
+
+  LOOM:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  CARTOGRAPHY_TABLE:
+    price: 24.0
+    category: BLOCKS
+    xp-per-unit: 8
+
+  FLETCHING_TABLE:
+    price: 24.0
+    category: BLOCKS
+    xp-per-unit: 8
+
+  NOTE_BLOCK:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  JUKEBOX:
+    price: 220.0
+    category: BLOCKS
+    xp-per-unit: 73
+
+  CHISELED_BOOKSHELF:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  LECTERN:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  BELL:
+    price: 300.0
+    category: BLOCKS
+    xp-per-unit: 100
+
+  BEACON:
+    price: 5000.0
+    category: BLOCKS
+    xp-per-unit: 1666
+
+  CONDUIT:
+    price: 1400.0
+    category: BLOCKS
+    xp-per-unit: 466
+
+  BEEHIVE:
+    price: 80.0
+    category: BLOCKS
+    xp-per-unit: 26
+
+  BEE_NEST:
+    price: 80.0
+    category: BLOCKS
+    xp-per-unit: 26
+
+  # - Decorative blocks
+  LANTERN:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  SOUL_LANTERN:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  CHAIN:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  IRON_BARS:
+    price: 80.0
+    category: BLOCKS
+    xp-per-unit: 26
+
+  LIGHTNING_ROD:
+    price: 28.0
+    category: BLOCKS
+    xp-per-unit: 9
+
+  FLOWER_POT:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  ITEM_FRAME:
+    price: 100.0
+    category: BLOCKS
+    xp-per-unit: 33
+
+  GLOW_ITEM_FRAME:
+    price: 120.0
+    category: BLOCKS
+    xp-per-unit: 40
+
+  PAINTING:
+    price: 120.0
+    category: BLOCKS
+    xp-per-unit: 40
+
+  ARMOR_STAND:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  END_CRYSTAL:
+    price: 200.0
+    category: BLOCKS
+    xp-per-unit: 66
+
+  TORCH:
+    price: 2.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  SOUL_TORCH:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  LADDER:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  JACK_O_LANTERN:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  TARGET:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  SUSPICIOUS_SAND:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SUSPICIOUS_GRAVEL:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  DECORATED_POT:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  SNIFFER_EGG:
+    price: 800.0
+    category: BLOCKS
+    xp-per-unit: 266
+
+  SPAWNER:
+    price: 8000.0
+    category: BLOCKS
+    xp-per-unit: 2666
+
+  DRAGON_EGG:
+    price: 50000.0
+    category: BLOCKS
+    xp-per-unit: 16666
+
+  # - Redstone components
+  REDSTONE_TORCH:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  REDSTONE_LAMP:
+    price: 70.0
+    category: BLOCKS
+    xp-per-unit: 23
+
+  LEVER:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  STONE_BUTTON:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_BLACKSTONE_BUTTON:
+    price: 3.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  STONE_PRESSURE_PLATE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  POLISHED_BLACKSTONE_PRESSURE_PLATE:
+    price: 4.0
+    category: BLOCKS
+    xp-per-unit: 1
+
+  LIGHT_WEIGHTED_PRESSURE_PLATE:
+    price: 70.0
+    category: BLOCKS
+    xp-per-unit: 23
+
+  HEAVY_WEIGHTED_PRESSURE_PLATE:
+    price: 28.0
+    category: BLOCKS
+    xp-per-unit: 9
+
+  REPEATER:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  COMPARATOR:
+    price: 24.0
+    category: BLOCKS
+    xp-per-unit: 8
+
+  OBSERVER:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  PISTON:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  STICKY_PISTON:
+    price: 44.0
+    category: BLOCKS
+    xp-per-unit: 14
+
+  TRIPWIRE_HOOK:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  DAYLIGHT_DETECTOR:
+    price: 30.0
+    category: BLOCKS
+    xp-per-unit: 10
+
+  # - Rails & transport
+  RAIL:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  POWERED_RAIL:
+    price: 36.0
+    category: BLOCKS
+    xp-per-unit: 12
+
+  DETECTOR_RAIL:
+    price: 28.0
+    category: BLOCKS
+    xp-per-unit: 9
+
+  ACTIVATOR_RAIL:
+    price: 28.0
+    category: BLOCKS
+    xp-per-unit: 9
+
+  MINECART:
+    price: 70.0
+    category: BLOCKS
+    xp-per-unit: 23
+
+  CHEST_MINECART:
+    price: 90.0
+    category: BLOCKS
+    xp-per-unit: 30
+
+  HOPPER_MINECART:
+    price: 130.0
+    category: BLOCKS
+    xp-per-unit: 43
+
+  FURNACE_MINECART:
+    price: 80.0
+    category: BLOCKS
+    xp-per-unit: 26
+
+  TNT_MINECART:
+    price: 50.0
+    category: BLOCKS
+    xp-per-unit: 16
+
+  # - Boats (5 planks -> 1 boat; cost $20)
+  OAK_BOAT:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  SPRUCE_BOAT:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  BIRCH_BOAT:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  JUNGLE_BOAT:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  ACACIA_BOAT:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  DARK_OAK_BOAT:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  MANGROVE_BOAT:
+    price: 16.0
+    category: BLOCKS
+    xp-per-unit: 5
+
+  CHERRY_BOAT:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  BAMBOO_RAFT:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  PALE_OAK_BOAT:
+    price: 20.0
+    category: BLOCKS
+    xp-per-unit: 6
+
+  OAK_CHEST_BOAT:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  SPRUCE_CHEST_BOAT:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  BIRCH_CHEST_BOAT:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  JUNGLE_CHEST_BOAT:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  ACACIA_CHEST_BOAT:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  DARK_OAK_CHEST_BOAT:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  MANGROVE_CHEST_BOAT:
+    price: 40.0
+    category: BLOCKS
+    xp-per-unit: 13
+
+  CHERRY_CHEST_BOAT:
+    price: 45.0
+    category: BLOCKS
+    xp-per-unit: 15
+
+  BAMBOO_CHEST_RAFT:
+    price: 38.0
+    category: BLOCKS
+    xp-per-unit: 12
+
+  PALE_OAK_CHEST_BOAT:
+    price: 45.0
+    category: BLOCKS
+    xp-per-unit: 15
+
+  # - Signs & hanging signs
+  OAK_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SPRUCE_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BIRCH_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  JUNGLE_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  ACACIA_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  DARK_OAK_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MANGROVE_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CHERRY_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BAMBOO_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CRIMSON_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  WARPED_SIGN:
+    price: 6.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PALE_OAK_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  OAK_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  SPRUCE_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  BIRCH_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  JUNGLE_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  ACACIA_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  DARK_OAK_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  MANGROVE_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CHERRY_HANGING_SIGN:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  BAMBOO_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  CRIMSON_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  WARPED_HANGING_SIGN:
+    price: 8.0
+    category: BLOCKS
+    xp-per-unit: 2
+
+  PALE_OAK_HANGING_SIGN:
+    price: 10.0
+    category: BLOCKS
+    xp-per-unit: 3
+
+  # - Misc utility items
+  MAP:
+    price: 14.0
+    category: BLOCKS
+    xp-per-unit: 4
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  #  ADDITIONS
+  #  Sell-only (no buy-price) unless noted, so nothing new is server-shop buyable
+  #  -> no buy/sell arbitrage. Prices follow the existing anchors; xp ~ price/3.
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  # - Wood pressure plates (2 planks=$8; sell $5, specialty $6)
+  OAK_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  SPRUCE_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  BIRCH_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  JUNGLE_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  ACACIA_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  DARK_OAK_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  MANGROVE_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  BAMBOO_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  CRIMSON_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  WARPED_PRESSURE_PLATE: { price: 5.0, category: BLOCKS, xp-per-unit: 1 }
+  CHERRY_PRESSURE_PLATE: { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+  PALE_OAK_PRESSURE_PLATE: { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+
+  # - Wood buttons (1 plank=$4; sell $3, specialty $4)
+  OAK_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  SPRUCE_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  BIRCH_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  JUNGLE_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  ACACIA_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  DARK_OAK_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  MANGROVE_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  BAMBOO_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  CRIMSON_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  WARPED_BUTTON: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  CHERRY_BUTTON: { price: 4.0, category: BLOCKS, xp-per-unit: 1 }
+  PALE_OAK_BUTTON: { price: 4.0, category: BLOCKS, xp-per-unit: 1 }
+
+  # - Stone brick variants
+  MOSSY_STONE_BRICKS: { price: 12.0, category: BLOCKS, xp-per-unit: 4 }
+  CRACKED_STONE_BRICKS: { price: 10.0, category: BLOCKS, xp-per-unit: 3 }
+  CHISELED_STONE_BRICKS: { price: 12.0, category: BLOCKS, xp-per-unit: 4 }
+
+  # - Polished base stones (full blocks)
+  POLISHED_GRANITE: { price: 7.0, category: BLOCKS, xp-per-unit: 2 }
+  POLISHED_DIORITE: { price: 7.0, category: BLOCKS, xp-per-unit: 2 }
+  POLISHED_ANDESITE: { price: 7.0, category: BLOCKS, xp-per-unit: 2 }
+  POLISHED_DEEPSLATE: { price: 8.0, category: BLOCKS, xp-per-unit: 2 }
+
+  # - Resin (resin_brick=$25, resin_bricks=$80)
+  RESIN_BRICK_STAIRS: { price: 80.0, category: NATURAL_ITEMS, xp-per-unit: 26 }
+  RESIN_BRICK_SLAB: { price: 40.0, category: NATURAL_ITEMS, xp-per-unit: 13 }
+  RESIN_BRICK_WALL: { price: 80.0, category: NATURAL_ITEMS, xp-per-unit: 26 }
+  CHISELED_RESIN_BRICKS:
+    { price: 90.0, category: NATURAL_ITEMS, xp-per-unit: 30 }
+
+  # - Prismarine (shard=$15, crystals=$20)
+  PRISMARINE: { price: 60.0, category: BLOCKS, xp-per-unit: 20 }
+  PRISMARINE_BRICKS: { price: 135.0, category: BLOCKS, xp-per-unit: 45 }
+  DARK_PRISMARINE: { price: 130.0, category: BLOCKS, xp-per-unit: 43 }
+  SEA_LANTERN: { price: 120.0, category: BLOCKS, xp-per-unit: 40 }
+
+  # - Misc stone / nether / end blocks
+  POLISHED_BASALT: { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+  GILDED_BLACKSTONE: { price: 30.0, category: BLOCKS, xp-per-unit: 10 }
+  PURPUR_BLOCK: { price: 40.0, category: BLOCKS, xp-per-unit: 13 }
+  END_STONE_BRICKS: { price: 10.0, category: BLOCKS, xp-per-unit: 3 }
+  QUARTZ_BRICKS: { price: 24.0, category: BLOCKS, xp-per-unit: 8 }
+  SMOOTH_QUARTZ: { price: 24.0, category: BLOCKS, xp-per-unit: 8 }
+  CRYING_OBSIDIAN: { price: 60.0, category: NATURAL_ITEMS, xp-per-unit: 20 }
+
+  # - Copper bulbs (mirror copper_grate oxidation curve)
+  COPPER_BULB: { price: 72.0, category: BLOCKS, xp-per-unit: 24 }
+  EXPOSED_COPPER_BULB: { price: 50.0, category: BLOCKS, xp-per-unit: 16 }
+  WEATHERED_COPPER_BULB: { price: 32.0, category: BLOCKS, xp-per-unit: 10 }
+  OXIDIZED_COPPER_BULB: { price: 18.0, category: BLOCKS, xp-per-unit: 6 }
+  WAXED_COPPER_BULB: { price: 74.0, category: BLOCKS, xp-per-unit: 24 }
+  WAXED_EXPOSED_COPPER_BULB: { price: 52.0, category: BLOCKS, xp-per-unit: 17 }
+  WAXED_WEATHERED_COPPER_BULB:
+    { price: 34.0, category: BLOCKS, xp-per-unit: 11 }
+  WAXED_OXIDIZED_COPPER_BULB: { price: 20.0, category: BLOCKS, xp-per-unit: 6 }
+
+  # - Copper trapdoors
+  COPPER_TRAPDOOR: { price: 50.0, category: BLOCKS, xp-per-unit: 16 }
+  EXPOSED_COPPER_TRAPDOOR: { price: 36.0, category: BLOCKS, xp-per-unit: 12 }
+  WEATHERED_COPPER_TRAPDOOR: { price: 22.0, category: BLOCKS, xp-per-unit: 7 }
+  OXIDIZED_COPPER_TRAPDOOR: { price: 14.0, category: BLOCKS, xp-per-unit: 4 }
+  WAXED_COPPER_TRAPDOOR: { price: 52.0, category: BLOCKS, xp-per-unit: 17 }
+  WAXED_EXPOSED_COPPER_TRAPDOOR:
+    { price: 38.0, category: BLOCKS, xp-per-unit: 12 }
+  WAXED_WEATHERED_COPPER_TRAPDOOR:
+    { price: 24.0, category: BLOCKS, xp-per-unit: 8 }
+  WAXED_OXIDIZED_COPPER_TRAPDOOR:
+    { price: 16.0, category: BLOCKS, xp-per-unit: 5 }
+
+  # - Copper doors (2 ingots each; cheaper than trapdoors)
+  COPPER_DOOR: { price: 30.0, category: BLOCKS, xp-per-unit: 10 }
+  EXPOSED_COPPER_DOOR: { price: 22.0, category: BLOCKS, xp-per-unit: 7 }
+  WEATHERED_COPPER_DOOR: { price: 14.0, category: BLOCKS, xp-per-unit: 4 }
+  OXIDIZED_COPPER_DOOR: { price: 8.0, category: BLOCKS, xp-per-unit: 2 }
+  WAXED_COPPER_DOOR: { price: 32.0, category: BLOCKS, xp-per-unit: 10 }
+  WAXED_EXPOSED_COPPER_DOOR: { price: 24.0, category: BLOCKS, xp-per-unit: 8 }
+  WAXED_WEATHERED_COPPER_DOOR: { price: 16.0, category: BLOCKS, xp-per-unit: 5 }
+  WAXED_OXIDIZED_COPPER_DOOR: { price: 10.0, category: BLOCKS, xp-per-unit: 3 }
+
+  # - Ores (silk-touch value ~ the drop). Deepslate variants same.
+  COAL_ORE: { price: 8.0, category: ORES, xp-per-unit: 3 }
+  DEEPSLATE_COAL_ORE: { price: 8.0, category: ORES, xp-per-unit: 3 }
+  IRON_ORE: { price: 14.0, category: ORES, xp-per-unit: 5 }
+  DEEPSLATE_IRON_ORE: { price: 14.0, category: ORES, xp-per-unit: 5 }
+  COPPER_ORE: { price: 8.0, category: ORES, xp-per-unit: 3 }
+  DEEPSLATE_COPPER_ORE: { price: 8.0, category: ORES, xp-per-unit: 3 }
+  GOLD_ORE: { price: 35.0, category: ORES, xp-per-unit: 12 }
+  DEEPSLATE_GOLD_ORE: { price: 35.0, category: ORES, xp-per-unit: 12 }
+  NETHER_GOLD_ORE: { price: 8.0, category: ORES, xp-per-unit: 3 }
+  REDSTONE_ORE: { price: 24.0, category: ORES, xp-per-unit: 8 }
+  DEEPSLATE_REDSTONE_ORE: { price: 24.0, category: ORES, xp-per-unit: 8 }
+  LAPIS_ORE: { price: 80.0, category: ORES, xp-per-unit: 27 }
+  DEEPSLATE_LAPIS_ORE: { price: 80.0, category: ORES, xp-per-unit: 27 }
+  DIAMOND_ORE: { price: 250.0, category: ORES, xp-per-unit: 83 }
+  DEEPSLATE_DIAMOND_ORE: { price: 250.0, category: ORES, xp-per-unit: 83 }
+  EMERALD_ORE: { price: 80.0, category: ORES, xp-per-unit: 27 }
+  DEEPSLATE_EMERALD_ORE: { price: 80.0, category: ORES, xp-per-unit: 27 }
+  NETHER_QUARTZ_ORE: { price: 12.0, category: ORES, xp-per-unit: 4 }
+
+  # - Infested blocks (silverfish; low value)
+  INFESTED_STONE: { price: 4.0, category: BLOCKS, xp-per-unit: 1 }
+  INFESTED_COBBLESTONE: { price: 3.0, category: BLOCKS, xp-per-unit: 1 }
+  INFESTED_STONE_BRICKS: { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+  INFESTED_MOSSY_STONE_BRICKS: { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+  INFESTED_CRACKED_STONE_BRICKS:
+    { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+  INFESTED_CHISELED_STONE_BRICKS:
+    { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+  INFESTED_DEEPSLATE: { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+
+  # - Mob heads (charged-creeper / boss drops)
+  SKELETON_SKULL: { price: 150.0, category: MOB_DROPS, xp-per-unit: 50 }
+  WITHER_SKELETON_SKULL: { price: 300.0, category: MOB_DROPS, xp-per-unit: 100 }
+  ZOMBIE_HEAD: { price: 150.0, category: MOB_DROPS, xp-per-unit: 50 }
+  CREEPER_HEAD: { price: 150.0, category: MOB_DROPS, xp-per-unit: 50 }
+  PIGLIN_HEAD: { price: 150.0, category: MOB_DROPS, xp-per-unit: 50 }
+  DRAGON_HEAD: { price: 2000.0, category: MOB_DROPS, xp-per-unit: 666 }
+
+  # - Chicken-variant eggs
+  BLUE_EGG: { price: 4.0, category: MOB_DROPS, xp-per-unit: 1 }
+  BROWN_EGG: { price: 4.0, category: MOB_DROPS, xp-per-unit: 1 }
+
+  # - Froglights
+  OCHRE_FROGLIGHT: { price: 100.0, category: BLOCKS, xp-per-unit: 33 }
+  VERDANT_FROGLIGHT: { price: 100.0, category: BLOCKS, xp-per-unit: 33 }
+  PEARLESCENT_FROGLIGHT: { price: 100.0, category: BLOCKS, xp-per-unit: 33 }
+
+  # - Functional / decorative blocks
+  TNT: { price: 60.0, category: BLOCKS, xp-per-unit: 20 }
+  CRAFTER: { price: 120.0, category: BLOCKS, xp-per-unit: 40 }
+  # Craft cost on this server: 8 chiseled stone bricks ($96) + 1 iron ingot ($18)
+  # = $114. Kept below that so crafting can never net a profit (was $8000 — a ~70x flip).
+  LODESTONE: { price: 100.0, category: BLOCKS, xp-per-unit: 33 }
+  SCAFFOLDING: { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+  RESPAWN_ANCHOR: { price: 300.0, category: BLOCKS, xp-per-unit: 100 }
+  CARVED_PUMPKIN: { price: 16.0, category: BLOCKS, xp-per-unit: 5 }
+  DRIED_GHAST: { price: 80.0, category: BLOCKS, xp-per-unit: 26 }
+  TURTLE_EGG: { price: 100.0, category: BLOCKS, xp-per-unit: 33 }
+  CLAY: { price: 16.0, category: NATURAL_ITEMS, xp-per-unit: 5 }
+
+  # END_ROD: priced LOW because the server shop sells it for $24
+  # (sell must stay under 24 / 3.3 to avoid buy->sell arbitrage).
+  END_ROD: { price: 6.0, category: BLOCKS, xp-per-unit: 2 }
+
+  # SHULKER_BOX (uncolored): matches the coloured boxes ($600).
+  # Its server-shop buy price is raised to $2000 in shop.yml to stay exploit-safe.
+  SHULKER_BOX: { price: 600.0, category: BLOCKS, xp-per-unit: 200 }
+
+  # - Naturals / foliage
+  SNOW: { price: 2.0, category: NATURAL_ITEMS, xp-per-unit: 1 }
+  PALE_MOSS_BLOCK: { price: 8.0, category: NATURAL_ITEMS, xp-per-unit: 2 }
+  PALE_MOSS_CARPET: { price: 4.0, category: NATURAL_ITEMS, xp-per-unit: 1 }
+  FROGSPAWN: { price: 20.0, category: NATURAL_ITEMS, xp-per-unit: 6 }
+  HANGING_ROOTS: { price: 4.0, category: NATURAL_ITEMS, xp-per-unit: 1 }
+  CHORUS_PLANT: { price: 20.0, category: NATURAL_ITEMS, xp-per-unit: 6 }
+  BIG_DRIPLEAF: { price: 8.0, category: NATURAL_ITEMS, xp-per-unit: 2 }
+  SMALL_DRIPLEAF: { price: 8.0, category: NATURAL_ITEMS, xp-per-unit: 2 }
+  MANGROVE_ROOTS: { price: 6.0, category: NATURAL_ITEMS, xp-per-unit: 2 }
+  MUDDY_MANGROVE_ROOTS: { price: 6.0, category: NATURAL_ITEMS, xp-per-unit: 2 }
+  PINK_PETALS: { price: 4.0, category: NATURAL_ITEMS, xp-per-unit: 1 }
+  # 1.21.5+ foliage (skipped on older versions)
+  TALL_DRY_GRASS: { price: 3.0, category: NATURAL_ITEMS, xp-per-unit: 1 }
+  SHORT_DRY_GRASS: { price: 2.0, category: NATURAL_ITEMS, xp-per-unit: 1 }
+  FIREFLY_BUSH: { price: 8.0, category: NATURAL_ITEMS, xp-per-unit: 2 }
+  WILDFLOWERS: { price: 4.0, category: NATURAL_ITEMS, xp-per-unit: 1 }
+  LEAF_LITTER: { price: 2.0, category: NATURAL_ITEMS, xp-per-unit: 1 }
+  BUSH: { price: 2.0, category: NATURAL_ITEMS, xp-per-unit: 1 }
+
+  # - Animal / fish buckets (bucket=$40 + contents)
+  COD_BUCKET: { price: 52.0, category: FISH, xp-per-unit: 17 }
+  SALMON_BUCKET: { price: 56.0, category: FISH, xp-per-unit: 18 }
+  TROPICAL_FISH_BUCKET: { price: 70.0, category: FISH, xp-per-unit: 23 }
+  PUFFERFISH_BUCKET: { price: 80.0, category: FISH, xp-per-unit: 26 }
+  AXOLOTL_BUCKET: { price: 100.0, category: FISH, xp-per-unit: 33 }
+  TADPOLE_BUCKET: { price: 50.0, category: FISH, xp-per-unit: 16 }
+
+  # - Coloured bundles (16) — match the plain BUNDLE ($18)
+  WHITE_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  ORANGE_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  MAGENTA_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  LIGHT_BLUE_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  YELLOW_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  LIME_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  PINK_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  GRAY_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  LIGHT_GRAY_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  CYAN_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  PURPLE_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  BLUE_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  BROWN_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  GREEN_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  RED_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  BLACK_BUNDLE: { price: 18.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+
+  # - Tools / utility
+  BRUSH: { price: 20.0, category: ARMOR_AND_TOOLS, xp-per-unit: 6 }
+  BOWL: { price: 2.0, category: ARMOR_AND_TOOLS, xp-per-unit: 1 }
+  GOLDEN_SPEAR: { price: 70.0, category: ARMOR_AND_TOOLS, xp-per-unit: 23 }
+
+  # - Food
+  MUSHROOM_STEW: { price: 20.0, category: CROPS, xp-per-unit: 7 }
+
+  # - Lightning rod oxidation + waxed variants (base LIGHTNING_ROD=$28)
+  EXPOSED_LIGHTNING_ROD: { price: 22.0, category: BLOCKS, xp-per-unit: 7 }
+  WEATHERED_LIGHTNING_ROD: { price: 16.0, category: BLOCKS, xp-per-unit: 5 }
+  OXIDIZED_LIGHTNING_ROD: { price: 10.0, category: BLOCKS, xp-per-unit: 3 }
+  WAXED_LIGHTNING_ROD: { price: 30.0, category: BLOCKS, xp-per-unit: 10 }
+  WAXED_EXPOSED_LIGHTNING_ROD: { price: 24.0, category: BLOCKS, xp-per-unit: 8 }
+  WAXED_WEATHERED_LIGHTNING_ROD:
+    { price: 18.0, category: BLOCKS, xp-per-unit: 6 }
+  WAXED_OXIDIZED_LIGHTNING_ROD:
+    { price: 12.0, category: BLOCKS, xp-per-unit: 4 }
+
+  # - Horse armor (copper + netherite)
+  COPPER_HORSE_ARMOR:
+    { price: 80.0, category: ARMOR_AND_TOOLS, xp-per-unit: 26 }
+  NETHERITE_HORSE_ARMOR:
+    { price: 2000.0, category: ARMOR_AND_TOOLS, xp-per-unit: 666 }
+
+  # - Nautilus armor (verify Material names against the load log)
+  NAUTILUS_HELMET: { price: 400.0, category: ARMOR_AND_TOOLS, xp-per-unit: 133 }
+  NAUTILUS_CHESTPLATE:
+    { price: 640.0, category: ARMOR_AND_TOOLS, xp-per-unit: 213 }
+  NAUTILUS_LEGGINGS:
+    { price: 560.0, category: ARMOR_AND_TOOLS, xp-per-unit: 186 }
+  NAUTILUS_BOOTS: { price: 320.0, category: ARMOR_AND_TOOLS, xp-per-unit: 106 }

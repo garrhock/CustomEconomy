@@ -1,0 +1,196 @@
+# ─────────────────────────────────────────────
+#  CustomEconomy — Main Configuration
+# ─────────────────────────────────────────────
+
+database:
+  type: SQLITE          # SQLITE or MYSQL
+  sqlite:
+    file: economy.db
+  mysql:
+    host: localhost
+    port: 3306
+    database: customeconomy
+    username: root
+    password: ''
+    pool-size: 10
+    connection-timeout: 5000
+  # Transactions are written in async batches — flush every N ms
+  transaction-batch-interval-ms: 2000
+
+economy:
+  # Currency display
+  currency-symbol: '$'
+  currency-name: 'Dollar'
+  currency-name-plural: 'Dollars'
+  # Format: FULL ($1,234,567.89), COMPACT ($1.23M), SHORT ($1M)
+  display-format: COMPACT
+  decimal-places: 2
+
+# ─────────────────────────────────────────────
+#  Admin Shop
+# ─────────────────────────────────────────────
+shop:
+  # Shop buy prices are computed as: sell_price × buy-price-markup
+  # Items with an explicit buy-price in shop.yml ignore this value.
+  # Must stay above max-multiplier (3.0) × safety-margin (1.1) = 3.3
+  buy-price-markup: 3.3
+  # Purchases whose total cost exceeds this show a Yes/No confirmation first.
+  confirm-above: 10000.0
+
+sell:
+  # Broadcast to the player on successful sell
+  message-enabled: true
+  # Minimum earnings to show a breakdown (suppress tiny sells)
+  breakdown-threshold: 0.01
+  # If true, /sell inventory skips the hotbar
+  skip-hotbar: false
+
+# ─────────────────────────────────────────────
+#  Multiplier System  (Phase 2)
+# ─────────────────────────────────────────────
+multipliers:
+  enabled: true
+  # XP required for level n = n^2 * xp-scale
+  xp-scale: 100
+  # Multiplier per level (1.0 + level * step-per-level)
+  step-per-level: 0.05
+  # Hard cap (3.0 = 300%)
+  max-multiplier: 3.0
+  max-level: 40
+
+# ─────────────────────────────────────────────
+#  Dynamic Market  (Phase 2)
+# ─────────────────────────────────────────────
+# ─────────────────────────────────────────────
+#  Player Shop  (player-to-player listings)
+# ─────────────────────────────────────────────
+player-shop:
+  max-listings: 10    # Max active listings (sell + buy combined) per player
+
+market:
+  enabled: true             # Set true to activate dynamic pricing
+  tick-interval-seconds: 300    # How often prices recalculate (default 5 min)
+  rolling-window-hours: 24      # Transaction history window for volume calculation
+  baseline-volume: 100          # Units sold/bought per window = maximum price pressure
+                                # (only used when adaptive-depth is disabled)
+  default-volatility: 0.20      # How aggressively non-items.yml items respond to volume
+  default-recovery: 0.05        # How fast prices recover toward base each tick
+  # Market depth scales with population: baseline = max(min-participants,
+  # unique sellers in the window) × baseline-per-seller. Small player counts
+  # get a stable market; growth makes it progressively more player-driven.
+  adaptive-depth:
+    enabled: true
+    baseline-per-seller: 50
+    min-participants: 10
+  # No item may fall more than max-daily-drop below its UTC-day-start price —
+  # turns dump crashes into gradual declines.
+  circuit-breaker:
+    enabled: true
+    max-daily-drop: 0.15
+
+# ─────────────────────────────────────────────
+#  Autosell  (Phase 3)
+# ─────────────────────────────────────────────
+autosell:
+  enabled: false
+  default-interval-seconds: 30
+  tiers:
+    - { permission: customeco.autosell.t1, interval: 60 }
+    - { permission: customeco.autosell.t2, interval: 30 }
+    - { permission: customeco.autosell.t3, interval: 15 }
+    - { permission: customeco.autosell.t4, interval: 5 }
+
+# ─────────────────────────────────────────────
+#  Shards — the gated second currency
+# ─────────────────────────────────────────────
+# Money inflates with the season; shards don't. Everything that paces
+# progression (spawners, later: vault rows, KOTH stakes) is priced in shards.
+# Shards enter the economy ONLY through: PvP kills, votes/crates/events
+# (via `shardsadmin give` from console), and nothing else.
+#
+# Shard balances live in the same database as the rest of the economy — the
+# `database:` block at the top of this file covers them too. Balances from the
+# old standalone Shards plugin (plugins/Shards/shards.db) are imported once,
+# automatically, on the first start after the merge.
+shards:
+  earn:
+    kill:
+      # Shards paid to the killer on a PvP kill. Kills are otherwise unpaid
+      # by any plugin on this server, so this stacks with nothing.
+      amount: 10
+      # Minutes before killing the SAME victim pays again (0 = no cooldown).
+      # This is collusion-minting protection (alt/friend kill-trading prints
+      # currency from nothing), not an activity throttle.
+      same-victim-cooldown-minutes: 30
+
+  display:
+    symbol: "⧫"
+
+  # Action-bar + sound feedback whenever shards are earned (kills, votes, admin give) —
+  # mirrors CustomEconomy's sell feedback so both currencies feel the same.
+  feedback:
+    sound: BLOCK_AMETHYST_BLOCK_CHIME
+    volume: 1.0
+    pitch: 1.4
+
+  # ─────────────────────────────────────────────
+  #  Shard Shop (/shardshop)
+  # ─────────────────────────────────────────────
+  # Purchases run the configured console commands with %player% replaced.
+  # Verify the SilkSpawners give syntax on your build before launch
+  # (`/silkspawners help` — some builds use the entity name, some the id).
+  # Spawner PLACEMENT still requires Warrior rank (silkspawners.place.* node),
+  # so buying early is saving, not skipping, the ladder.
+  shop:
+    title: "⧫ Shard Shop"
+    rows: 3
+    entries:
+      chicken:
+        slot: 10
+        icon: SPAWNER
+        name: "<white>Chicken Spawner</white>"
+        cost: 250
+        commands:
+          - "silkspawners give %player% CHICKEN 1"
+      pig:
+        slot: 11
+        icon: SPAWNER
+        name: "<white>Pig Spawner</white>"
+        cost: 300
+        commands:
+          - "silkspawners give %player% PIG 1"
+      cow:
+        slot: 12
+        icon: SPAWNER
+        name: "<white>Cow Spawner</white>"
+        cost: 300
+        commands:
+          - "silkspawners give %player% COW 1"
+      zombie:
+        slot: 13
+        icon: SPAWNER
+        name: "<green>Zombie Spawner</green>"
+        cost: 400
+        commands:
+          - "silkspawners give %player% ZOMBIE 1"
+      skeleton:
+        slot: 14
+        icon: SPAWNER
+        name: "<gray>Skeleton Spawner</gray>"
+        cost: 500
+        commands:
+          - "silkspawners give %player% SKELETON 1"
+      blaze:
+        slot: 15
+        icon: SPAWNER
+        name: "<gold>Blaze Spawner</gold>"
+        cost: 1200
+        commands:
+          - "silkspawners give %player% BLAZE 1"
+      iron-golem:
+        slot: 16
+        icon: SPAWNER
+        name: "<aqua>Iron Golem Spawner</aqua>"
+        cost: 3000
+        commands:
+          - "silkspawners give %player% IRON_GOLEM 1"

@@ -1,0 +1,26 @@
+# Maven build output
+target/
+dependency-reduced-pom.xml
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Server runtime output from local testing, not sources.
+# Root-anchored so src/main/resources/*.yml stays tracked.
+/world/
+/logs/
+/*.db
+/*.db-shm
+/*.db-wal
+/config.yml
+/items.yml
+/shop.yml

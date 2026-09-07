@@ -1,0 +1,132 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  CustomEconomy — Admin Shop Sections
+#
+#  buy-price rules:
+#    • If omitted, the buy price is computed automatically:
+#        buy_price = sell_price (from items.yml) × shop.buy-price-markup
+#      This keeps buy and sell prices in sync — change the sell price in
+#      items.yml and the shop buy price updates on the next /ecoadmin reload.
+#    • Set buy-price explicitly only when:
+#        (a) the item has no sell price in items.yml, OR
+#        (b) you intentionally want to charge a premium above the markup.
+#    • Items with no sell price and no buy-price are skipped with a warning.
+#
+#  Fields per item:
+#    material     - Bukkit Material name (required)
+#    display-name - label shown in the GUI (optional, defaults to material name)
+#    quantity     - stack size per click (optional, defaults to 1)
+#    buy-price    - explicit price override (optional, see rules above)
+# ─────────────────────────────────────────────────────────────────────────────
+
+sections:
+
+  overworld:
+    display-name: "Overworld"
+    icon: GRASS_BLOCK
+    items:
+      - material: WATER_BUCKET
+        display-name: "Water Bucket"
+      - material: STONE_BRICKS
+        display-name: "Stone Bricks"
+      - material: OAK_LOG
+        display-name: "Oak Log"
+      - material: COBBLESTONE
+        display-name: "Cobblestone"
+      - material: DIRT
+        display-name: "Dirt"
+      - material: SAND
+        display-name: "Sand"
+      - material: GRAVEL
+        display-name: "Gravel"
+
+  nether:
+    display-name: "Nether"
+    icon: NETHERRACK
+    items:
+      - material: BLAZE_ROD
+        display-name: "Blaze Rod"
+      - material: NETHER_WART
+        display-name: "Nether Wart"
+      - material: GLOWSTONE
+        display-name: "Glowstone"
+      - material: MAGMA_CREAM
+        display-name: "Magma Cream"
+      - material: GHAST_TEAR
+        display-name: "Ghast Tear"
+      - material: QUARTZ
+        display-name: "Nether Quartz"
+      - material: SOUL_SAND
+        display-name: "Soul Sand"
+      - material: MAGMA_BLOCK
+        display-name: "Magma Block"
+      - material: OBSIDIAN
+        display-name: "Obsidian"
+
+  end:
+    display-name: "End"
+    icon: END_STONE
+    items:
+      - material: ENDER_CHEST
+        display-name: "Ender Chest"
+        buy-price: 500.0
+      - material: ENDER_PEARL
+        display-name: "Ender Pearl"
+      - material: END_STONE
+        display-name: "End Stone"
+        quantity: 16
+      - material: DRAGON_BREATH
+        display-name: "Dragon's Breath"
+      - material: END_ROD
+        display-name: "End Rod"
+        buy-price: 24.0
+      - material: CHORUS_FRUIT
+        display-name: "Chorus Fruit"
+      - material: POPPED_CHORUS_FRUIT
+        display-name: "Popped Chorus Fruit"
+      - material: SHULKER_SHELL
+        display-name: "Shulker Shell"
+      - material: SHULKER_BOX
+        display-name: "Shulker Box"
+        buy-price: 2000.0   # raised: must stay above sell ($600) × max-mult (3) × 1.1
+
+  gear:
+    display-name: "Gear"
+    icon: DIAMOND_SWORD
+    items:
+      - material: SMOOTH_STONE
+        display-name: "Smooth Stone"
+      - material: GOLDEN_CARROT
+        display-name: "Golden Carrot"
+      - material: GLOWSTONE
+        display-name: "Glowstone"
+      - material: TOTEM_OF_UNDYING
+        display-name: "Totem of Undying"
+      - material: ENDER_PEARL
+        display-name: "Ender Pearl"
+      - material: GOLDEN_APPLE
+        display-name: "Golden Apple"
+      - material: EXPERIENCE_BOTTLE
+        display-name: "Bottle o' Enchanting"
+
+  food:
+    display-name: "Food"
+    icon: COOKED_BEEF
+    items:
+      - material: POTATO
+        display-name: "Potato"
+      - material: SWEET_BERRIES
+        display-name: "Sweet Berries"
+      - material: MELON_SLICE
+        display-name: "Melon Slice"
+      - material: CARROT
+        display-name: "Carrot"
+      - material: APPLE
+        display-name: "Apple"
+      - material: COOKED_CHICKEN
+        display-name: "Cooked Chicken"
+      - material: COOKED_BEEF
+        display-name: "Steak"
+      - material: GOLDEN_CARROT
+        display-name: "Golden Carrot"
+      - material: GOLDEN_APPLE
+        display-name: "Golden Apple"

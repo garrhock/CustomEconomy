@@ -1,0 +1,62 @@
+name: CustomEconomy
+version: '2.1.0'
+main: dev.smpeconomy.CustomEconomy
+api-version: '1.21.2'
+description: Production-grade SMP economy - money, shards, player shops, and progression
+authors: [ SMP ]
+website: ''
+
+softdepend:
+  - Vault
+  - EssentialsX
+  - PlaceholderAPI
+  - LuckPerms
+  - EconomyShopGUI
+  - QuickShop-Hikari
+  - ItemsAdder
+
+# Money commands (/sell, /worth, /worths, /shop, /playershop, /multi, /ecoadmin)
+# register through Paper's Brigadier lifecycle in CustomEconomy#onEnable. The
+# shard commands below predate the merge and still use the classic executor path.
+commands:
+  shards:
+    description: View your shard balance
+    usage: /shards
+  shardsadmin:
+    description: Shards admin - give/take/set are the integration surface for votes, crates, and events
+    usage: /shardsadmin <give|take|set|reload> [player] [amount]
+    permission: shards.admin
+  shardshop:
+    description: Open the shard shop
+    usage: /shardshop
+
+permissions:
+  customeco.sell:
+    description: Use /sell commands
+    default: true
+  customeco.worth:
+    description: Use /worth command
+    default: true
+  customeco.shop:
+    description: Use /shop command
+    default: true
+  customeco.shop.listings.unlimited:
+    description: Allow an unlimited number of active player-shop listings
+    default: false
+  # Per-rank limits use customeco.shop.listings.<number> (e.g. customeco.shop.listings.20).
+  # The highest numeric node a player holds wins; no node falls back to player-shop.max-listings.
+  customeco.autosell:
+    description: Use /autosell command
+    default: op
+  customeco.admin:
+    description: Access /ecoadmin commands
+    default: op
+  customeco.admin.market:
+    description: Manage market prices
+    default: op
+  shards.use:
+    description: Use /shards
+    default: true
+  shards.admin:
+    description: Access /shardsadmin
+    default: op
