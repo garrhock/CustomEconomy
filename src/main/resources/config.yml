@@ -112,6 +112,22 @@ autosell:
 # `database:` block at the top of this file covers them too. Balances from the
 # old standalone Shards plugin (plugins/Shards/shards.db) are imported once,
 # automatically, on the first start after the merge.
+# ─────────────────────────────────────────────
+#  Messages
+# ─────────────────────────────────────────────
+# Text lives in messages/<locale>.yml. Only en.yml ships; add de.yml, fr.yml and so
+# on and they are picked up automatically. A translation may supply only some keys —
+# anything missing falls back to the default locale per key, not per file.
+messages:
+  default-locale: en
+  # Render in each player's own client language when a file for it exists.
+  # Inventory titles always use default-locale: Minecraft fixes a title when the
+  # window is created, before the plugin knows who is opening it.
+  per-player-locale: true
+  # Refuse to enable if a message file fails validation. Useful in CI or staging;
+  # leave off in production, where a bad key should degrade rather than stop the server.
+  strict: false
+
 shards:
   earn:
     kill:

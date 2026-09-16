@@ -1,5 +1,10 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+import dev.smpeconomy.message.MessageKey;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.model.ItemCategory;
 import dev.smpeconomy.service.MultiplierService;
@@ -48,8 +53,7 @@ public final class MultiCategoryMenu extends BaseGui {
     private final ItemCategory category;
 
     public MultiCategoryMenu(MultiplierService multiplierService, UUID playerUuid, ItemCategory category) {
-        super(54, Component.text(category.getDisplayName() + " Progress", GRAY)
-                .decoration(TextDecoration.BOLD, true));
+        super(54, CoreKeys.MULTI_CATEGORY_TITLE, TokenBag.of().put("category", category.getDisplayName()));
         this.multiplierService = multiplierService;
         this.playerUuid = playerUuid;
         this.category = category;
@@ -69,46 +73,34 @@ public final class MultiCategoryMenu extends BaseGui {
             int slot = PATH_SLOTS[i];
             int stage = i + 1;
             double stageMult = 1.0 + stage * 0.1;
-
             Material mat;
-            TextColor nameColor;
+            MessageKey stageKey;
             List<Component> lore = new ArrayList<>();
             lore.add(Component.empty());
 
             if (i < level) {
                 mat = Material.LIME_STAINED_GLASS_PANE;
-                nameColor = GREEN;
-                lore.add(Component.text("  Multiplier: ", GRAY)
-                        .append(Component.text(String.format("%.1fx", stageMult), GREEN))
-                        .decoration(TextDecoration.ITALIC, false));
-                lore.add(Component.text("  ✔ Complete", GREEN)
-                        .decoration(TextDecoration.ITALIC, false));
+                stageKey = CoreKeys.MULTI_CATEGORY_STAGE_COMPLETE;
+                lore.add(messages.lore(CoreKeys.MULTI_CATEGORY_MULT_COMPLETE, TokenBag.of().put("multiplier", String.format("%.1fx", stageMult))));
+                lore.add(messages.lore(CoreKeys.MULTI_CATEGORY_COMPLETE));
             } else if (i == level && level < MultiplierService.MAX_LEVEL) {
                 mat = Material.YELLOW_STAINED_GLASS_PANE;
-                nameColor = YELLOW;
+                stageKey = CoreKeys.MULTI_CATEGORY_STAGE_CURRENT;
                 long total = xpIn + xpTo;
                 double pct = total == 0 ? 0.0 : (xpIn * 100.0 / total);
-                lore.add(Component.text("  Multiplier: ", GRAY)
-                        .append(Component.text(String.format("%.1fx", stageMult), YELLOW))
-                        .decoration(TextDecoration.ITALIC, false));
-                lore.add(Component.text(String.format("  $%s / $%s  (%.1f%%)",
-                        formatShort(xpIn), formatShort(total), pct), WHITE)
-                        .decoration(TextDecoration.ITALIC, false));
+                lore.add(messages.lore(CoreKeys.MULTI_CATEGORY_MULT_CURRENT, TokenBag.of().put("multiplier", String.format("%.1fx", stageMult))));
+                lore.add(messages.lore(CoreKeys.MULTI_CATEGORY_PROGRESS, TokenBag.of().put("current", formatShort(xpIn)).put("total", formatShort(total)).put("percent", String.format("%.1f", pct))));
             } else {
                 mat = Material.WHITE_STAINED_GLASS_PANE;
-                nameColor = GRAY;
-                lore.add(Component.text("  Multiplier: ", GRAY)
-                        .append(Component.text(String.format("%.1fx", stageMult), GRAY))
-                        .decoration(TextDecoration.ITALIC, false));
-                lore.add(Component.text("  🔒 Locked", GRAY)
-                        .decoration(TextDecoration.ITALIC, false));
+                stageKey = CoreKeys.MULTI_CATEGORY_STAGE_LOCKED;
+                lore.add(messages.lore(CoreKeys.MULTI_CATEGORY_MULT_LOCKED, TokenBag.of().put("multiplier", String.format("%.1fx", stageMult))));
+                lore.add(messages.lore(CoreKeys.MULTI_CATEGORY_LOCKED));
             }
             lore.add(Component.empty());
 
             ItemStack pane = new ItemStack(mat);
             ItemMeta meta = pane.getItemMeta();
-            meta.displayName(Component.text("Stage " + stage, nameColor)
-                    .decoration(TextDecoration.ITALIC, false));
+            meta.displayName(messages.lore(stageKey, TokenBag.of().put("stage", stage)));
             meta.lore(lore);
             pane.setItemMeta(meta);
             inventory.setItem(slot, pane);
@@ -120,17 +112,14 @@ public final class MultiCategoryMenu extends BaseGui {
             iconMat = Material.CHEST;
         ItemStack icon = new ItemStack(iconMat);
         ItemMeta iconMeta = icon.getItemMeta();
-        iconMeta.displayName(Component.text(category.getDisplayName(), GOLD)
-                .decoration(TextDecoration.ITALIC, false));
+        iconMeta.displayName(messages.lore(CoreKeys.MULTI_CATEGORY_ICON_NAME, TokenBag.of().put("category", category.getDisplayName())));
         double curMult = multiplierService.getMultiplier(playerUuid, category);
         iconMeta.lore(List.of(
                 Component.empty(),
-                Component.text("  Current Multiplier: ", GRAY)
-                        .append(Component.text(String.format("%.1fx", curMult),
-                                level >= MultiplierService.MAX_LEVEL ? GREEN : YELLOW))
-                        .decoration(TextDecoration.ITALIC, false),
-                Component.text("  Level: " + level + " / " + MultiplierService.MAX_LEVEL, GRAY)
-                        .decoration(TextDecoration.ITALIC, false),
+                messages.lore(level >= MultiplierService.MAX_LEVEL
+                                ? CoreKeys.MULTI_CATEGORY_CURRENT_MULT_MAX
+                                : CoreKeys.MULTI_CATEGORY_CURRENT_MULT, TokenBag.of().put("multiplier", String.format("%.1fx", curMult))),
+                messages.lore(CoreKeys.MULTI_CATEGORY_LEVEL, TokenBag.of().put("level", level).put("max", MultiplierService.MAX_LEVEL)),
                 Component.empty()));
         icon.setItemMeta(iconMeta);
         inventory.setItem(1, icon);
@@ -138,7 +127,7 @@ public final class MultiCategoryMenu extends BaseGui {
         // Slot 45: red back button
         ItemStack back = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         ItemMeta backMeta = back.getItemMeta();
-        backMeta.displayName(Component.text("Back", RED).decoration(TextDecoration.ITALIC, false));
+        backMeta.displayName(messages.lore(CoreKeys.MULTI_CATEGORY_BACK));
         back.setItemMeta(backMeta);
         inventory.setItem(45, back);
         onClick(45, event -> {

@@ -1,5 +1,9 @@
 package dev.smpeconomy.service;
 
+import dev.smpeconomy.message.Messages;
+
+import dev.smpeconomy.message.TokenBag;
+
 import dev.smpeconomy.api.event.PlayerSellEvent;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.database.repository.TransactionRepository;
@@ -43,6 +47,7 @@ public final class SellService {
     private static final TextColor GREEN = TextColor.color(0x55FF55);
 
     private final WorthService worth;
+    private final Messages messages;
     private final VaultHook vault;
     private final TransactionRepository txRepo;
     private final ConfigManager config;
@@ -51,7 +56,8 @@ public final class SellService {
 
     public SellService(WorthService worth, VaultHook vault,
             TransactionRepository txRepo, ConfigManager config,
-            MultiplierService multiplierService, MarketService marketService) {
+            MultiplierService multiplierService, MarketService marketService, Messages messages) {
+        this.messages = messages;
         this.worth = worth;
         this.vault = vault;
         this.txRepo = txRepo;
@@ -94,6 +100,11 @@ public final class SellService {
      * Unsellable items are returned in {@link SellResult#getReturned()}.
      */
     public SellResult sellExternal(Player player, ItemStack[] items) {
+        return sellExternal(player, items, Transaction.Source.SELL_GUI);
+    }
+
+    /** Same, but attributed to a specific source. */
+    public SellResult sellExternal(Player player, ItemStack[] items, Transaction.Source source) {
         if (!vault.isHooked()) {
             try {
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
@@ -157,7 +168,7 @@ public final class SellService {
                     0, player.getUniqueId(), e.itemWorth().getKey(),
                     e.qty(), e.priceEach(), e.appliedMult(),
                     e.qty() * e.priceEach(),
-                    Transaction.Source.SELL_GUI, now));
+                    source, now));
         }
 
         SellResult result = rb.build();
@@ -195,11 +206,7 @@ public final class SellService {
                     player.getUniqueId(), xpEntry.getKey(), xpEntry.getValue());
             if (newLevel >= 0) {
                 double newMult = MultiplierService.multiplierForLevel(newLevel);
-                player.sendMessage(
-                        Component.text("★ ", GOLD)
-                                .append(Component.text(xpEntry.getKey().getDisplayName() + " Level Up! ", GREEN))
-                                .append(Component.text("Level " + newLevel + " — Sell bonus: "
-                                        + FormatUtil.formatMultiplier(newMult), GOLD)));
+                player.sendMessage(messages.get(dev.smpeconomy.message.CoreKeys.SELL_LEVEL_UP, TokenBag.of().put("category", xpEntry.getKey().getDisplayName()).put("level", newLevel).put("multiplier", FormatUtil.formatMultiplier(newMult))));
             }
         }
 
@@ -326,11 +333,7 @@ public final class SellService {
                     player.getUniqueId(), xpEntry.getKey(), xpEntry.getValue());
             if (newLevel >= 0) {
                 double newMult = MultiplierService.multiplierForLevel(newLevel);
-                player.sendMessage(
-                        Component.text("★ ", GOLD)
-                                .append(Component.text(xpEntry.getKey().getDisplayName() + " Level Up! ", GREEN))
-                                .append(Component.text("Level " + newLevel + " — Sell bonus: "
-                                        + FormatUtil.formatMultiplier(newMult), GOLD)));
+                player.sendMessage(messages.get(dev.smpeconomy.message.CoreKeys.SELL_LEVEL_UP, TokenBag.of().put("category", xpEntry.getKey().getDisplayName()).put("level", newLevel).put("multiplier", FormatUtil.formatMultiplier(newMult))));
             }
         }
 

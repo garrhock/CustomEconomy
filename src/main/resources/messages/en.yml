@@ -1,0 +1,352 @@
+# Shards messages — MiniMessage. Tokens: {amount} {balance} {player} {victim}
+prefix: "<dark_gray>[<aqua>⧫</aqua>]</dark_gray> "
+balance: "<gray>Shards</gray> <dark_gray>»</dark_gray> <aqua>{balance} ⧫</aqua>"
+actionbar-kill: "<aqua><bold>+{amount} ⧫</bold></aqua> <dark_gray>—</dark_gray> <white>{victim}</white>"
+actionbar-earned: "<aqua><bold>+{amount} ⧫</bold></aqua>"
+actionbar-cooldown: "<gray>no shards — you killed {victim} too recently</gray>"
+admin-given: "<green>Gave <aqua>{amount} ⧫</aqua> to {player}. New balance: <aqua>{balance} ⧫</aqua>"
+admin-taken: "<green>Took <aqua>{amount} ⧫</aqua> from {player}. New balance: <aqua>{balance} ⧫</aqua>"
+admin-set: "<green>Set {player} to <aqua>{balance} ⧫</aqua>"
+admin-insufficient: "<red>{player} only has <aqua>{balance} ⧫</aqua>"
+admin-usage: "<yellow>/shardsadmin <give|take|set|reload> <player> <amount>"
+admin-player-online: "<red>Player must be online: {player}"
+reloaded: "<green>Shards config + messages reloaded."
+player-only: "<red>Only players can use this command."
+shop-confirm: "<yellow>Buy</yellow> {item} <yellow>for <aqua>{cost} ⧫</aqua>? Click it again to confirm.</yellow>"
+shop-bought: "<green>Bought</green> {item} <green>for <aqua>{cost} ⧫</aqua> — balance: <aqua>{balance} ⧫</aqua>"
+shop-insufficient: "<red>You need <aqua>{cost} ⧫</aqua> — you have <aqua>{balance} ⧫</aqua>"
+
+# ─────────────────────────────────────────────
+#  Core economy
+# ─────────────────────────────────────────────
+# MiniMessage format. Tokens are written {like-this}.
+# Values are quoted because MiniMessage text often contains ':' which YAML
+# would otherwise read as a key.
+general:
+  players-only: '<red>Players only.'
+
+playershop:
+  sell:
+    hold-item: '<red>Hold the item you want to sell.'
+    created: '<green>Sell listing created: {quantity}x {item} @ {price} each.'
+    not-enough-items: '<red>You don''t have enough of that item.'
+    max-listings: '<red>You''ve reached your maximum active listings.'
+    max-listings-capped: '<red>You''ve reached your maximum of {cap} active listings.'
+    price-too-low: '<red>Price too low - minimum is {minimum}.'
+    failed: '<red>Couldn''t create that listing.'
+  menu:
+    title: '<gray><bold>Player Shop</bold></gray>'
+    own-listing: '<red>You can''t trade with your own listing.</red>'
+    out-of-stock: '<red>That listing is out of stock.</red>'
+    nothing-to-sell: '<red>You don''t have any of that item to sell.</red>'
+    quantity-buy-title: '<gray>Buy {item}</gray>'
+    quantity-sell-title: '<gray>Sell {item}</gray>'
+    purchased: '<green>Purchased {quantity}x {item} for {total}.</green>'
+    sold: '<green>Sold {quantity}x {item} for {total}.</green>'
+    cannot-afford: '<red>You can''t afford that.</red>'
+    not-enough-items: '<red>You don''t have enough of that item.</red>'
+    unavailable: '<red>That listing is no longer available.</red>'
+    failed: '<red>Transaction failed: {reason}</red>'
+    item-name: '<gold><bold>{item}</bold></gold>'
+    seller: '<gray>  Seller: {seller}</gray>'
+    price: '<gray>  Price:  {price} each</gray>'
+    filled: '<gray>  Filled: {filled} / {total}</gray>'
+    available: '<gray>  Available: {available}</gray>'
+    expires: '<gray>  Expires in {time}</gray>'
+    click-to-buy: '<aqua>  Click to buy</aqua>'
+    click-to-fulfill: '<aqua>  Click to fulfill</aqua>'
+    toggle-sell: '<red><bold>Sell Offers</bold></red>'
+    toggle-buy: '<green><bold>Buy Orders</bold></green>'
+    toggle-sell-lore: '<gray>  Items for sale by players</gray>'
+    toggle-buy-lore: '<gray>  Items players want to buy</gray>'
+    click-to-switch: '<gray>  Click to switch</gray>'
+    filter: '<gold><bold>Filter</bold></gold>'
+    filter-active: '<aqua>  Active: {sort}</aqua>'
+    filter-click: '<gray>  Click to change sort order</gray>'
+    my-offers: '<gold><bold>My Offers</bold></gold>'
+    my-offers-lore: '<gray>  View and manage your listings.</gray>'
+    new-offer: '<gold><bold>Create New Offer</bold></gold>'
+    new-offer-lore: '<gray>  Create a sell listing or buy order.</gray>'
+  new:
+    title: '<gray><bold>New Offer</bold></gray>'
+    place-item-first: '<red>Place an item in the center slot first.</red>'
+    search-first: '<red>Search for an item first using the name tag.</red>'
+    # Sent as a raw chat prompt, so legacy colour codes apply here, not MiniMessage.
+    chat-prompt: '&eEnter the item name (e.g. stone_bricks):'
+    unknown-item: '<red>Unknown item: {input}. Try the exact Minecraft material name.</red>'
+    none-in-inventory: '<red>You don''t have any {item} in your inventory.</red>'
+    quantity-buy-title: '<gray>Buy {item}</gray>'
+    quantity-sell-title: '<gray>Sell {item}</gray>'
+    invalid-price: '<red>Invalid price.</red>'
+    price-must-be-positive: '<red>Price must be greater than zero.</red>'
+    buy-order-created: '<green>Buy order created: {quantity}x {item} @ {price} each.</green>'
+    sell-listing-created: '<green>Sell listing created: {quantity}x {item} @ {price} each.</green>'
+    cannot-afford-escrow: '<red>You can''t afford the escrow for that buy order.</red>'
+    not-enough-items: '<red>You don''t have enough of that item.</red>'
+    max-listings: '<red>You''ve reached your maximum active listings.</red>'
+    max-listings-capped: '<red>You''ve reached your maximum of {cap} active listings.</red>'
+    price-too-low: '<red>Price too low — minimum is {minimum}.</red>'
+    price-too-high: '<red>Price too high — maximum is {maximum}.</red>'
+    failed: '<red>Something went wrong creating your listing.</red>'
+    search-name: '<gold>Search Item</gold>'
+    search-lore-1: '<gray>  For BUY orders: type the item name</gray>'
+    search-lore-2: '<gray>  e.g. stone_bricks, oak_log</gray>'
+    search-lore-3: '<gray>  For SELL offers: place the item</gray>'
+    search-lore-4: '<gray>  in the center slot directly.</gray>'
+    no-item: '<gray>No item selected</gray>'
+    no-item-lore-1: '<gray>  SELL: place item here from cursor</gray>'
+    no-item-lore-2: '<gray>  BUY:  use the name tag to search</gray>'
+    selected-name: '<gold>{item}</gold>'
+    selected-lore-1: '<gray>  Selected item</gray>'
+    selected-lore-2: '<gray>  Click SELL or BUY to continue.</gray>'
+    sell-button: '<red>Create Sell Offer</red>'
+    sell-lore-1: '<gray>  Items removed from inventory now.</gray>'
+    sell-lore-2: '<gray>  Returned on cancel or expiry.</gray>'
+    buy-button: '<green>Create Buy Order</green>'
+    buy-lore-1: '<gray>  Money deducted upfront (escrow).</gray>'
+    buy-lore-2: '<gray>  Refunded on cancel or expiry.</gray>'
+    cancel: '<red>Cancel</red>'
+  offers:
+    title: '<gray><bold>My Offers</bold></gray>'
+    claimed: '<green>Items claimed.</green>'
+    item-name: '<gold><bold>{item}</bold></gold>'
+    type-sell: '<gray>  Type: </gray><red>Sell Offer</red>'
+    type-buy: '<gray>  Type: </gray><green>Buy Order</green>'
+    price: '<gray>  Price: {price} each</gray>'
+    filled: '<gray>  Filled: {filled} / {total}</gray>'
+    expires: '<gray>  Expires in {time}</gray>'
+    click-cancel: '<red>  Click to cancel listing</red>'
+    done-name: '<green><bold>{item}</bold></green>'
+    order-filled: '<green>  Order filled — all bought</green>'
+    listing-closed: '<green>  Listing closed — items returned</green>'
+    click-claim: '<green>  ▶ Click to claim your items</green>'
+    toggle-sell: '<red><bold>Sell Offers</bold></red>'
+    toggle-buy: '<green><bold>Buy Orders</bold></green>'
+    showing-sell: '<gray>  Showing your sell offers</gray>'
+    showing-buy: '<gray>  Showing your buy orders</gray>'
+    click-switch: '<gray>  Click to switch</gray>'
+    # Plain text: the menu colours these itself.
+    all: 'All Offers'
+    all-lore: '<gray>  Back to all players'' offers.</gray>'
+    claim-items: 'Claim Items'
+    claim-items-lore: '<gray>  Open your item claim chest.</gray>'
+    new: 'Create New Offer'
+    new-lore: '<gray>  Create a sell listing or buy order.</gray>'
+  history:
+    title: '<gray><bold>Transaction History</bold></gray>'
+    entry-name: '<gold><bold>{item}</bold></gold>'
+    qty: '<gray>  Qty:   {quantity}</gray>'
+    price: '<gray>  Price: {price} each</gray>'
+    total-spent: '<red>  Total: -{total}</red>'
+    total-earned: '<green>  Total: +{total}</green>'
+    when: '<gray>  When:  {when}</gray>'
+    # Each toggle state is a whole sentence rather than "switch to " + a label,
+    # so translations are free to reorder the words.
+    toggle-purchases: '<green><bold>Purchases</bold></green>'
+    toggle-sales: '<red><bold>Sales</bold></red>'
+    purchases-lore: '<gray>  Items you have bought.</gray>'
+    sales-lore: '<gray>  Items you have sold.</gray>'
+    switch-to-sales: '<gray>  Click to switch to Sales</gray>'
+    switch-to-purchases: '<gray>  Click to switch to Purchases</gray>'
+    toggle-server-shop: '<blue><bold>Server Shop</bold></blue>'
+    toggle-player-shop: '<blue><bold>Player Shop</bold></blue>'
+    server-shop-lore: '<gray>  Transactions with the server shop.</gray>'
+    player-shop-lore: '<gray>  Transactions with other players.</gray>'
+    switch-to-player-shop: '<gray>  Click to switch to Player Shop</gray>'
+    switch-to-server-shop: '<gray>  Click to switch to Server Shop</gray>'
+    empty: '<gray>No history yet.</gray>'
+  storage:
+    title: '<gray><bold>Claim Items</bold></gray>'
+    all-claimed: '<green>All items claimed!</green>'
+    click-to-claim: '<green>  Click to claim</green>'
+    claim-all: '<green><bold>Claim All</bold></green>'
+    claim-all-lore: '<gray>  Move everything to your inventory.</gray>'
+  filter:
+    title: '<gray><bold>Sort & Filter</bold></gray>'
+    option-active: '<green>{label}</green>'
+    option-inactive: '<gold>{label}</gold>'
+    description: '<gray>  {description}</gray>'
+    currently-active: '<green>  ✔ Currently active</green>'
+    click-to-apply: '<gray>  Click to apply</gray>'
+    back: '<red>Back</red>'
+  list:
+    empty: '<gray>You have no active sell listings.'
+    header: '<gold>Your active sell listings:'
+    entry: '<yellow>  {quantity}x {item} @ {price} each{sold}'
+    entry-sold-suffix: ' ({quantity} sold)'
+
+worth:
+  unknown-item: '<red>Unknown item: {item}'
+  hold-item: '<gray>Hold an item to check its worth.'
+  no-sell-value: '<gray>{item} has no sell value.'
+  header: '<gold>⬛ </gold><white>{item}</white><gray>  [{category}]</gray>'
+  unit-price-effective: '<gray>  Your sell price/unit: </gray><green>{price}</green>'
+  unit-price-base: '<gray>  Price/unit: </gray><green>{price}</green>'
+  stack-total: '<gray>  Stack ×{quantity}: </gray><green>{total}</green>'
+
+shop:
+  buy:
+    title: '<gray><bold>Buying {item}</bold></gray>'
+    decrease: '<red>-{amount}</red>'
+    increase: '<green>+{amount}</green>'
+    cancel: '<red>Cancel</red>'
+    confirm: '<green>Confirm</green>'
+    item-name: '<gold>{item}</gold>'
+    quantity: '<gray>  Quantity: </gray><green>{quantity}</green>'
+    unit-price: '<gray>  Unit price: </gray><green>{price}</green>'
+    total-affordable: '<gray>  Total: </gray><green>{total}</green>'
+    total-unaffordable: '<gray>  Total: </gray><red>{total}</red>'
+    balance: '<gray>  Your balance: </gray><gray>{balance}</gray>'
+    click-to-confirm: '<gray>  Click the item to confirm purchase.</gray>'
+    purchased: '<gray>Purchased </gray><green>{quantity}x {item}</green><gray> for </gray><green>{cost}</green>'
+    purchased-partial: '<gray>Purchased </gray><green>{quantity}x {item}</green><gray> for </gray><green>{cost}</green><gold> — some items dropped at your feet.</gold>'
+    cannot-afford: '<red>You can''t afford that.</red>'
+    inventory-full: '<red>Your inventory is full.</red>'
+  main:
+    title: '<gray><bold>Shop</bold></gray>'
+    balance: '<gray>  Balance: </gray><color:#55FF55>{balance}</color:#55FF55>'
+    # Icon names. Styling comes from the menu; these are the text only.
+    icon-server-shop: 'Server Shop'
+    icon-top-items: 'Top Items'
+    icon-history: 'Transaction History'
+    icon-player-shop: 'Player Shop'
+    # Lore blocks are lists, so a translation can use more or fewer lines.
+    top-items-lore:
+      - '<gray>  See the most bought and sold items</gray>'
+      - '<gray>  across any time range and shop.</gray>'
+    history-lore:
+      - '<gray>  View your buy and sell history</gray>'
+      - '<gray>  for both the server and player shop.</gray>'
+    player-shop-lore:
+      - '<gray>  Browse and post player listings.</gray>'
+      - '<gray>  Sell your items or place buy orders.</gray>'
+    section-item-count:
+      one: '<gray>  {count} item</gray>'
+      other: '<gray>  {count} items</gray>'
+    click-to-open: '<gray>  ▶ Click to open</gray>'
+    click-to-browse: '<gray>  ▶ Click to browse</gray>'
+  category:
+    title: '<gray><bold>Shop — {category}</bold></gray>'
+    qty-per-click: '<gray>  Qty per click: ×{quantity}</gray>'
+    # {trend} is filled from trend-up / trend-down below, or is empty at ±0%.
+    price: '<gray>  Price: </gray><green>{price}</green>{trend}'
+    trend-up: '<red>  {trend}</red>'
+    trend-down: '<aqua>  {trend}</aqua>'
+    left-click: '<gray>  Left Click:   ×{quantity}</gray>'
+    right-click: '<gray>  Right Click:  ×{quantity}</gray>'
+    shift-click: '<gray>  Shift+Click:  ×{quantity}</gray>'
+
+sell:
+  # Shown above the hotbar when player-shop earnings land.
+  earnings-actionbar: '<color:#55FF55>+{amount}</color>'
+  level-up: '<gold>★ </gold><green>{category} Level Up! </green><gold>Level {level} — Sell bonus: {multiplier}</gold>'
+  gui:
+    title: '<gray><bold>Drop items in to sell</bold></gray>'
+
+worths:
+  title: '<gray><bold>Item Values</bold></gray>'
+  # {trend} is filled from trend-up / trend-down / trend-flat below.
+  price-line: '<gray>  Sell: </gray><green>{price}</green>{trend}'
+  trend-up: '<green>   ↑ +{percent}%</green>'
+  trend-down: '<red>   ↓ {percent}%</red>'
+  trend-flat: '<gray>   ↔</gray>'
+  filter:
+    title: '<gray><bold>Sort</bold></gray>'
+    option-active: '<green>{label}</green>'
+    option-inactive: '<gold>{label}</gold>'
+
+multi:
+  category:
+    title: '<gray><bold>{category} Progress</bold></gray>'
+    # One variant per stage state so each can be styled independently.
+    multiplier-complete: '<gray>  Multiplier: </gray><green>{multiplier}</green>'
+    multiplier-current: '<gray>  Multiplier: </gray><yellow>{multiplier}</yellow>'
+    multiplier-locked: '<gray>  Multiplier: </gray><gray>{multiplier}</gray>'
+    complete: '<green>  ✔ Complete</green>'
+    progress: '<white>  ${current} / ${total}  ({percent}%)</white>'
+    locked: '<gray>  🔒 Locked</gray>'
+    stage-complete: '<green>Stage {stage}</green>'
+    stage-current: '<yellow>Stage {stage}</yellow>'
+    stage-locked: '<gray>Stage {stage}</gray>'
+    icon-name: '<gold>{category}</gold>'
+    current-multiplier-max: '<gray>  Current Multiplier: </gray><green>{multiplier}</green>'
+    current-multiplier: '<gray>  Current Multiplier: </gray><yellow>{multiplier}</yellow>'
+    level: '<gray>  Level: {level} / {max}</gray>'
+    back: '<red>Back</red>'
+  main:
+    title: '<gray><bold>Sell Multiplier</bold></gray>'
+    category: '<gold>{category}</gold>'
+    level: '<gray>  Level: </gray><green>{level}</green>'
+    multiplier: '<gray>  Multiplier: </gray><green>{multiplier}</green>'
+    progress: '<gray>  Progress: </gray><green>{progress}</green>'
+    click-for-details: '<gray>  ▶ Click for details</gray>'
+
+market-stats:
+  title: '<gray><bold>Top Items</bold></gray>'
+  # Plain text: the menu applies its own colour to these two.
+  controls-name: 'Top Items Controls'
+  scope-name: 'Scope: {scope}'
+  period: '<aqua>  Period:  {period}</aqua>'
+  metric: '<aqua>  Metric:  {metric}</aqua>'
+  sort-by: '<aqua>  Sort by: {sort}</aqua>'
+  hint-metric: '<gray>  Left Click   → change metric (Sold/Bought)</gray>'
+  hint-period: '<gray>  Right Click  → change period</gray>'
+  hint-sort: '<gray>  Swap Hands   → change sort (Money/Quantity)</gray>'
+  scope-lore: '<gray>  Which shop''s trades to rank.</gray>'
+  scope-cycle: '<gray>  Click to cycle Server / Player / Both</gray>'
+  # One key per podium place so the medal, colour and wording travel together.
+  entry-rank-1: '<gold><bold>🥇 #1  {item}</bold></gold>'
+  entry-rank-2: '<color:#AAAAAA><bold>🥈 #2  {item}</bold></color>'
+  entry-rank-3: '<color:#FF7700><bold>🥉 #3  {item}</bold></color>'
+  entry-rank-other: '<white><bold>#{rank}  {item}</bold></white>'
+  volume:
+    one: '<gray>  Volume: {quantity} unit</gray>'
+    other: '<gray>  Volume: {quantity} units</gray>'
+  value: '<green>  Value:  {value}</green>'
+  empty: '<gray>No data for this range yet.</gray>'
+
+
+# ─────────────────────────────────────────────
+#  Virtual spawners
+# ─────────────────────────────────────────────
+spawners:
+  no-permission: '<red>You don''t have permission to do that.'
+  not-owner: '<red>You are not the owner of this spawner.'
+  spawner-given: '<green>Spawner given to {player}.'
+  invalid-type: '<red>Invalid spawner type.'
+  merged: '<green>Spawners merged.'
+  collected:
+    one: '<green>Collected {amount} item and {xp} XP.'
+    other: '<green>Collected {amount} items and {xp} XP.'
+  sold: '<green>Sold items for {money}.'
+  destroyed-without-silk: '<red>Destroyed {amount}x spawner. Use Silk Touch to keep it.'
+  spawner-broken: '<green>Spawner broken.'
+  spawner-stacked: '<green>You stacked a spawner, now at {amount}x'
+  spawner-stacked-multi: '<green>You stacked {count}x spawner, now at {amount}x'
+  gui-title: '<dark_gray>{stack} {type} SPAWNERS'
+  gui-title-storage: '<dark_gray>{stack} {type} ({page}/{pages})'
+  gui-spawner-item-name: '<yellow>{stack} {type} SPAWNERS'
+  gui-click-to-sell: '<yellow><bold>•<reset><white>Click to sell items and collect xp'
+  gui-storage-filled: '<yellow>storage: <white>{percent}% <yellow>Filled'
+  gui-open-storage: '<gold>SPAWNER STORAGE'
+  gui-storage-preview-entry: '<gold>{amount} <white>{item}'
+  gui-storage-preview-empty: '<gray>Empty'
+  gui-collect-xp: '<green>COLLECT XP'
+  gui-collect-xp-points: '<green>{xp} <white>XP Points'
+  gui-close: '<red>Close'
+  gui-previous-page: '<green>PREVIOUS'
+  gui-previous-page-lore: '<white>Click to go back a page'
+  gui-back: '<red>BACK'
+  gui-back-lore: '<white>Click to return to the spawner'
+  gui-sell-items: '<green>Sell Items'
+  gui-storage-collect: '<gold>SPAWNER'
+  gui-storage-collect-lore: '<white>Collect your loot from the storage'
+  gui-drop-all: '<green>DROP LOOT'
+  gui-drop-all-lore: '<white>Click to drop all loot on the page'
+  gui-sell-xp: '<gold>Sell XP'
+  gui-sell-all: '<green>SELL ALL'
+  gui-sell-all-lore: '<gray>click to sell all mob drops!'
+  gui-next-page: '<yellow>Next Page'
+  gui-next-page-lore: '<white>Click to go to next page'
+  gui-storage-item-name: '<yellow>{item} x{amount}'
+  being-viewed: '<red>The spawner is currently being viewed by a player.'

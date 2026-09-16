@@ -14,5 +14,5 @@ public record Transaction(
     Source  source,
     Instant createdAt
 ) {
-    public enum Source { SELL_HAND, SELL_INVENTORY, SELL_GUI, AUTOSELL, ADMIN, SHOP_BUY, PLAYER_BUY, PLAYER_SELL }
+    public enum Source { SELL_HAND, SELL_INVENTORY, SELL_GUI, AUTOSELL, SPAWNER, ADMIN, SHOP_BUY, PLAYER_BUY, PLAYER_SELL }
 }

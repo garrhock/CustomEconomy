@@ -1,5 +1,10 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.CustomEconomy;
+
+import dev.smpeconomy.message.CoreKeys;
+
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -18,8 +23,7 @@ public final class SellGui implements InventoryHolder {
 
     public SellGui() {
         this.inventory = Bukkit.createInventory(this, 54,
-            Component.text("Drop items in to sell", GRAY)
-                .decoration(TextDecoration.BOLD, true));
+            CustomEconomy.getInstance().getMessages().get(CoreKeys.SELL_GUI_TITLE));
     }
 
     @Override

@@ -1,6 +1,9 @@
 package dev.smpeconomy.gui;
 
 import dev.smpeconomy.CustomEconomy;
+import dev.smpeconomy.message.MessageKey;
+import dev.smpeconomy.message.Messages;
+import dev.smpeconomy.message.TokenBag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -29,6 +32,18 @@ public abstract class BaseGui implements InventoryHolder {
 
     /** Bumped on every {@link #asyncLoad} call so stale results can be discarded. */
     private int loadGeneration = 0;
+
+    // Rebound to the viewer's locale in open() so lore is per-player. The title can't be:
+    // Bukkit locks it in when the inventory is created, before we know who's opening it.
+    protected Messages messages = CustomEconomy.getInstance().getMessages();
+
+    protected BaseGui(int size, MessageKey title) {
+        this(size, title, TokenBag.empty());
+    }
+
+    protected BaseGui(int size, MessageKey title, TokenBag tokens) {
+        this(size, CustomEconomy.getInstance().getMessages().get(title, tokens));
+    }
 
     protected BaseGui(int size, Component title) {
         this.inventory = Bukkit.createInventory(this, size, title);
@@ -104,6 +119,7 @@ public abstract class BaseGui implements InventoryHolder {
 
     public void open(Player player) {
         this.viewer = player;
+        this.messages = CustomEconomy.getInstance().getMessages().forRecipient(player);
         populate();
         player.openInventory(inventory);
         if (playOpenSound()) {

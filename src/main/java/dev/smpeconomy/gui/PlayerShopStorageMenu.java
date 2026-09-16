@@ -1,5 +1,7 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.model.StorageItem;
 import dev.smpeconomy.service.PlayerShopService;
@@ -42,7 +44,7 @@ public final class PlayerShopStorageMenu extends BaseGui {
     private int page = 0;
 
     public PlayerShopStorageMenu(PlayerShopService shopService, Runnable onBack) {
-        super(54, Component.text("Claim Items", GRAY).decoration(TextDecoration.BOLD, true));
+        super(54, CoreKeys.PLAYERSHOP_STORAGE_TITLE);
         this.shopService = shopService;
         this.onBack      = onBack;
     }
@@ -72,8 +74,7 @@ public final class PlayerShopStorageMenu extends BaseGui {
         inventory.setItem(SLOT_CLAIM_ALL, makeClaimAll());
         onClick(SLOT_CLAIM_ALL, e -> {
             shopService.claimAllStorage(player);
-            player.sendMessage(Component.text("All items claimed!", GREEN)
-                .decoration(TextDecoration.ITALIC, false));
+            messages.send(player, CoreKeys.PLAYERSHOP_STORAGE_ALL_CLAIMED);
             player.closeInventory();
             CustomEconomy plugin = CustomEconomy.getInstance();
             plugin.getServer().getScheduler().runTask(plugin, onBack);
@@ -130,7 +131,7 @@ public final class PlayerShopStorageMenu extends BaseGui {
         if (meta == null) return;
         List<Component> lore = meta.hasLore() ? new java.util.ArrayList<>(meta.lore()) : new java.util.ArrayList<>();
         lore.add(Component.empty());
-        lore.add(Component.text("  Click to claim", GREEN).decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_STORAGE_CLICK_TO_CLAIM));
         meta.lore(lore);
         item.setItemMeta(meta);
     }
@@ -139,11 +140,10 @@ public final class PlayerShopStorageMenu extends BaseGui {
     private ItemStack makeClaimAll() {
         ItemStack item = new ItemStack(Material.HOPPER);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Claim All", GREEN)
-            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_STORAGE_CLAIM_ALL));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Move everything to your inventory.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_STORAGE_CLAIM_ALL_LORE)
         ));
         item.setItemMeta(meta);
         return item;

@@ -66,6 +66,15 @@ public final class CustomEconomyAPI {
     }
 
     /**
+     * Sells items that aren't in the player's inventory - a spawner buffer, a staging GUI.
+     * Nothing is taken from the inventory; the caller clears its own source.
+     * Unpriced items are not sold and come back in {@link SellResult#getReturned()}.
+     */
+    public SellResult sellExternal(Player player, ItemStack[] items, Transaction.Source source) {
+        return sellService.sellExternal(player, items, source);
+    }
+
+    /**
      * Returns the total number of items with configured prices.
      */
     public int getLoadedItemCount() {

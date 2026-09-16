@@ -1,5 +1,9 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.model.ItemCategory;
 import dev.smpeconomy.service.MultiplierService;
@@ -44,7 +48,7 @@ public final class MultiMainMenu extends BaseGui {
 
     public MultiMainMenu(MultiplierService multiplierService, UUID playerUuid) {
         // 1-row chest (9 slots) — one category icon per slot
-        super(9, Component.text("Sell Multiplier", GRAY).decoration(TextDecoration.BOLD, true));
+        super(9, CoreKeys.MULTI_MAIN_TITLE);
         this.multiplierService = multiplierService;
         this.playerUuid = playerUuid;
     }
@@ -78,18 +82,14 @@ public final class MultiMainMenu extends BaseGui {
 
         ItemStack icon = new ItemStack(entry.icon());
         ItemMeta meta = icon.getItemMeta();
-        meta.displayName(Component.text(cat.getDisplayName(), GOLD).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.MULTI_MAIN_CATEGORY, TokenBag.of().put("category", cat.getDisplayName())));
         meta.lore(List.of(
                 Component.empty(),
-                Component.text("  Level: ", GRAY).decoration(TextDecoration.ITALIC, false)
-                        .append(Component.text(level, GREEN).decoration(TextDecoration.ITALIC, false)),
-                Component.text("  Multiplier: ", GRAY).decoration(TextDecoration.ITALIC, false)
-                        .append(Component.text(String.format("%.1fx", multiplier), GREEN)
-                                .decoration(TextDecoration.ITALIC, false)),
-                Component.text("  Progress: ", GRAY).decoration(TextDecoration.ITALIC, false)
-                        .append(Component.text(progressLine, GREEN).decoration(TextDecoration.ITALIC, false)),
+                messages.lore(CoreKeys.MULTI_MAIN_LEVEL, TokenBag.of().put("level", level)),
+                messages.lore(CoreKeys.MULTI_MAIN_MULTIPLIER, TokenBag.of().put("multiplier", String.format("%.1fx", multiplier))),
+                messages.lore(CoreKeys.MULTI_MAIN_PROGRESS, TokenBag.of().put("progress", progressLine)),
                 Component.empty(),
-                Component.text("  ▶ Click for details", GRAY).decoration(TextDecoration.ITALIC, false)));
+                messages.lore(CoreKeys.MULTI_MAIN_CLICK_DETAILS)));
         icon.setItemMeta(meta);
         return icon;
     }

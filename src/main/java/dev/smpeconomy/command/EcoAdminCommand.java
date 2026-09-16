@@ -1,5 +1,7 @@
 package dev.smpeconomy.command;
 
+import dev.smpeconomy.message.Messages;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -31,6 +33,7 @@ public final class EcoAdminCommand {
     private static final TextColor GREEN = NamedTextColor.GREEN;
 
     private final JavaPlugin plugin;
+    private final Messages messages;
     private final ConfigManager config;
     private final WorthService worthService;
     private final MarketService marketService;
@@ -38,7 +41,8 @@ public final class EcoAdminCommand {
 
     public EcoAdminCommand(JavaPlugin plugin, ConfigManager config,
                            WorthService worthService, MarketService marketService,
-                           ShardsModule shards) {
+                           ShardsModule shards, Messages messages) {
+        this.messages = messages;
         this.plugin         = plugin;
         this.config         = config;
         this.worthService   = worthService;
@@ -54,7 +58,12 @@ public final class EcoAdminCommand {
             .then(Commands.literal("reload")
                 .executes(ctx -> {
                     config.reload();
+                    messages.reload();
                     shards.reload();
+                    if (dev.smpeconomy.CustomEconomy.getInstance().getSpawnerModule() != null) {
+                        // rates and messages apply now; [restart] keys only when tasks reschedule
+                        dev.smpeconomy.CustomEconomy.getInstance().getSpawnerModule().reloadConfig();
+                    }
                     int issues = ShopExploitValidator.validate(worthService, config.getShopSections(), plugin.getLogger());
                     String msg = "CustomEconomy reloaded. Items: " + worthService.getItemCount()
                         + (issues > 0 ? " — WARNING: " + issues + " shop price exploit(s) detected, check console." : "");

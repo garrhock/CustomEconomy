@@ -1,5 +1,7 @@
 package dev.smpeconomy.shards;
 
+import dev.smpeconomy.CustomEconomy;
+
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.database.DatabaseManager;
 import dev.smpeconomy.shards.api.ShardsAPI;
@@ -12,7 +14,7 @@ import dev.smpeconomy.shards.service.ShardsService;
 import dev.smpeconomy.shards.storage.LegacyShardImport;
 import dev.smpeconomy.shards.storage.ShardStore;
 import dev.smpeconomy.shards.util.EarnFeedback;
-import dev.smpeconomy.shards.util.Msg;
+import dev.smpeconomy.message.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,7 +38,7 @@ public final class ShardsModule {
 
     private ShardStore store;
     private ShardsService service;
-    private Msg msg;
+    private Messages msg;
     private ShardShop shop;
 
     public ShardsModule(JavaPlugin plugin, DatabaseManager db, ConfigManager config) {
@@ -46,7 +48,7 @@ public final class ShardsModule {
     }
 
     public void enable() {
-        msg   = new Msg(plugin);
+        msg   = CustomEconomy.getInstance().getMessages();
         store = new ShardStore(db, config.isMysql(), plugin.getLogger());
 
         LegacyShardImport.run(plugin.getDataFolder(), db, config.isMysql(), plugin.getLogger());
@@ -88,7 +90,7 @@ public final class ShardsModule {
 
     /** Re-reads messages.yml and the shop section. config.yml itself is reloaded by ConfigManager. */
     public void reload() {
-        if (msg != null)  msg.reload();
+        // /ecoadmin reload already reloaded messages.yml; just rebuild the shop
         if (shop != null) shop.reload();
     }
 

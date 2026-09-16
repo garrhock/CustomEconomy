@@ -1,5 +1,9 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.service.MarketService;
@@ -48,7 +52,7 @@ public final class ShopMainMenu extends BaseGui {
     private final MarketService marketService;
 
     public ShopMainMenu(ConfigManager config, ShopService shopService, MarketService marketService) {
-        super(SIZE, Component.text("Shop", GRAY).decoration(TextDecoration.BOLD, true));
+        super(SIZE, CoreKeys.SHOP_MAIN_TITLE);
         this.config        = config;
         this.shopService   = shopService;
         this.marketService = marketService;
@@ -126,14 +130,12 @@ public final class ShopMainMenu extends BaseGui {
             meta.displayName(title(viewer.getName()));
             meta.lore(List.of(
                 Component.empty(),
-                Component.text("  Balance: ", GRAY)
-                    .append(Component.text(dev.smpeconomy.util.FormatUtil.formatMoney(
+                messages.lore(CoreKeys.SHOP_MAIN_BALANCE, TokenBag.of().put("balance", dev.smpeconomy.util.FormatUtil.formatMoney(
                         CustomEconomy.getInstance().getVaultHook().getBalance(viewer),
-                        config.getCurrencySymbol()), TextColor.color(0x55FF55)))
-                    .decoration(TextDecoration.ITALIC, false)
+                        config.getCurrencySymbol())))
             ));
         } else {
-            meta.displayName(title("Server Shop"));
+            meta.displayName(title(messages.raw(CoreKeys.SHOP_MAIN_ICON_SERVER_SHOP)));
         }
         head.setItemMeta(meta);
         return head;
@@ -142,14 +144,13 @@ public final class ShopMainMenu extends BaseGui {
     private ItemStack makeTopItemsIcon() {
         ItemStack item = new ItemStack(Material.BEACON);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(title("Top Items"));
-        meta.lore(List.of(
-            Component.empty(),
-            Component.text("  See the most bought and sold items", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  across any time range and shop.", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.empty(),
-            Component.text("  ▶ Click to open", GRAY).decoration(TextDecoration.ITALIC, false)
-        ));
+        meta.displayName(title(messages.raw(CoreKeys.SHOP_MAIN_ICON_TOP_ITEMS)));
+        List<Component> lore = new java.util.ArrayList<>();
+        lore.add(Component.empty());
+        lore.addAll(messages.loreList(CoreKeys.SHOP_MAIN_TOP_ITEMS_LORE));
+        lore.add(Component.empty());
+        lore.add(messages.lore(CoreKeys.SHOP_MAIN_CLICK_TO_OPEN));
+        meta.lore(lore);
         item.setItemMeta(meta);
         return item;
     }
@@ -157,14 +158,13 @@ public final class ShopMainMenu extends BaseGui {
     private ItemStack makeHistoryIcon() {
         ItemStack item = new ItemStack(Material.WRITABLE_BOOK);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(title("Transaction History"));
-        meta.lore(List.of(
-            Component.empty(),
-            Component.text("  View your buy and sell history", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  for both the server and player shop.", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.empty(),
-            Component.text("  ▶ Click to open", GRAY).decoration(TextDecoration.ITALIC, false)
-        ));
+        meta.displayName(title(messages.raw(CoreKeys.SHOP_MAIN_ICON_HISTORY)));
+        List<Component> lore = new java.util.ArrayList<>();
+        lore.add(Component.empty());
+        lore.addAll(messages.loreList(CoreKeys.SHOP_MAIN_HISTORY_LORE));
+        lore.add(Component.empty());
+        lore.add(messages.lore(CoreKeys.SHOP_MAIN_CLICK_TO_OPEN));
+        meta.lore(lore);
         item.setItemMeta(meta);
         return item;
     }
@@ -172,14 +172,13 @@ public final class ShopMainMenu extends BaseGui {
     private ItemStack makePlayerShopIcon() {
         ItemStack item = new ItemStack(Material.CHEST);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(title("Player Shop"));
-        meta.lore(List.of(
-            Component.empty(),
-            Component.text("  Browse and post player listings.", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  Sell your items or place buy orders.", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.empty(),
-            Component.text("  ▶ Click to open", GRAY).decoration(TextDecoration.ITALIC, false)
-        ));
+        meta.displayName(title(messages.raw(CoreKeys.SHOP_MAIN_ICON_PLAYER_SHOP)));
+        List<Component> lore = new java.util.ArrayList<>();
+        lore.add(Component.empty());
+        lore.addAll(messages.loreList(CoreKeys.SHOP_MAIN_PLAYER_SHOP_LORE));
+        lore.add(Component.empty());
+        lore.add(messages.lore(CoreKeys.SHOP_MAIN_CLICK_TO_OPEN));
+        meta.lore(lore);
         item.setItemMeta(meta);
         return item;
     }
@@ -190,9 +189,9 @@ public final class ShopMainMenu extends BaseGui {
         meta.displayName(title(section.getDisplayName()));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  " + section.getEntries().size() + " items", GRAY).decoration(TextDecoration.ITALIC, false),
+            messages.lore(CoreKeys.SHOP_MAIN_SECTION_ITEM_COUNT, TokenBag.of().put("count", section.getEntries().size())),
             Component.empty(),
-            Component.text("  ▶ Click to browse", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.SHOP_MAIN_CLICK_TO_BROWSE)
         ));
         icon.setItemMeta(meta);
         return icon;

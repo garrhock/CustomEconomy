@@ -1,5 +1,9 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.model.ItemWorth;
@@ -54,7 +58,7 @@ public final class WorthsMenu extends BaseGui {
     private int page        = 0;
 
     public WorthsMenu(ConfigManager config, WorthService worthService, MarketService marketService) {
-        super(54, Component.text("Item Values", GuiUtil.GRAY).decoration(TextDecoration.BOLD, true));
+        super(54, CoreKeys.WORTHS_TITLE);
         this.config        = config;
         this.worthService  = worthService;
         this.marketService = marketService;
@@ -185,16 +189,12 @@ public final class WorthsMenu extends BaseGui {
         // "Sell: $X  ↑ +12%" on one line.
         double factor = marketService.getFactor(w.getKey());
         int pct = (int) Math.round((factor - 1.0) * 100);
-        String arrow;
-        TextColor arrowColor;
-        if (pct > 0)      { arrow = "↑ +" + pct + "%"; arrowColor = GuiUtil.GREEN; }
-        else if (pct < 0) { arrow = "↓ " + pct + "%";  arrowColor = GuiUtil.RED; }
-        else              { arrow = "↔";               arrowColor = GuiUtil.GRAY; }
+        String trend;
+        if (pct > 0)      trend = messages.raw(CoreKeys.WORTHS_TREND_UP, TokenBag.of().put("percent", pct));
+        else if (pct < 0) trend = messages.raw(CoreKeys.WORTHS_TREND_DOWN, TokenBag.of().put("percent", pct));
+        else              trend = messages.raw(CoreKeys.WORTHS_TREND_FLAT);
 
-        Component priceLine = Component.text("  Sell: ", GuiUtil.GRAY)
-            .append(Component.text(FormatUtil.formatMoney(price, sym), GuiUtil.GREEN))
-            .append(Component.text("   " + arrow, arrowColor))
-            .decoration(TextDecoration.ITALIC, false);
+        Component priceLine = messages.lore(CoreKeys.WORTHS_PRICE_LINE, TokenBag.of().put("price", FormatUtil.formatMoney(price, sym)).put("trend", trend));
 
         meta.lore(List.of(
             Component.empty(),

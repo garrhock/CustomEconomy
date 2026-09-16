@@ -1,5 +1,9 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.database.repository.TransactionRepository;
@@ -56,7 +60,7 @@ public final class PlayerShopHistoryMenu extends BaseGui {
     private int page = 0;
 
     public PlayerShopHistoryMenu(ConfigManager config, TransactionRepository txRepo, Runnable onBack) {
-        super(54, Component.text("Transaction History", GRAY).decoration(TextDecoration.BOLD, true));
+        super(54, CoreKeys.PLAYERSHOP_HISTORY_TITLE);
         this.config  = config;
         this.txRepo  = txRepo;
         this.onBack  = onBack;
@@ -144,7 +148,7 @@ public final class PlayerShopHistoryMenu extends BaseGui {
         return switch (shop) {
             case SERVER -> trade == TradeType.PURCHASES
                 ? List.of(Source.SHOP_BUY)
-                : List.of(Source.SELL_HAND, Source.SELL_INVENTORY, Source.SELL_GUI, Source.AUTOSELL);
+                : List.of(Source.SELL_HAND, Source.SELL_INVENTORY, Source.SELL_GUI, Source.AUTOSELL, Source.SPAWNER);
             case PLAYER -> trade == TradeType.PURCHASES
                 ? List.of(Source.PLAYER_BUY)
                 : List.of(Source.PLAYER_SELL);
@@ -162,19 +166,15 @@ public final class PlayerShopHistoryMenu extends BaseGui {
         boolean isPurchase = tx.totalEarned() < 0;
         TextColor moneyColor = isPurchase ? RED : GREEN;
         String moneyPrefix   = isPurchase ? "-" : "+";
-
-        meta.displayName(Component.text(
-            tx.itemKey().replace('_', ' '), GOLD)
-            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_HISTORY_ENTRY_NAME, TokenBag.of().put("item", tx.itemKey().replace('_', ' '))));
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.empty());
-        lore.add(Component.text("  Qty:   " + tx.quantity(), GRAY).decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Price: " + FormatUtil.formatMoney(Math.abs(tx.pricePerUnit()), sym) + " each",
-            GRAY).decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Total: " + moneyPrefix + FormatUtil.formatMoney(Math.abs(tx.totalEarned()), sym),
-            moneyColor).decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  When:  " + timeAgo(tx.createdAt()), GRAY).decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_HISTORY_QTY, TokenBag.of().put("quantity", tx.quantity())));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_HISTORY_PRICE, TokenBag.of().put("price", FormatUtil.formatMoney(Math.abs(tx.pricePerUnit()), sym))));
+        lore.add(messages.lore(isPurchase ? CoreKeys.PLAYERSHOP_HISTORY_TOTAL_SPENT
+                                          : CoreKeys.PLAYERSHOP_HISTORY_TOTAL_EARNED, TokenBag.of().put("total", FormatUtil.formatMoney(Math.abs(tx.totalEarned()), sym))));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_HISTORY_WHEN, TokenBag.of().put("when", timeAgo(tx.createdAt()))));
         meta.lore(lore);
         icon.setItemMeta(meta);
         return icon;
@@ -184,15 +184,15 @@ public final class PlayerShopHistoryMenu extends BaseGui {
         boolean isPurchases = tradeType == TradeType.PURCHASES;
         ItemStack item = new ItemStack(isPurchases ? Material.LIME_CONCRETE : Material.RED_CONCRETE);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text(isPurchases ? "Purchases" : "Sales",
-            isPurchases ? GREEN : RED).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(isPurchases ? CoreKeys.PLAYERSHOP_HISTORY_TOGGLE_PURCHASES
+                                                   : CoreKeys.PLAYERSHOP_HISTORY_TOGGLE_SALES));
         meta.lore(List.of(
             Component.empty(),
-            Component.text(isPurchases ? "  Items you have bought." : "  Items you have sold.", GRAY)
-                .decoration(TextDecoration.ITALIC, false),
+            messages.lore(isPurchases ? CoreKeys.PLAYERSHOP_HISTORY_PURCHASES_LORE
+                                      : CoreKeys.PLAYERSHOP_HISTORY_SALES_LORE),
             Component.empty(),
-            Component.text("  Click to switch to " + (isPurchases ? "Sales" : "Purchases"), GRAY)
-                .decoration(TextDecoration.ITALIC, false)
+            messages.lore(isPurchases ? CoreKeys.PLAYERSHOP_HISTORY_SWITCH_TO_SALES
+                                      : CoreKeys.PLAYERSHOP_HISTORY_SWITCH_TO_PURCHASES)
         ));
         item.setItemMeta(meta);
         return item;
@@ -202,17 +202,15 @@ public final class PlayerShopHistoryMenu extends BaseGui {
         boolean isServer = shopType == ShopType.SERVER;
         ItemStack item  = new ItemStack(Material.BLUE_CONCRETE);
         ItemMeta meta   = item.getItemMeta();
-        meta.displayName(Component.text(
-            isServer ? "Server Shop" : "Player Shop", BLUE)
-            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(isServer ? CoreKeys.PLAYERSHOP_HISTORY_TOGGLE_SERVER_SHOP
+                                                : CoreKeys.PLAYERSHOP_HISTORY_TOGGLE_PLAYER_SHOP));
         meta.lore(List.of(
             Component.empty(),
-            Component.text(isServer
-                ? "  Transactions with the server shop."
-                : "  Transactions with other players.", GRAY).decoration(TextDecoration.ITALIC, false),
+            messages.lore(isServer ? CoreKeys.PLAYERSHOP_HISTORY_SERVER_SHOP_LORE
+                                   : CoreKeys.PLAYERSHOP_HISTORY_PLAYER_SHOP_LORE),
             Component.empty(),
-            Component.text("  Click to switch to " + (isServer ? "Player Shop" : "Server Shop"), GRAY)
-                .decoration(TextDecoration.ITALIC, false)
+            messages.lore(isServer ? CoreKeys.PLAYERSHOP_HISTORY_SWITCH_TO_PLAYER_SHOP
+                                   : CoreKeys.PLAYERSHOP_HISTORY_SWITCH_TO_SERVER_SHOP)
         ));
         item.setItemMeta(meta);
         return item;
@@ -221,7 +219,7 @@ public final class PlayerShopHistoryMenu extends BaseGui {
     private ItemStack makeEmpty() {
         ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("No history yet.", GRAY).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_HISTORY_EMPTY));
         item.setItemMeta(meta);
         return item;
     }

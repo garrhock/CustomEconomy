@@ -1,5 +1,9 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.service.ChatInputService;
@@ -51,7 +55,7 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
 
     public PlayerShopNewOfferMenu(ConfigManager config, PlayerShopService shopService,
                                    ChatInputService chatInput, Runnable onBack) {
-        super(27, Component.text("New Offer", GRAY).decoration(TextDecoration.BOLD, true));
+        super(27, CoreKeys.PLAYERSHOP_NEW_TITLE);
         this.config      = config;
         this.shopService = shopService;
         this.chatInput   = chatInput;
@@ -79,7 +83,7 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
         onClick(SLOT_SELL, e -> {
             if (selectedItem == null) {
                 ((Player) e.getWhoClicked()).sendMessage(
-                    Component.text("Place an item in the center slot first.", RED)
+                    messages.get(CoreKeys.PLAYERSHOP_NEW_PLACE_ITEM_FIRST)
                         .decoration(TextDecoration.ITALIC, false));
                 return;
             }
@@ -91,7 +95,7 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
         onClick(SLOT_BUY, e -> {
             if (selectedItem == null) {
                 ((Player) e.getWhoClicked()).sendMessage(
-                    Component.text("Search for an item first using the name tag.", RED)
+                    messages.get(CoreKeys.PLAYERSHOP_NEW_SEARCH_FIRST)
                         .decoration(TextDecoration.ITALIC, false));
                 return;
             }
@@ -137,13 +141,11 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
 
     private void handleSearch(Player player) {
         player.closeInventory();
-        chatInput.prompt(player, "§eEnter the item name (e.g. stone_bricks):", input -> {
+        chatInput.prompt(player, messages.raw(CoreKeys.PLAYERSHOP_NEW_PROMPT), input -> {
             Material mat = Material.matchMaterial(input.trim().toUpperCase()
                 .replace(' ', '_').replace('-', '_'));
             if (mat == null || mat == Material.AIR) {
-                player.sendMessage(Component.text(
-                    "Unknown item: " + input + ". Try the exact Minecraft material name.", RED)
-                    .decoration(TextDecoration.ITALIC, false));
+                messages.send(player, CoreKeys.PLAYERSHOP_NEW_UNKNOWN_ITEM, TokenBag.of().put("input", input));
                 CustomEconomy plugin = CustomEconomy.getInstance();
                 plugin.getServer().getScheduler().runTask(plugin, () -> this.open(player));
                 return;
@@ -165,9 +167,7 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
 
         if (!isBuy && maxQty == 0) {
             player.closeInventory();
-            player.sendMessage(Component.text(
-                "You don't have any " + selectedItem.getType().name().replace('_', ' ')
-                + " in your inventory.", RED).decoration(TextDecoration.ITALIC, false));
+            messages.send(player, CoreKeys.PLAYERSHOP_NEW_NONE_IN_INVENTORY, TokenBag.of().put("item", selectedItem.getType().name().replace('_', ' ')));
             plugin.getServer().getScheduler().runTask(plugin, () -> this.open(player));
             return;
         }
@@ -178,7 +178,8 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
 
         plugin.getServer().getScheduler().runTask(plugin, () ->
             new QuantitySelectMenu(
-                Component.text((isBuy ? "Buy " : "Sell ") + selectedItem.getType().name().replace('_', ' '), GRAY),
+                messages.get(isBuy ? CoreKeys.PLAYERSHOP_NEW_QTY_BUY_TITLE
+                                            : CoreKeys.PLAYERSHOP_NEW_QTY_SELL_TITLE, TokenBag.of().put("item", selectedItem.getType().name().replace('_', ' '))),
                 selectedItem.clone(), QuantitySelectMenu.Mode.PLAIN,
                 1, maxQty, 1, 0, config.getCurrencySymbol(), onConfirm, onCancel)
             .open(player));
@@ -214,14 +215,14 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
                 try {
                     price = Double.parseDouble(priceInput.trim());
                 } catch (NumberFormatException ex) {
-                    player.sendMessage(Component.text("Invalid price.", RED)
+                    player.sendMessage(messages.get(CoreKeys.PLAYERSHOP_NEW_INVALID_PRICE)
                         .decoration(TextDecoration.ITALIC, false));
                     plugin.getServer().getScheduler().runTask(plugin, () -> this.open(player));
                     return;
                 }
 
                 if (price <= 0) {
-                    player.sendMessage(Component.text("Price must be greater than zero.", RED)
+                    player.sendMessage(messages.get(CoreKeys.PLAYERSHOP_NEW_PRICE_POSITIVE)
                         .decoration(TextDecoration.ITALIC, false));
                     plugin.getServer().getScheduler().runTask(plugin, () -> this.open(player));
                     return;
@@ -239,37 +240,23 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
     private void sendResultMessage(Player player, Result result, boolean isBuy,
                                     int qty, double price, String sym) {
         switch (result) {
-            case SUCCESS -> player.sendMessage(Component.text(
-                (isBuy ? "Buy order" : "Sell listing") + " created: "
-                + qty + "x " + selectedItem.getType().name().replace('_', ' ')
-                + " @ " + FormatUtil.formatMoney(price, sym) + " each.", GREEN)
-                .decoration(TextDecoration.ITALIC, false));
-            case INSUFFICIENT_FUNDS -> player.sendMessage(Component.text(
-                "You can't afford the escrow for that buy order.", RED)
-                .decoration(TextDecoration.ITALIC, false));
-            case INSUFFICIENT_ITEMS -> player.sendMessage(Component.text(
-                "You don't have enough of that item.", RED)
-                .decoration(TextDecoration.ITALIC, false));
+            case SUCCESS -> messages.send(player, isBuy ? CoreKeys.PLAYERSHOP_NEW_BUY_CREATED : CoreKeys.PLAYERSHOP_NEW_SELL_CREATED, TokenBag.of().put("quantity", qty).put("item", selectedItem.getType().name().replace('_', ' ')).put("price", FormatUtil.formatMoney(price, sym)));
+            case INSUFFICIENT_FUNDS -> messages.send(player, CoreKeys.PLAYERSHOP_NEW_NO_ESCROW);
+            case INSUFFICIENT_ITEMS -> messages.send(player, CoreKeys.PLAYERSHOP_NEW_NOT_ENOUGH);
             case MAX_LISTINGS_REACHED -> {
                 int cap = shopService.getMaxListings(player);
-                String capText = cap == Integer.MAX_VALUE ? "" : " of " + cap;
-                player.sendMessage(Component.text(
-                    "You've reached your maximum" + capText + " active listings.", RED)
-                    .decoration(TextDecoration.ITALIC, false));
+                if (cap == Integer.MAX_VALUE) {
+                    messages.send(player, CoreKeys.PLAYERSHOP_NEW_MAX_LISTINGS);
+                } else {
+                    messages.send(player, CoreKeys.PLAYERSHOP_NEW_MAX_LISTINGS_CAPPED, TokenBag.of().put("cap", cap));
+                }
             }
-            case INVALID_PRICE -> player.sendMessage(Component.text(
-                "Invalid price.", RED).decoration(TextDecoration.ITALIC, false));
-            case PRICE_TOO_LOW -> player.sendMessage(Component.text(
-                "Price too low — minimum is "
-                + FormatUtil.formatMoney(shopService.getSellPriceFloor(selectedItem.getType()), sym) + ".", RED)
-                .decoration(TextDecoration.ITALIC, false));
-            case PRICE_TOO_HIGH -> player.sendMessage(Component.text(
-                "Price too high — maximum is "
-                + FormatUtil.formatMoney(shopService.getBuyPriceCeiling(selectedItem.getType()), sym) + ".", RED)
-                .decoration(TextDecoration.ITALIC, false));
-            default -> player.sendMessage(Component.text(
-                "Something went wrong creating your listing.", RED)
-                .decoration(TextDecoration.ITALIC, false));
+            case INVALID_PRICE -> messages.send(player, CoreKeys.PLAYERSHOP_NEW_INVALID_PRICE);
+            case PRICE_TOO_LOW -> messages.send(player, CoreKeys.PLAYERSHOP_NEW_PRICE_TOO_LOW, TokenBag.of().put("minimum", FormatUtil.formatMoney(
+                    shopService.getSellPriceFloor(selectedItem.getType()), sym)));
+            case PRICE_TOO_HIGH -> messages.send(player, CoreKeys.PLAYERSHOP_NEW_PRICE_TOO_HIGH, TokenBag.of().put("maximum", FormatUtil.formatMoney(
+                    shopService.getBuyPriceCeiling(selectedItem.getType()), sym)));
+            default -> messages.send(player, CoreKeys.PLAYERSHOP_NEW_FAILED);
         }
     }
 
@@ -278,14 +265,14 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
     private ItemStack makeSearchIcon() {
         ItemStack item = new ItemStack(Material.NAME_TAG);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Search Item", GOLD).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_NEW_SEARCH_NAME));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  For BUY orders: type the item name", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  e.g. stone_bricks, oak_log", GRAY).decoration(TextDecoration.ITALIC, false),
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_SEARCH_LORE_1),
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_SEARCH_LORE_2),
             Component.empty(),
-            Component.text("  For SELL offers: place the item", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  in the center slot directly.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_SEARCH_LORE_3),
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_SEARCH_LORE_4)
         ));
         item.setItemMeta(meta);
         return item;
@@ -294,11 +281,11 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
     private ItemStack makePlaceholder() {
         ItemStack item = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("No item selected", GRAY).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_NEW_NO_ITEM));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  SELL: place item here from cursor", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  BUY:  use the name tag to search", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_NO_ITEM_LORE_1),
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_NO_ITEM_LORE_2)
         ));
         item.setItemMeta(meta);
         return item;
@@ -308,11 +295,11 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
         ItemStack preview = selectedItem.clone();
         ItemMeta meta     = preview.getItemMeta();
         String name       = selectedItem.getType().name().replace('_', ' ');
-        meta.displayName(Component.text(name, GOLD).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_NEW_SELECTED_NAME, TokenBag.of().put("item", name)));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Selected item", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  Click SELL or BUY to continue.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_SELECTED_LORE_1),
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_SELECTED_LORE_2)
         ));
         preview.setItemMeta(meta);
         preview.setAmount(1);
@@ -322,11 +309,11 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
     private ItemStack makeSellButton() {
         ItemStack item = new ItemStack(Material.RED_CONCRETE);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Create Sell Offer", RED).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_NEW_SELL_BUTTON));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Items removed from inventory now.", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  Returned on cancel or expiry.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_SELL_LORE_1),
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_SELL_LORE_2)
         ));
         item.setItemMeta(meta);
         return item;
@@ -335,11 +322,11 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
     private ItemStack makeBuyButton() {
         ItemStack item = new ItemStack(Material.LIME_CONCRETE);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Create Buy Order", GREEN).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_NEW_BUY_BUTTON));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Money deducted upfront (escrow).", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  Refunded on cancel or expiry.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_BUY_LORE_1),
+            messages.lore(CoreKeys.PLAYERSHOP_NEW_BUY_LORE_2)
         ));
         item.setItemMeta(meta);
         return item;
@@ -348,7 +335,7 @@ public final class PlayerShopNewOfferMenu extends BaseGui {
     private ItemStack makeBack() {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Cancel", RED).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_NEW_CANCEL));
         item.setItemMeta(meta);
         return item;
     }

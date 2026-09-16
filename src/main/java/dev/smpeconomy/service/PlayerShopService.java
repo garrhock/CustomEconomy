@@ -1,5 +1,9 @@
 package dev.smpeconomy.service;
 
+import dev.smpeconomy.message.Messages;
+
+import dev.smpeconomy.message.TokenBag;
+
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.database.repository.PlayerShopRepository;
 import dev.smpeconomy.database.repository.PlayerShopRepository.SortOrder;
@@ -56,6 +60,7 @@ public final class PlayerShopService {
     private static final long LISTING_DAYS = 7L;
 
     private final JavaPlugin plugin;
+    private final Messages messages;
     private final PlayerShopRepository repo;
     private final TransactionRepository txRepo;
     private final VaultHook vault;
@@ -66,7 +71,8 @@ public final class PlayerShopService {
 
     public PlayerShopService(JavaPlugin plugin, PlayerShopRepository repo, TransactionRepository txRepo,
                              VaultHook vault, WorthService worthService, ConfigManager config,
-                             int maxListingsPerPlayer, Logger log) {
+                             int maxListingsPerPlayer, Logger log, Messages messages) {
+        this.messages = messages;
         this.plugin               = plugin;
         this.repo                 = repo;
         this.txRepo               = txRepo;
@@ -410,8 +416,7 @@ public final class PlayerShopService {
     /** Shows a "+$amount" message above the hotbar and plays the sell ping, like /sell. */
     private void notifyEarnings(Player player, double amount) {
         String sym = config.getCurrencySymbol();
-        player.sendActionBar(Component.text("+" + FormatUtil.formatMoney(amount, sym),
-                TextColor.color(0x55FF55)).decoration(TextDecoration.ITALIC, false));
+        player.sendActionBar(messages.get(dev.smpeconomy.message.CoreKeys.SELL_EARNINGS_ACTIONBAR, TokenBag.of().put("amount", FormatUtil.formatMoney(amount, sym))));
         try {
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1.0f, 1.0f);
         } catch (Throwable ignored) {

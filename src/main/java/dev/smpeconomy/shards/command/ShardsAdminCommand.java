@@ -1,10 +1,13 @@
 package dev.smpeconomy.shards.command;
 
+import dev.smpeconomy.message.TokenBag;
+
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.shards.ShardsModule;
 import dev.smpeconomy.shards.service.ShardsService;
 import dev.smpeconomy.shards.util.EarnFeedback;
-import dev.smpeconomy.shards.util.Msg;
+import dev.smpeconomy.message.ShardKeys;
+import dev.smpeconomy.message.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,11 +25,11 @@ public final class ShardsAdminCommand implements CommandExecutor {
 
     private final ConfigManager config;
     private final ShardsService service;
-    private final Msg msg;
+    private final Messages msg;
     private final ShardsModule module;
     private final EarnFeedback feedback;
 
-    public ShardsAdminCommand(ConfigManager config, ShardsService service, Msg msg,
+    public ShardsAdminCommand(ConfigManager config, ShardsService service, Messages msg,
                               ShardsModule module, EarnFeedback feedback) {
         this.config = config;
         this.service = service;
@@ -42,54 +45,44 @@ public final class ShardsAdminCommand implements CommandExecutor {
             // Shares config.yml with the money economy, so this reloads both.
             config.reload();
             module.reload();
-            msg.send(sender, "reloaded", Map.of());
+            msg.sendPrefixed(sender, ShardKeys.RELOADED);
             return true;
         }
         if (args.length < 3) {
-            msg.send(sender, "admin-usage", Map.of());
+            msg.sendPrefixed(sender, ShardKeys.ADMIN_USAGE);
             return true;
         }
         Player target = Bukkit.getPlayerExact(args[1]);
         if (target == null) {
-            msg.send(sender, "admin-player-online", Map.of("player", args[1]));
+            msg.sendPrefixed(sender, ShardKeys.ADMIN_PLAYER_ONLINE, TokenBag.of().put("player", args[1]));
             return true;
         }
         long amount;
         try {
             amount = Long.parseLong(args[2]);
         } catch (NumberFormatException e) {
-            msg.send(sender, "admin-usage", Map.of());
+            msg.sendPrefixed(sender, ShardKeys.ADMIN_USAGE);
             return true;
         }
         switch (args[0].toLowerCase()) {
             case "give" -> {
                 long balance = service.deposit(target.getUniqueId(), amount);
-                msg.sendActionBar(target, "actionbar-earned", Map.of("amount", String.valueOf(amount)));
+                msg.sendActionBar(target, ShardKeys.ACTIONBAR_EARNED, TokenBag.of().put("amount", String.valueOf(amount)));
                 feedback.play(target);
-                msg.send(sender, "admin-given", Map.of(
-                        "amount", String.valueOf(amount),
-                        "player", target.getName(),
-                        "balance", String.valueOf(balance)));
+                msg.sendPrefixed(sender, ShardKeys.ADMIN_GIVEN, TokenBag.of().put("amount", String.valueOf(amount)).put("player", target.getName()).put("balance", String.valueOf(balance)));
             }
             case "take" -> {
                 if (service.withdraw(target.getUniqueId(), amount)) {
-                    msg.send(sender, "admin-taken", Map.of(
-                            "amount", String.valueOf(amount),
-                            "player", target.getName(),
-                            "balance", String.valueOf(service.balance(target.getUniqueId()))));
+                    msg.sendPrefixed(sender, ShardKeys.ADMIN_TAKEN, TokenBag.of().put("amount", String.valueOf(amount)).put("player", target.getName()).put("balance", String.valueOf(service.balance(target.getUniqueId()))));
                 } else {
-                    msg.send(sender, "admin-insufficient", Map.of(
-                            "player", target.getName(),
-                            "balance", String.valueOf(service.balance(target.getUniqueId()))));
+                    msg.sendPrefixed(sender, ShardKeys.ADMIN_INSUFFICIENT, TokenBag.of().put("player", target.getName()).put("balance", String.valueOf(service.balance(target.getUniqueId()))));
                 }
             }
             case "set" -> {
                 long balance = service.set(target.getUniqueId(), amount);
-                msg.send(sender, "admin-set", Map.of(
-                        "player", target.getName(),
-                        "balance", String.valueOf(balance)));
+                msg.sendPrefixed(sender, ShardKeys.ADMIN_SET, TokenBag.of().put("player", target.getName()).put("balance", String.valueOf(balance)));
             }
-            default -> msg.send(sender, "admin-usage", Map.of());
+            default -> msg.sendPrefixed(sender, ShardKeys.ADMIN_USAGE);
         }
         return true;
     }

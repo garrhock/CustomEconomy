@@ -1,8 +1,11 @@
 package dev.smpeconomy.shards.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
 import dev.smpeconomy.shards.service.ShardsService;
 import dev.smpeconomy.shards.util.EarnFeedback;
-import dev.smpeconomy.shards.util.Msg;
+import dev.smpeconomy.message.ShardKeys;
+import dev.smpeconomy.message.Messages;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -53,7 +56,7 @@ public final class ShardShop implements Listener {
 
     private final JavaPlugin plugin;
     private final ShardsService service;
-    private final Msg msg;
+    private final Messages msg;
     private final EarnFeedback feedback;
 
     private String title = "Shard Shop";
@@ -61,7 +64,7 @@ public final class ShardShop implements Listener {
     private final Map<Integer, Entry> bySlot = new HashMap<>();
     private final Map<UUID, PendingBuy> pending = new ConcurrentHashMap<>();
 
-    public ShardShop(JavaPlugin plugin, ShardsService service, Msg msg, EarnFeedback feedback) {
+    public ShardShop(JavaPlugin plugin, ShardsService service, Messages msg, EarnFeedback feedback) {
         this.plugin = plugin;
         this.service = service;
         this.msg = msg;
@@ -138,26 +141,19 @@ public final class ShardShop implements Listener {
         PendingBuy buy = pending.get(player.getUniqueId());
         if (buy == null || !buy.entryId().equals(entry.id()) || buy.expiresAt() < now) {
             pending.put(player.getUniqueId(), new PendingBuy(entry.id(), now + CONFIRM_WINDOW_MS));
-            msg.send(player, "shop-confirm", Map.of(
-                    "item", entry.name(),
-                    "cost", String.valueOf(entry.cost())));
+            msg.sendPrefixed(player, ShardKeys.SHOP_CONFIRM, TokenBag.of().put("item", entry.name()).put("cost", String.valueOf(entry.cost())));
             return;
         }
         pending.remove(player.getUniqueId());
         if (!service.withdraw(player.getUniqueId(), entry.cost())) {
-            msg.send(player, "shop-insufficient", Map.of(
-                    "cost", String.valueOf(entry.cost()),
-                    "balance", String.valueOf(service.balance(player.getUniqueId()))));
+            msg.sendPrefixed(player, ShardKeys.SHOP_INSUFFICIENT, TokenBag.of().put("cost", String.valueOf(entry.cost())).put("balance", String.valueOf(service.balance(player.getUniqueId()))));
             return;
         }
         for (String command : entry.commands()) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     command.replace("%player%", player.getName()));
         }
-        msg.send(player, "shop-bought", Map.of(
-                "item", entry.name(),
-                "cost", String.valueOf(entry.cost()),
-                "balance", String.valueOf(service.balance(player.getUniqueId()))));
+        msg.sendPrefixed(player, ShardKeys.SHOP_BOUGHT, TokenBag.of().put("item", entry.name()).put("cost", String.valueOf(entry.cost())).put("balance", String.valueOf(service.balance(player.getUniqueId()))));
         feedback.play(player);
     }
 }

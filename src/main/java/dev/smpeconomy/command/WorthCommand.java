@@ -1,5 +1,13 @@
 package dev.smpeconomy.command;
 
+import dev.smpeconomy.message.Messages;
+
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
+import dev.smpeconomy.CustomEconomy;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -27,9 +35,11 @@ public final class WorthCommand {
     private static final TextColor GRAY  = NamedTextColor.GRAY;
 
     private final JavaPlugin plugin;
+    private final Messages messages;
     private final WorthService worthService;
 
-    public WorthCommand(JavaPlugin plugin, WorthService worthService) {
+    public WorthCommand(JavaPlugin plugin, WorthService worthService, Messages messages) {
+        this.messages = messages;
         this.plugin       = plugin;
         this.worthService = worthService;
     }
@@ -41,7 +51,7 @@ public final class WorthCommand {
                 // /worth — show held item worth
                 if (!(ctx.getSource().getSender() instanceof Player p)) {
                     ctx.getSource().getSender().sendMessage(
-                        Component.text("Players only.", NamedTextColor.RED));
+                        messages.get(CoreKeys.PLAYERS_ONLY));
                     return Command.SINGLE_SUCCESS;
                 }
                 showHandWorth(p);
@@ -61,7 +71,8 @@ public final class WorthCommand {
                     ItemWorth worth = worthService.getItemWorthMap().get(key);
                     if (worth == null) {
                         ctx.getSource().getSender().sendMessage(
-                            Component.text("Unknown item: " + key, NamedTextColor.RED));
+                            messages
+                                .get(CoreKeys.WORTH_UNKNOWN_ITEM, TokenBag.of().put("item", key)));
                         return Command.SINGLE_SUCCESS;
                     }
                     String sym = plugin.getConfig().getString("economy.currency-symbol", "$");
@@ -87,13 +98,14 @@ public final class WorthCommand {
         String sym = plugin.getConfig().getString("economy.currency-symbol", "$");
         ItemStack hand = player.getInventory().getItemInMainHand();
         if (!ItemUtil.isValid(hand)) {
-            player.sendMessage(Component.text("Hold an item to check its worth.", GRAY));
+            player.sendMessage(messages
+                .get(CoreKeys.WORTH_HOLD_ITEM));
             return;
         }
         Optional<ItemWorth> opt = worthService.getItemWorth(hand);
         if (opt.isEmpty()) {
-            player.sendMessage(Component.text(
-                ItemUtil.getDisplayName(hand) + " has no sell value.", GRAY));
+            player.sendMessage(messages
+                .get(CoreKeys.WORTH_NO_VALUE, TokenBag.of().put("item", ItemUtil.getDisplayName(hand))));
             return;
         }
         // Effective price the player would actually receive (multiplier × market factor).
@@ -105,17 +117,10 @@ public final class WorthCommand {
     private void sendWorthMessage(org.bukkit.command.CommandSender sender, ItemWorth worth, int qty,
                                   double unitPrice, boolean effective, String sym) {
         double total = unitPrice * qty;
-        sender.sendMessage(
-            Component.text("⬛ ", GOLD)
-                .append(Component.text(worth.getDisplayName(), NamedTextColor.WHITE))
-                .append(Component.text("  [" + worth.getCategory().getDisplayName() + "]", GRAY)));
-        sender.sendMessage(
-            Component.text(effective ? "  Your sell price/unit: " : "  Price/unit: ", GRAY)
-                .append(Component.text(FormatUtil.formatMoney(unitPrice, sym), GREEN)));
+        sender.sendMessage(messages.get(CoreKeys.WORTH_HEADER, TokenBag.of().put("item", worth.getDisplayName()).put("category", worth.getCategory().getDisplayName())));
+        sender.sendMessage(messages.get(effective ? CoreKeys.WORTH_UNIT_EFFECTIVE : CoreKeys.WORTH_UNIT_BASE, TokenBag.of().put("price", FormatUtil.formatMoney(unitPrice, sym))));
         if (qty > 1) {
-            sender.sendMessage(
-                Component.text("  Stack ×" + qty + ": ", GRAY)
-                    .append(Component.text(FormatUtil.formatMoney(total, sym), GREEN)));
+            sender.sendMessage(messages.get(CoreKeys.WORTH_STACK, TokenBag.of().put("quantity", qty).put("total", FormatUtil.formatMoney(total, sym))));
         }
     }
 }

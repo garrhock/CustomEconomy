@@ -1,5 +1,10 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+import dev.smpeconomy.message.MessageKey;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.database.repository.TransactionRepository;
@@ -116,7 +121,7 @@ public final class MarketStatsMenu extends BaseGui {
     private ShopScope shopScope = ShopScope.SERVER;
 
     public MarketStatsMenu(ConfigManager config, TransactionRepository txRepo, Runnable onBack) {
-        super(54, Component.text("Top Items", GRAY).decoration(TextDecoration.BOLD, true));
+        super(54, CoreKeys.MARKET_STATS_TITLE);
         this.config  = config;
         this.txRepo  = txRepo;
         this.onBack  = onBack;
@@ -203,7 +208,7 @@ public final class MarketStatsMenu extends BaseGui {
         if (scope == ShopScope.SERVER || scope == ShopScope.BOTH) {
             if (m == Metric.PURCHASES) list.add(Source.SHOP_BUY);
             else list.addAll(List.of(Source.SELL_HAND, Source.SELL_INVENTORY,
-                                     Source.SELL_GUI, Source.AUTOSELL));
+                                     Source.SELL_GUI, Source.AUTOSELL, Source.SPAWNER));
         }
         if (scope == ShopScope.PLAYER || scope == ShopScope.BOTH) {
             list.add(m == Metric.PURCHASES ? Source.PLAYER_BUY : Source.PLAYER_SELL);
@@ -216,17 +221,17 @@ public final class MarketStatsMenu extends BaseGui {
     private ItemStack makeControls() {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Top Items Controls", GOLD)
+        meta.displayName(Component.text(messages.raw(CoreKeys.MARKET_STATS_CONTROLS_NAME), GOLD)
             .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Period:  " + timeRange.label, AQUA).decoration(TextDecoration.ITALIC, false),
-            Component.text("  Metric:  " + metric.label, AQUA).decoration(TextDecoration.ITALIC, false),
-            Component.text("  Sort by: " + sortBy.label, AQUA).decoration(TextDecoration.ITALIC, false),
+            messages.lore(CoreKeys.MARKET_STATS_PERIOD, TokenBag.of().put("period", timeRange.label)),
+            messages.lore(CoreKeys.MARKET_STATS_METRIC, TokenBag.of().put("metric", metric.label)),
+            messages.lore(CoreKeys.MARKET_STATS_SORT_BY, TokenBag.of().put("sort", sortBy.label)),
             Component.empty(),
-            Component.text("  Left Click   → change metric (Sold/Bought)", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  Right Click  → change period", GRAY).decoration(TextDecoration.ITALIC, false),
-            Component.text("  Swap Hands   → change sort (Money/Quantity)", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.MARKET_STATS_HINT_METRIC),
+            messages.lore(CoreKeys.MARKET_STATS_HINT_PERIOD),
+            messages.lore(CoreKeys.MARKET_STATS_HINT_SORT)
         ));
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -237,13 +242,14 @@ public final class MarketStatsMenu extends BaseGui {
     private ItemStack makeScopeButton() {
         ItemStack item = new ItemStack(Material.COMPASS);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Scope: " + shopScope.label, GOLD)
+        meta.displayName(Component.text(
+            messages.raw(CoreKeys.MARKET_STATS_SCOPE_NAME, TokenBag.of().put("scope", shopScope.label)), GOLD)
             .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Which shop's trades to rank.", GRAY).decoration(TextDecoration.ITALIC, false),
+            messages.lore(CoreKeys.MARKET_STATS_SCOPE_LORE),
             Component.empty(),
-            Component.text("  Click to cycle Server / Player / Both", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.MARKET_STATS_SCOPE_CYCLE)
         ));
         item.setItemMeta(meta);
         return item;
@@ -254,29 +260,20 @@ public final class MarketStatsMenu extends BaseGui {
         ItemStack icon = new ItemStack(mat != null ? mat : Material.PAPER);
         ItemMeta meta  = icon.getItemMeta();
 
-        TextColor nameColor = switch (rank) {
-            case 1 -> GOLD;
-            case 2 -> SILVER;
-            case 3 -> BRONZE;
-            default -> WHITE;
-        };
-        String rankPrefix = switch (rank) {
-            case 1 -> "🥇 #1  ";
-            case 2 -> "🥈 #2  ";
-            case 3 -> "🥉 #3  ";
-            default -> "#" + rank + "  ";
+        MessageKey rankKey = switch (rank) {
+            case 1 -> CoreKeys.MARKET_STATS_ENTRY_RANK_1;
+            case 2 -> CoreKeys.MARKET_STATS_ENTRY_RANK_2;
+            case 3 -> CoreKeys.MARKET_STATS_ENTRY_RANK_3;
+            default -> CoreKeys.MARKET_STATS_ENTRY_RANK_OTHER;
         };
 
         String sym = config.getCurrencySymbol();
-        meta.displayName(Component.text(rankPrefix + entry.itemKey().replace('_', ' '), nameColor)
-            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(rankKey, TokenBag.of().put("rank", rank).put("item", entry.itemKey().replace('_', ' '))));
 
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Volume: " + String.format("%,d", entry.totalQuantity()) + " units", GRAY)
-                .decoration(TextDecoration.ITALIC, false),
-            Component.text("  Value:  " + FormatUtil.formatMoney(entry.totalValue(), sym), GREEN)
-                .decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.MARKET_STATS_VOLUME, TokenBag.of().put("quantity", String.format("%,d", entry.totalQuantity()))),
+            messages.lore(CoreKeys.MARKET_STATS_VALUE, TokenBag.of().put("value", FormatUtil.formatMoney(entry.totalValue(), sym)))
         ));
 
         if (rank <= 3) {
@@ -290,8 +287,7 @@ public final class MarketStatsMenu extends BaseGui {
     private ItemStack makeEmpty() {
         ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("No data for this range yet.", GRAY)
-            .decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.MARKET_STATS_EMPTY));
         item.setItemMeta(meta);
         return item;
     }

@@ -1,5 +1,9 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.database.repository.PlayerShopRepository.SortOrder;
@@ -66,7 +70,7 @@ public final class PlayerShopMenu extends BaseGui {
 
     /** Opens on a specific view: {@code Type.SELL} for the auction house, {@code Type.BUY} for offers. */
     public PlayerShopMenu(ConfigManager config, PlayerShopService shopService, Type initialView) {
-        super(54, Component.text("Player Shop", GRAY).decoration(TextDecoration.BOLD, true));
+        super(54, CoreKeys.PLAYERSHOP_MENU_TITLE);
         this.config      = config;
         this.shopService = shopService;
         this.viewing     = initialView;
@@ -169,7 +173,7 @@ public final class PlayerShopMenu extends BaseGui {
 
     private void handleListingClick(Player player, PlayerListing listing) {
         if (listing.ownerUuid().equals(player.getUniqueId())) {
-            player.sendMessage(Component.text("You can't trade with your own listing.", RED)
+            player.sendMessage(messages.get(CoreKeys.PLAYERSHOP_MENU_OWN_LISTING)
                 .decoration(TextDecoration.ITALIC, false));
             return;
         }
@@ -193,9 +197,8 @@ public final class PlayerShopMenu extends BaseGui {
         }
 
         if (max < 1) {
-            player.sendMessage(Component.text(
-                isSell ? "That listing is out of stock." : "You don't have any of that item to sell.",
-                RED).decoration(TextDecoration.ITALIC, false));
+            messages.send(player, isSell ? CoreKeys.PLAYERSHOP_MENU_OUT_OF_STOCK
+                                                  : CoreKeys.PLAYERSHOP_MENU_NOTHING_TO_SELL);
             return;
         }
 
@@ -226,7 +229,8 @@ public final class PlayerShopMenu extends BaseGui {
 
         plugin.getServer().getScheduler().runTask(plugin, () ->
             new QuantitySelectMenu(
-                Component.text((isSell ? "Buy " : "Sell ") + listing.itemDisplayName(), GRAY),
+                messages.get(isSell ? CoreKeys.PLAYERSHOP_MENU_QUANTITY_BUY_TITLE
+                                             : CoreKeys.PLAYERSHOP_MENU_QUANTITY_SELL_TITLE, TokenBag.of().put("item", listing.itemDisplayName())),
                 iconFromListing(listing), mode, 1, max, 1, listing.pricePerUnit(), sym,
                 onConfirm, onCancel
             ).open(player));
@@ -236,18 +240,11 @@ public final class PlayerShopMenu extends BaseGui {
                                     int qty, PlayerListing listing, String sym) {
         double total = listing.pricePerUnit() * qty;
         switch (result) {
-            case SUCCESS -> player.sendMessage(Component.text(
-                (isSell ? "Purchased " : "Sold ") + qty + "x " + listing.itemDisplayName()
-                + " for " + FormatUtil.formatMoney(total, sym) + ".", GREEN)
-                .decoration(TextDecoration.ITALIC, false));
-            case INSUFFICIENT_FUNDS -> player.sendMessage(
-                Component.text("You can't afford that.", RED).decoration(TextDecoration.ITALIC, false));
-            case INSUFFICIENT_ITEMS -> player.sendMessage(
-                Component.text("You don't have enough of that item.", RED).decoration(TextDecoration.ITALIC, false));
-            case LISTING_UNAVAILABLE -> player.sendMessage(
-                Component.text("That listing is no longer available.", RED).decoration(TextDecoration.ITALIC, false));
-            default -> player.sendMessage(
-                Component.text("Transaction failed: " + result.name(), RED).decoration(TextDecoration.ITALIC, false));
+            case SUCCESS -> messages.send(player, isSell ? CoreKeys.PLAYERSHOP_MENU_PURCHASED : CoreKeys.PLAYERSHOP_MENU_SOLD, TokenBag.of().put("quantity", qty).put("item", listing.itemDisplayName()).put("total", FormatUtil.formatMoney(total, sym)));
+            case INSUFFICIENT_FUNDS -> messages.send(player, CoreKeys.PLAYERSHOP_MENU_CANNOT_AFFORD);
+            case INSUFFICIENT_ITEMS -> messages.send(player, CoreKeys.PLAYERSHOP_MENU_NOT_ENOUGH_ITEMS);
+            case LISTING_UNAVAILABLE -> messages.send(player, CoreKeys.PLAYERSHOP_MENU_UNAVAILABLE);
+            default -> messages.send(player, CoreKeys.PLAYERSHOP_MENU_FAILED, TokenBag.of().put("reason", result.name()));
         }
     }
 
@@ -282,30 +279,24 @@ public final class PlayerShopMenu extends BaseGui {
 
         ItemMeta meta = icon.getItemMeta();
         String sym    = config.getCurrencySymbol();
-        meta.displayName(Component.text(listing.itemDisplayName(), GOLD)
-            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_MENU_ITEM_NAME, TokenBag.of().put("item", listing.itemDisplayName())));
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.empty());
-        lore.add(Component.text("  Seller: " + listing.ownerName(), GRAY)
-            .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Price:  " + FormatUtil.formatMoney(listing.pricePerUnit(), sym) + " each", GRAY)
-            .decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_MENU_SELLER, TokenBag.of().put("seller", listing.ownerName())));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_MENU_PRICE, TokenBag.of().put("price", FormatUtil.formatMoney(listing.pricePerUnit(), sym))));
 
         if (listing.listingType() == Type.BUY) {
-            lore.add(Component.text("  Filled: " + listing.quantityFilled()
-                + " / " + listing.quantityTotal(), GRAY).decoration(TextDecoration.ITALIC, false));
+            lore.add(messages.lore(CoreKeys.PLAYERSHOP_MENU_FILLED, TokenBag.of().put("filled", listing.quantityFilled()).put("total", listing.quantityTotal())));
         } else {
-            lore.add(Component.text("  Available: " + listing.quantityRemaining(), GRAY)
-                .decoration(TextDecoration.ITALIC, false));
+            lore.add(messages.lore(CoreKeys.PLAYERSHOP_MENU_AVAILABLE, TokenBag.of().put("available", listing.quantityRemaining())));
         }
-        lore.add(Component.text("  Expires in " + GuiUtil.timeUntil(listing.expiresAt()), GRAY)
-            .decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_MENU_EXPIRES, TokenBag.of().put("time", GuiUtil.timeUntil(listing.expiresAt()))));
 
         lore.add(Component.empty());
-        lore.add(Component.text(
-            listing.listingType() == Type.SELL ? "  Click to buy" : "  Click to fulfill",
-            AQUA).decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(listing.listingType() == Type.SELL
+            ? CoreKeys.PLAYERSHOP_MENU_CLICK_TO_BUY
+            : CoreKeys.PLAYERSHOP_MENU_CLICK_TO_FULFILL));
         meta.lore(lore);
         icon.setItemMeta(meta);
         return icon;
@@ -315,15 +306,14 @@ public final class PlayerShopMenu extends BaseGui {
         boolean isSell = viewing == Type.SELL;
         ItemStack item = new ItemStack(isSell ? Material.RED_CONCRETE : Material.LIME_CONCRETE);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text(
-            isSell ? "Sell Offers" : "Buy Orders",
-            isSell ? RED : GREEN).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(isSell ? CoreKeys.PLAYERSHOP_MENU_TOGGLE_SELL
+                                                    : CoreKeys.PLAYERSHOP_MENU_TOGGLE_BUY));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  " + (isSell ? "Items for sale by players" : "Items players want to buy"), GRAY)
-                .decoration(TextDecoration.ITALIC, false),
+            messages.lore(isSell ? CoreKeys.PLAYERSHOP_MENU_TOGGLE_SELL_LORE
+                                       : CoreKeys.PLAYERSHOP_MENU_TOGGLE_BUY_LORE),
             Component.empty(),
-            Component.text("  Click to switch", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_MENU_CLICK_TO_SWITCH)
         ));
         item.setItemMeta(meta);
         return item;
@@ -332,12 +322,12 @@ public final class PlayerShopMenu extends BaseGui {
     private ItemStack makeFilterIcon() {
         ItemStack item = new ItemStack(Material.NAME_TAG);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Filter", GOLD).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_MENU_FILTER));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Active: " + sortLabel(sort), AQUA).decoration(TextDecoration.ITALIC, false),
+            messages.lore(CoreKeys.PLAYERSHOP_MENU_FILTER_ACTIVE, TokenBag.of().put("sort", sortLabel(sort))),
             Component.empty(),
-            Component.text("  Click to change sort order", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_MENU_FILTER_CLICK)
         ));
         item.setItemMeta(meta);
         return item;
@@ -346,10 +336,10 @@ public final class PlayerShopMenu extends BaseGui {
     private ItemStack makeMyOffersIcon() {
         ItemStack item = new ItemStack(Material.CHEST);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("My Offers", GOLD).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_MENU_MY_OFFERS));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  View and manage your listings.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_MENU_MY_OFFERS_LORE)
         ));
         item.setItemMeta(meta);
         return item;
@@ -358,10 +348,10 @@ public final class PlayerShopMenu extends BaseGui {
     private ItemStack makeNewOfferIcon() {
         ItemStack item = new ItemStack(Material.NETHER_STAR);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Create New Offer", GOLD).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_MENU_NEW_OFFER));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Create a sell listing or buy order.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_MENU_NEW_OFFER_LORE)
         ));
         item.setItemMeta(meta);
         return item;

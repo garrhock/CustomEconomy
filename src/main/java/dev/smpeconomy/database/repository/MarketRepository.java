@@ -99,7 +99,7 @@ public final class MarketRepository {
             SELECT item_key, SUM(quantity) AS vol
             FROM transactions
             WHERE created_at > ?
-              AND source IN ('SELL_HAND', 'SELL_INVENTORY', 'SELL_GUI', 'AUTOSELL')
+              AND source IN ('SELL_HAND', 'SELL_INVENTORY', 'SELL_GUI', 'AUTOSELL', 'SPAWNER')
             GROUP BY item_key
             """;
         return queryVolume(sql, since);
@@ -128,7 +128,7 @@ public final class MarketRepository {
             SELECT COUNT(DISTINCT uuid) AS sellers
             FROM transactions
             WHERE created_at > ?
-              AND source IN ('SELL_HAND', 'SELL_INVENTORY', 'SELL_GUI', 'AUTOSELL')
+              AND source IN ('SELL_HAND', 'SELL_INVENTORY', 'SELL_GUI', 'AUTOSELL', 'SPAWNER')
             """;
         try (Connection con = db.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {

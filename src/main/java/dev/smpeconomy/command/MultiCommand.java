@@ -1,5 +1,11 @@
 package dev.smpeconomy.command;
 
+import dev.smpeconomy.message.Messages;
+
+import dev.smpeconomy.message.CoreKeys;
+
+import dev.smpeconomy.CustomEconomy;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.smpeconomy.gui.MultiMainMenu;
@@ -16,8 +22,10 @@ import java.util.List;
 public final class MultiCommand {
 
     private final MultiplierService multiplierService;
+    private final Messages messages;
 
-    public MultiCommand(MultiplierService multiplierService) {
+    public MultiCommand(MultiplierService multiplierService, Messages messages) {
+        this.messages = messages;
         this.multiplierService = multiplierService;
     }
 
@@ -27,7 +35,7 @@ public final class MultiCommand {
             .executes(ctx -> {
                 if (!(ctx.getSource().getSender() instanceof Player p)) {
                     ctx.getSource().getSender().sendMessage(
-                        Component.text("Players only.", NamedTextColor.RED));
+                        messages.get(CoreKeys.PLAYERS_ONLY));
                     return Command.SINGLE_SUCCESS;
                 }
                 new MultiMainMenu(multiplierService, p.getUniqueId()).open(p);

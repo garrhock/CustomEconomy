@@ -1,0 +1,75 @@
+# ─────────────────────────────────────────────
+#  CustomEconomy — Virtual Spawners
+#
+#  Spawner TEXT is not here: it lives in messages.yml under `spawners:`, in
+#  MiniMessage, alongside every other message the plugin sends.
+# ─────────────────────────────────────────────
+# Spawners never spawn real mobs. They generate the mob's drops straight into
+# the block's own storage, which you empty by hand or drain with a hopper.
+#
+# Values marked [restart] are read once when the server starts. Everything else
+# is picked up by /ecoadmin reload.
+
+# Do not edit: used to migrate your settings when the plugin updates.
+config-version: 1
+
+# Items produced per spawner, per production cycle (see settings.production-interval).
+# Any spawner type not listed here defaults to 1.0.
+multipliers:
+  CHICKEN: 6.0
+  PIG: 6.0
+  COW: 6.0
+  ZOMBIE: 6.0
+  SKELETON: 6.0
+  BLAZE: 6.0
+  IRON_GOLEM: 6.0
+  SPIDER: 6.0
+  CREEPER: 6.0
+  ZOMBIFIED_PIGLIN: 6.0
+
+# Added to the multiplier when no other spawner is within settings.isolation_radius.
+# Encourages spreading farms out rather than stacking everything in one block.
+isolated_bonus: 0.5
+
+# Without this, stacking scales output linearly forever — a 100x stack prints
+# 100x the drops, and spawner farms become a money printer. Instead output
+# approaches a ceiling: effective = soft_cap * stack / (soft_cap + stack - 1).
+# A stack of 1 is never penalised. soft_cap is roughly the most a single block
+# can produce per cycle, so the ceiling is soft_cap x multiplier items per cycle.
+# Set enabled: false for uncapped linear scaling.
+diminishing_returns:
+  enabled: true
+  soft_cap: 125
+
+settings:
+  # Require Silk Touch to RECOVER a spawner. Without it the block still breaks —
+  # the whole stack is destroyed and nothing drops, as in vanilla. Set false to let
+  # any tool recover spawners.
+  require_silk_touch: true
+  # Convert naturally generated (dungeon) spawners to virtual ones too.
+  natural_spawners_virtual: false
+  # [restart] How often spawner data is written to disk, in ticks (6000 = 5 min).
+  auto_save_interval: 6000
+  # [restart] How often spawners produce, in ticks (600 = 30 seconds).
+  production_interval: 600
+  # Blocks between spawners for isolated_bonus to apply.
+  isolation_radius: 5
+  # DISPLAY ONLY — the number the GUI's "storage filled %" is measured against.
+  # This does NOT cap storage; spawner buffers are unbounded.
+  storage_display_capacity: 1000000
+
+# Draining spawner storage into a hopper placed beneath it.
+hopper:
+  enabled: true
+  # [restart] Time between collection passes. Accepts a duration such as 3s or 100t.
+  check_delay: 3s
+  # Item stacks moved per pass (maximum 5).
+  stack_per_transfer: 5
+
+# NOTE: spawner drops are priced by CustomEconomy's items.yml and are subject to
+# the same market factors and multipliers as any other sale. There is no separate
+# spawner price list.
+
+# XP generated per produced item, collected from the spawner GUI.
+xp:
+  amount_per_cycle: 5

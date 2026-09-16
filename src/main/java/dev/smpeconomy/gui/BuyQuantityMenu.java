@@ -1,5 +1,9 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.service.ShopService;
@@ -39,7 +43,7 @@ public final class BuyQuantityMenu extends BaseGui {
 
     public BuyQuantityMenu(ShopEntry entry, int initialQty, double dynamicUnitPrice,
                             ConfigManager config, ShopService shopService, Runnable onCancel) {
-        super(27, Component.text("Buying " + entry.displayName(), GRAY).decoration(TextDecoration.BOLD, true));
+        super(27, CoreKeys.SHOP_BUY_TITLE, TokenBag.of().put("item", entry.displayName()));
         this.entry            = entry;
         this.dynamicUnitPrice = dynamicUnitPrice;
         this.qty              = Math.max(1, initialQty);
@@ -66,7 +70,7 @@ public final class BuyQuantityMenu extends BaseGui {
             if (qty - dec >= 1) {
                 ItemStack pane = makeGlass(RED);
                 ItemMeta m = pane.getItemMeta();
-                m.displayName(Component.text("-" + dec, RED).decoration(TextDecoration.ITALIC, false));
+                m.displayName(messages.lore(CoreKeys.SHOP_BUY_DECREASE, TokenBag.of().put("amount", dec)));
                 pane.setItemMeta(m);
                 inventory.setItem(slot, pane);
                 int step = dec;
@@ -85,7 +89,7 @@ public final class BuyQuantityMenu extends BaseGui {
             int slot = incSlots[i];
             ItemStack pane = makeGlass(GREEN);
             ItemMeta m = pane.getItemMeta();
-            m.displayName(Component.text("+" + inc, GREEN).decoration(TextDecoration.ITALIC, false));
+            m.displayName(messages.lore(CoreKeys.SHOP_BUY_INCREASE, TokenBag.of().put("amount", inc)));
             pane.setItemMeta(m);
             inventory.setItem(slot, pane);
             int step = inc;
@@ -98,7 +102,7 @@ public final class BuyQuantityMenu extends BaseGui {
 
         ItemStack cancel = makeGlass(RED);
         ItemMeta cm = cancel.getItemMeta();
-        cm.displayName(Component.text("Cancel", RED).decoration(TextDecoration.ITALIC, false));
+        cm.displayName(messages.lore(CoreKeys.SHOP_BUY_CANCEL));
         cancel.setItemMeta(cm);
         inventory.setItem(21, cancel);
         onClick(21, e -> {
@@ -109,7 +113,7 @@ public final class BuyQuantityMenu extends BaseGui {
 
         ItemStack confirm = makeGlass(GREEN);
         ItemMeta fm = confirm.getItemMeta();
-        fm.displayName(Component.text("Confirm", GREEN).decoration(TextDecoration.ITALIC, false));
+        fm.displayName(messages.lore(CoreKeys.SHOP_BUY_CONFIRM));
         confirm.setItemMeta(fm);
         inventory.setItem(23, confirm);
         onClick(23, this::handleConfirm);
@@ -142,23 +146,10 @@ public final class BuyQuantityMenu extends BaseGui {
         String sym = config.getCurrencySymbol();
         ShopService.BuyResult result = shopService.buyDirect(player, entry.material(), qty, dynamicUnitPrice);
         switch (result) {
-            case SUCCESS -> player.sendMessage(
-                    Component.text("Purchased ", GRAY)
-                            .append(Component.text(qty + "x " + entry.displayName(), GREEN))
-                            .append(Component.text(" for ", GRAY))
-                            .append(Component.text(FormatUtil.formatMoney(cost, sym), GREEN))
-                            .decoration(TextDecoration.ITALIC, false));
-            case PARTIAL_SUCCESS -> player.sendMessage(
-                    Component.text("Purchased ", GRAY)
-                            .append(Component.text(qty + "x " + entry.displayName(), GREEN))
-                            .append(Component.text(" for ", GRAY))
-                            .append(Component.text(FormatUtil.formatMoney(cost, sym), GREEN))
-                            .append(Component.text(" — some items dropped at your feet.", GOLD))
-                            .decoration(TextDecoration.ITALIC, false));
-            case INSUFFICIENT_FUNDS -> player.sendMessage(
-                    Component.text("You can't afford that.", RED).decoration(TextDecoration.ITALIC, false));
-            case NO_INVENTORY_SPACE -> player.sendMessage(
-                    Component.text("Your inventory is full.", RED).decoration(TextDecoration.ITALIC, false));
+            case SUCCESS -> messages.send(player, CoreKeys.SHOP_BUY_PURCHASED, TokenBag.of().put("quantity", qty).put("item", entry.displayName()).put("cost", FormatUtil.formatMoney(cost, sym)));
+            case PARTIAL_SUCCESS -> messages.send(player, CoreKeys.SHOP_BUY_PURCHASED_PARTIAL, TokenBag.of().put("quantity", qty).put("item", entry.displayName()).put("cost", FormatUtil.formatMoney(cost, sym)));
+            case INSUFFICIENT_FUNDS -> messages.send(player, CoreKeys.SHOP_BUY_CANNOT_AFFORD);
+            case NO_INVENTORY_SPACE -> messages.send(player, CoreKeys.SHOP_BUY_INVENTORY_FULL);
             default -> {}
         }
     }
@@ -166,7 +157,7 @@ public final class BuyQuantityMenu extends BaseGui {
     private ItemStack makeCenter() {
         ItemStack icon = new ItemStack(entry.material());
         ItemMeta meta  = icon.getItemMeta();
-        meta.displayName(Component.text(entry.displayName(), GOLD).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.SHOP_BUY_ITEM_NAME, TokenBag.of().put("item", entry.displayName())));
 
         String sym = config.getCurrencySymbol();
         double total   = dynamicUnitPrice * qty;
@@ -176,19 +167,13 @@ public final class BuyQuantityMenu extends BaseGui {
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.empty());
-        lore.add(Component.text("  Quantity: ", GRAY).append(Component.text(qty, GREEN))
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Unit price: ", GRAY)
-                .append(Component.text(FormatUtil.formatMoney(dynamicUnitPrice, sym), GREEN))
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Total: ", GRAY)
-                .append(Component.text(FormatUtil.formatMoney(total, sym), affordable ? GREEN : RED))
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Your balance: ", GRAY)
-                .append(Component.text(FormatUtil.formatMoney(balance, sym), GRAY))
-                .decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(CoreKeys.SHOP_BUY_QUANTITY, TokenBag.of().put("quantity", qty)));
+        lore.add(messages.lore(CoreKeys.SHOP_BUY_UNIT_PRICE, TokenBag.of().put("price", FormatUtil.formatMoney(dynamicUnitPrice, sym))));
+        lore.add(messages.lore(affordable ? CoreKeys.SHOP_BUY_TOTAL_AFFORDABLE
+                                          : CoreKeys.SHOP_BUY_TOTAL_UNAFFORDABLE, TokenBag.of().put("total", FormatUtil.formatMoney(total, sym))));
+        lore.add(messages.lore(CoreKeys.SHOP_BUY_BALANCE, TokenBag.of().put("balance", FormatUtil.formatMoney(balance, sym))));
         lore.add(Component.empty());
-        lore.add(Component.text("  Click the item to confirm purchase.", GRAY).decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(CoreKeys.SHOP_BUY_CLICK_TO_CONFIRM));
 
         meta.lore(lore);
         icon.setItemMeta(meta);

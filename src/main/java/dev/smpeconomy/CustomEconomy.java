@@ -10,6 +10,11 @@ import dev.smpeconomy.command.ShopCommand;
 import dev.smpeconomy.command.WorthCommand;
 import dev.smpeconomy.command.WorthsCommand;
 import dev.smpeconomy.config.ConfigManager;
+import dev.smpeconomy.message.CoreKeys;
+import dev.smpeconomy.message.MessageRegistry;
+import dev.smpeconomy.message.Messages;
+import dev.smpeconomy.message.ShardKeys;
+import dev.smpeconomy.message.SpawnerKeys;
 import dev.smpeconomy.database.DatabaseManager;
 import dev.smpeconomy.database.repository.MarketRepository;
 import dev.smpeconomy.database.repository.PlayerRepository;
@@ -27,6 +32,7 @@ import dev.smpeconomy.service.SellService;
 import dev.smpeconomy.service.ShopService;
 import dev.smpeconomy.service.WorthService;
 import dev.smpeconomy.shards.ShardsModule;
+import net.donutsmp.spawners.DonutSpawners;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,6 +47,8 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
     private static CustomEconomy instance;
 
     private ConfigManager configManager;
+    private MessageRegistry messageRegistry;
+    private Messages messages;
     private DatabaseManager databaseManager;
     private PlayerRepository playerRepository;
     private TransactionRepository transactionRepository;
@@ -55,6 +63,7 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
     private PlayerShopService playerShopService;
     private VaultHook vaultHook;
     private ShardsModule shardsModule;
+    private DonutSpawners spawnerModule;
     private CustomEconomyAPI api;
     private ChatInputService chatInputService;
 
@@ -72,6 +81,11 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
     public void onEnable() {
         // ── Config ───────────────────────────────────────────────────────────
         configManager = new ConfigManager(this);
+        messageRegistry = new MessageRegistry();
+        messageRegistry.register(CoreKeys.values());
+        messageRegistry.register(ShardKeys.values());
+        messageRegistry.register(SpawnerKeys.values());
+        messages      = new Messages(this, messageRegistry);
         configManager.load();
 
         // ── Database ─────────────────────────────────────────────────────────
@@ -106,12 +120,12 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
         }
 
         sellService = new SellService(worthService, vaultHook, transactionRepository,
-                                      configManager, multiplierService, marketService);
+                                      configManager, multiplierService, marketService, messages);
         shopService = new ShopService(vaultHook, transactionRepository, marketService);
         playerShopService = new PlayerShopService(
             this, playerShopRepository, transactionRepository, vaultHook,
             worthService, configManager,
-            configManager.getPlayerShopMaxListings(), getLogger());
+            configManager.getPlayerShopMaxListings(), getLogger(), messages);
 
         // ── Shards (second currency) ─────────────────────────────────────────
         shardsModule = new ShardsModule(this, databaseManager, configManager);
@@ -120,19 +134,23 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
         // ── Public API ───────────────────────────────────────────────────────
         api = new CustomEconomyAPI(worthService, sellService);
 
+        // after the API, since spawner drops are sold through it
+        spawnerModule = new DonutSpawners(this);
+        spawnerModule.enable();
+
         // ── Chat input service ───────────────────────────────────────────────
         chatInputService = new ChatInputService(this);
 
         // ── Commands (Paper brigadier) ───────────────────────────────────────
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, e -> {
             var registrar = e.registrar();
-            new SellCommand().register(registrar);
-            new WorthCommand(this, worthService).register(registrar);
-            new WorthsCommand(configManager, worthService, marketService).register(registrar);
-            new EcoAdminCommand(this, configManager, worthService, marketService, shardsModule).register(registrar);
-            new ShopCommand(configManager, shopService, marketService).register(registrar);
-            new PlayerShopCommand(configManager, playerShopService).register(registrar);
-            new MultiCommand(multiplierService).register(registrar);
+            new SellCommand(messages).register(registrar);
+            new WorthCommand(this, worthService, messages).register(registrar);
+            new WorthsCommand(configManager, worthService, marketService, messages).register(registrar);
+            new EcoAdminCommand(this, configManager, worthService, marketService, shardsModule, messages).register(registrar);
+            new ShopCommand(configManager, shopService, marketService, messages).register(registrar);
+            new PlayerShopCommand(configManager, playerShopService, messages).register(registrar);
+            new MultiCommand(multiplierService, messages).register(registrar);
         });
 
         // ── PlaceholderAPI ───────────────────────────────────────────────────
@@ -181,6 +199,7 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
 
         // Shards flush before the pool closes — they share it.
         if (shardsModule != null)          shardsModule.disable();
+        if (spawnerModule != null)         spawnerModule.disable();
 
         if (transactionRepository != null) transactionRepository.flushSync();
         if (multiplierService != null)     multiplierService.saveAll();
@@ -213,10 +232,12 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
     public VaultHook getVaultHook()                     { return vaultHook; }
     public MultiplierService getMultiplierService()     { return multiplierService; }
     public ShardsModule getShardsModule()               { return shardsModule; }
+    public DonutSpawners getSpawnerModule()             { return spawnerModule; }
     public TransactionRepository getTransactionRepository() { return transactionRepository; }
     public ShopService getShopService()                 { return shopService; }
     public PlayerShopService getPlayerShopService()     { return playerShopService; }
     public MarketService getMarketService()             { return marketService; }
     public ChatInputService getChatInputService()       { return chatInputService; }
     public CustomEconomyAPI getAPI()                    { return api; }
+    public Messages getMessages()                       { return messages; }
 }

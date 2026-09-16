@@ -19,6 +19,10 @@ softdepend:
 # register through Paper's Brigadier lifecycle in CustomEconomy#onEnable. The
 # shard commands below predate the merge and still use the classic executor path.
 commands:
+  givespawner:
+    description: Give a virtual spawner to a player
+    usage: /givespawner <player> <type> [stack]
+    permission: donutspawners.admin
   shards:
     description: View your shard balance
     usage: /shards
@@ -31,6 +35,9 @@ commands:
     usage: /shardshop
 
 permissions:
+  donutspawners.admin:
+    description: Give spawners with /givespawner
+    default: op
   customeco.sell:
     description: Use /sell commands
     default: true

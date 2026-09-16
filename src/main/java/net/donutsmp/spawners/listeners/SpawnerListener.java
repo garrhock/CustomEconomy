@@ -1,0 +1,419 @@
+package net.donutsmp.spawners.listeners;
+
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.SpawnerKeys;
+
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.donutsmp.spawners.DonutSpawners;
+import net.donutsmp.spawners.gui.SpawnerGUI;
+import net.donutsmp.spawners.holder.SpawnerGUIHolder;
+import net.donutsmp.spawners.mob.SpawnerType;
+import net.donutsmp.spawners.storage.SpawnerData;
+import net.donutsmp.spawners.util.SpawnerItemUtil;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.CreatureSpawner;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.SpawnerSpawnEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.NamespacedKey;
+import org.bukkit.persistence.PersistentDataType;
+
+import org.bukkit.event.player.PlayerQuitEvent; //
+import org.bukkit.Sound; //
+import org.bukkit.event.inventory.InventoryOpenEvent; //
+import org.bukkit.event.inventory.InventoryCloseEvent; // 
+import java.util.UUID; //
+import org.bukkit.entity.Item;//
+import org.bukkit.Location;//
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class SpawnerListener implements Listener {
+
+    private final DonutSpawners plugin;
+
+    public SpawnerListener(DonutSpawners plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        if (event.getInventory().getHolder() instanceof SpawnerGUIHolder) {
+            SpawnerGUIHolder holder = (SpawnerGUIHolder) event.getInventory().getHolder();
+            SpawnerData data = holder.getData();
+            plugin.getSpawnerManager().pauseHopperFor(data);
+            if (event.getPlayer() instanceof Player) {
+                plugin.getSpawnerManager().trySetGuiViewer(data, ((Player) event.getPlayer()).getUniqueId());
+            }
+        }
+    }
+    
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (event.getInventory().getHolder() instanceof SpawnerGUIHolder) {
+            SpawnerGUIHolder holder = (SpawnerGUIHolder) event.getInventory().getHolder();
+            SpawnerData data = holder.getData();
+            plugin.getSpawnerManager().resumeHopperFor(data);
+            if (event.getPlayer() instanceof Player) {
+                plugin.getSpawnerManager().clearGuiViewer(data, ((Player) event.getPlayer()).getUniqueId());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        plugin.getSpawnerManager().getSpawners().values().forEach(data -> plugin.getSpawnerManager().clearGuiViewer(data, uuid));
+    }
+
+    @EventHandler
+    public void onSpawnerPlace(BlockPlaceEvent event) {
+        if (event.isCancelled()) return;
+        ItemStack item = event.getItemInHand();
+        if (item.getType() != Material.SPAWNER) return;
+
+        SpawnerType type = SpawnerItemUtil.getSpawnerTypeFromItem(item);
+        if (type == null) return;
+
+        int stack = 1;
+
+        SpawnerData data = new SpawnerData(event.getBlock().getLocation(), event.getPlayer().getUniqueId(), type, stack);
+        plugin.getSpawnerManager().addSpawner(data);
+
+        CreatureSpawner cs = (CreatureSpawner) event.getBlock().getState();
+        try {
+            cs.setSpawnedType(type.getEntityType());
+            cs.update();
+        } catch (Exception e) {
+        }
+    }
+
+    @EventHandler
+    public void onSpawnerBreak(BlockBreakEvent event) {
+        if (event.isCancelled()) return;
+        Block block = event.getBlock();
+        if (block.getType() != Material.SPAWNER) return;
+
+        Player player = event.getPlayer();
+        SpawnerData data = plugin.getSpawnerManager().getSpawner(block.getLocation());
+
+        boolean isVirtual = plugin.getConfig().getBoolean("settings.natural_spawners_virtual", false);
+        boolean requireSilk = plugin.getConfig().getBoolean("settings.require_silk_touch", true);
+        boolean hasSilk = player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH);
+
+        if (data != null) {
+            event.setExpToDrop(0);
+            event.setDropItems(false);
+
+            // Silk Touch decides whether you get the spawner back, not whether you can break
+            // it. Without it the break still goes through and the whole stack is lost.
+            if (requireSilk && !hasSilk) {
+                int lost = data.getStackSize();
+                plugin.getSpawnerManager().removeSpawner(block.getLocation());
+                plugin.messages().send(player, SpawnerKeys.DESTROYED_WITHOUT_SILK,
+                        TokenBag.of().put("amount", lost));
+                return;
+            }
+
+            if (player.isSneaking()) {
+                int currentStack = data.getStackSize();
+                if (currentStack > 64) {
+                    ItemStack item = SpawnerItemUtil.createSpawnerItem(data.getType(), 64);
+                    block.getWorld().dropItemNaturally(block.getLocation(), item);
+                    data.setStackSize(currentStack - 64);
+                    event.setCancelled(true);
+                } else {
+                    ItemStack item = SpawnerItemUtil.createSpawnerItem(data.getType(), currentStack);
+                    block.getWorld().dropItemNaturally(block.getLocation(), item);
+                    plugin.getSpawnerManager().removeSpawner(block.getLocation());
+                }
+            } else {
+                if (data.getStackSize() > 1) {
+                    data.setStackSize(data.getStackSize() - 1);
+                    ItemStack item = SpawnerItemUtil.createSpawnerItem(data.getType(), 1);
+                    block.getWorld().dropItemNaturally(block.getLocation(), item);
+                    event.setCancelled(true);
+                } else {
+                    ItemStack item = SpawnerItemUtil.createSpawnerItem(data.getType(), 1);
+                    block.getWorld().dropItemNaturally(block.getLocation(), item);
+                    plugin.getSpawnerManager().removeSpawner(block.getLocation());
+                }
+            }
+
+        } else if (isVirtual) {
+            event.setExpToDrop(0);
+            event.setDropItems(false);
+
+            if (requireSilk && !hasSilk) {
+                plugin.messages().send(player, SpawnerKeys.DESTROYED_WITHOUT_SILK,
+                        TokenBag.of().put("amount", 1));
+                return;
+            }
+
+            CreatureSpawner cs = (CreatureSpawner) block.getState();
+            try {
+                SpawnerType type = SpawnerType.valueOf(cs.getSpawnedType().name());
+                ItemStack item = SpawnerItemUtil.createSpawnerItem(type, 1);
+                block.getWorld().dropItemNaturally(block.getLocation(), item);
+            } catch (IllegalArgumentException e) {
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSpawnerInteract(PlayerInteractEvent event) {
+        if (event.getHand() == org.bukkit.inventory.EquipmentSlot.OFF_HAND) return; //
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        Block block = event.getClickedBlock();
+        if (block == null || block.getType() != Material.SPAWNER) return;
+
+        Player player = event.getPlayer();
+        ItemStack itemInHand = player.getInventory().getItemInMainHand();
+        SpawnerData existingData = plugin.getSpawnerManager().getSpawner(block.getLocation());
+
+        if (itemInHand != null && itemInHand.getType() == Material.SPAWNER && existingData != null) {
+            SpawnerType typeInHand = SpawnerItemUtil.getSpawnerTypeFromItem(itemInHand);
+            if (typeInHand != null && typeInHand == existingData.getType()) {
+                event.setCancelled(true);
+                int amountToAdd = player.isSneaking() ? itemInHand.getAmount() : 1;
+                existingData.setStackSize(existingData.getStackSize() + amountToAdd);
+
+                if (player.isSneaking()) {
+                    player.getInventory().setItemInMainHand(null);
+                } else if (itemInHand.getAmount() > 1) {
+                    itemInHand.setAmount(itemInHand.getAmount() - 1);
+                } else {
+                    player.getInventory().setItemInMainHand(null);
+                }
+                if (amountToAdd == 1) {
+                    plugin.messages().sendActionBar(player, SpawnerKeys.SPAWNER_STACKED, TokenBag.of()
+                            .put("amount", existingData.getStackSize()));
+                } else {
+                    plugin.messages().sendActionBar(player, SpawnerKeys.SPAWNER_STACKED_MULTI, TokenBag.of()
+                            .put("amount", existingData.getStackSize())
+                            .put("count", amountToAdd));
+                }
+                return;
+            }
+        }
+
+        boolean isVirtual = plugin.getConfig().getBoolean("settings.natural_spawners_virtual", false);
+
+        if (existingData != null) {
+            event.setCancelled(true);
+            UUID current = plugin.getSpawnerManager().getGuiViewer(existingData);
+            if (current != null && !current.equals(player.getUniqueId())) {
+                plugin.messages().sendActionBar(player, SpawnerKeys.BEING_VIEWED);
+                try {
+                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+                } catch (Throwable t) {
+                    try {
+                        player.playSound(player.getLocation(), Sound.valueOf("VILLAGER_NO"), 1.0f, 1.0f);
+                    } catch (Throwable ignored) {}
+                }
+                return;
+            }
+            if (current == null) {
+                if (!plugin.getSpawnerManager().trySetGuiViewer(existingData, player.getUniqueId())) {
+                    plugin.messages().sendActionBar(player, SpawnerKeys.BEING_VIEWED);
+                    try {
+                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+                    } catch (Throwable t) {
+                        try {
+                            player.playSound(player.getLocation(), Sound.valueOf("VILLAGER_NO"), 1.0f, 1.0f);
+                        } catch (Throwable ignored) {}
+                    }
+                    return;
+                }
+            } new SpawnerGUI(plugin, existingData, false).open(player);
+        } else if (isVirtual) {
+            event.setCancelled(true);
+            CreatureSpawner cs = (CreatureSpawner) block.getState();
+            try {
+                SpawnerType type = SpawnerType.valueOf(cs.getSpawnedType().name());
+                SpawnerData data = new SpawnerData(block.getLocation(), player.getUniqueId(), type, 1);
+                plugin.getSpawnerManager().trySetGuiViewer(data, player.getUniqueId()); plugin.getSpawnerManager().addSpawner(data); 
+                new SpawnerGUI(plugin, data, false).open(player);
+            } catch (IllegalArgumentException ignored) {}
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getInventory().getHolder() instanceof SpawnerGUIHolder) {
+            event.setCancelled(true);
+            if (event.getClickedInventory() != event.getView().getTopInventory()) return;
+
+            Player player = (Player) event.getWhoClicked();
+            SpawnerGUIHolder holder = (SpawnerGUIHolder) event.getInventory().getHolder();
+            SpawnerData data = holder.getData();
+            int slot = event.getSlot();
+
+            if (holder.isStorage()) {
+                int currentPage = 1;
+                ItemStack closeItem = event.getInventory().getItem(45);
+                if (closeItem != null && closeItem.hasItemMeta()) {
+                    Integer p = closeItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(plugin.bukkit(), "gui_page"), PersistentDataType.INTEGER);
+                    if (p != null) currentPage = p;
+                }
+
+                if (slot < 45) {
+                    ItemStack clicked = event.getCurrentItem();
+                    if (clicked != null && clicked.getType() != Material.AIR) {
+                        HashMap<Integer, ItemStack> left = player.getInventory().addItem(clicked);
+                        int added = clicked.getAmount();
+                        if (!left.isEmpty()) {
+                            added -= left.get(0).getAmount();
+                        }
+                        if (added > 0) {
+                            long current = data.getAccumulatedDrops().getOrDefault(clicked.getType(), 0L);
+                            data.getAccumulatedDrops().put(clicked.getType(), Math.max(0, current - added));
+                            new SpawnerGUI(plugin, data, true, currentPage).open(player);
+                        }
+                    }
+                } else if (slot == 45) {
+                    new SpawnerGUI(plugin, data, false).open(player);
+                } else if (slot == 48) {
+                    ItemStack item = event.getCurrentItem();
+                    if (item != null && item.hasItemMeta()) {
+                        Integer target = item.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(plugin.bukkit(), "gui_target_page"), PersistentDataType.INTEGER);
+                        if (target != null) {
+                            new SpawnerGUI(plugin, data, true, target).open(player);
+                        }
+                    }
+                } else if (slot == 49) {
+                    int startIndex = (currentPage - 1) * 45;
+                    int endIndex = startIndex + 45;
+                    int index = 0;
+
+                    for (Map.Entry<Material, Long> entry : data.getAccumulatedDrops().entrySet()) {
+                        Material mat = entry.getKey();
+                        long remaining = entry.getValue();
+
+                        while (remaining > 0 && index < endIndex) {
+                            if (index >= startIndex) {
+                                int stackSize = (int) Math.min(remaining, 64);
+                                ItemStack stack = new ItemStack(mat, stackSize);
+                                HashMap<Integer, ItemStack> left = player.getInventory().addItem(stack);
+                                int added = stackSize;
+                                if (!left.isEmpty()) {
+                                    added -= left.values().stream().mapToInt(ItemStack::getAmount).sum();
+                                }
+                                if (added > 0) {
+                                    long current = data.getAccumulatedDrops().getOrDefault(mat, 0L);
+                                    data.getAccumulatedDrops().put(mat, Math.max(0, current - added));
+                                }
+                            }
+                            remaining -= 64;
+                            index++;
+                        }
+                        if (index >= endIndex) break;
+                    }
+                    new SpawnerGUI(plugin, data, true, currentPage).open(player);
+                } else if (slot == 50) {
+                    ItemStack item = event.getCurrentItem();
+                    if (item != null && item.hasItemMeta()) {
+                        Integer target = item.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(plugin.bukkit(), "gui_target_page"), PersistentDataType.INTEGER);
+                        if (target != null) {
+                            new SpawnerGUI(plugin, data, true, target).open(player);
+                        }
+                    }
+                } else if (slot == 52) {
+                    int startIndex = (currentPage - 1) * 45;
+                    int currentIndex = 0;
+                    int itemsDroppedOnPage = 0;
+                    HashMap<Material, Long> toRemove = new HashMap<>();
+
+                    for (Map.Entry<Material, Long> entry : data.getAccumulatedDrops().entrySet()) {
+                        Material mat = entry.getKey();
+                        long totalAmount = entry.getValue();
+                        long remaining = totalAmount;
+
+                        while (remaining > 0) {
+                            if (itemsDroppedOnPage >= 45) break;
+
+                            if (currentIndex >= startIndex) {
+                                int stackSize = (int) Math.min(remaining, 64);
+                                Location eye = player.getEyeLocation();
+                                Location spawnLoc = eye.clone().add(eye.getDirection().normalize().multiply(0.5));
+                                org.bukkit.entity.Item dropped = player.getWorld().dropItem(spawnLoc, new ItemStack(mat, stackSize));
+                                dropped.setVelocity(eye.getDirection().normalize().multiply(0.35));
+                                toRemove.put(mat, toRemove.getOrDefault(mat, 0L) + stackSize);
+                                itemsDroppedOnPage++;
+                            }
+                            remaining -= 64;
+                            currentIndex++;
+                        }
+                        if (itemsDroppedOnPage >= 45) break;
+                    }
+
+                    for (Map.Entry<Material, Long> entry : toRemove.entrySet()) {
+                        Material mat = entry.getKey();
+                        long amount = entry.getValue();
+                        long current = data.getAccumulatedDrops().getOrDefault(mat, 0L);
+                        if (current <= amount) {
+                            data.getAccumulatedDrops().remove(mat);
+                        } else {
+                            data.getAccumulatedDrops().put(mat, current - amount);
+                        }
+                    }
+                    new SpawnerGUI(plugin, data, true, currentPage).open(player);
+                } else if (slot == 53) {
+                    // sellItems() already removed what it sold, so don't clear the buffer here
+                    double sold = plugin.getEconomyHandler().sellItems(player, data.getAccumulatedDrops());
+                    plugin.messages().send(player, SpawnerKeys.SOLD, TokenBag.of()
+                            .put("money", String.format("%.2f", sold)));
+                    new SpawnerGUI(plugin, data, true, currentPage).open(player);
+                }
+            } else {
+                if (slot == 11) {
+                    new SpawnerGUI(plugin, data, true).open(player);
+                } else if (slot == 15) {
+                    if (data.getAccumulatedXP() > 0) {
+                        player.giveExp((int) data.getAccumulatedXP());
+                        plugin.messages().send(player, SpawnerKeys.COLLECTED, TokenBag.of()
+                                .put("amount", 0)
+                                .put("xp", data.getAccumulatedXP()));
+                        data.setAccumulatedXP(0);
+                        player.closeInventory();
+                    }
+                } else if (slot == 13) {
+                    long before = data.getAccumulatedDrops().values().stream().mapToLong(Long::longValue).sum();
+                    double sold = plugin.getEconomyHandler().sellItems(player, data.getAccumulatedDrops());
+                    long after = data.getAccumulatedDrops().values().stream().mapToLong(Long::longValue).sum();
+                    long xp = data.getAccumulatedXP();
+                    player.giveExp((int) xp);
+                    plugin.messages().send(player, SpawnerKeys.COLLECTED, TokenBag.of()
+                            .put("amount", before - after)
+                            .put("xp", xp));
+                    if (sold > 0) {
+                        plugin.messages().send(player, SpawnerKeys.SOLD, TokenBag.of()
+                                .put("money", String.format("%.2f", sold)));
+                    }
+                    data.setAccumulatedXP(0);
+                    player.closeInventory();
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSpawnerSpawn(SpawnerSpawnEvent event) {
+        if (event.getSpawner() != null && plugin.getSpawnerManager().getSpawner(event.getSpawner().getLocation()) != null) {
+            event.setCancelled(true);
+        }
+    }
+}

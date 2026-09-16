@@ -1,5 +1,9 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.model.PlayerListing;
@@ -58,7 +62,7 @@ public final class PlayerShopMyOffersMenu extends BaseGui {
     private int page = 0;
 
     public PlayerShopMyOffersMenu(ConfigManager config, PlayerShopService shopService, Runnable onBack) {
-        super(54, Component.text("My Offers", GRAY).decoration(TextDecoration.BOLD, true));
+        super(54, CoreKeys.PLAYERSHOP_OFFERS_TITLE);
         this.config      = config;
         this.shopService = shopService;
         this.onBack      = onBack;
@@ -147,7 +151,7 @@ public final class PlayerShopMyOffersMenu extends BaseGui {
                         final long lid = listing.id();
                         onClick(slot, e -> {
                             shopService.claimListingStorage(player, lid);
-                            player.sendMessage(Component.text("Items claimed.", GREEN)
+                            player.sendMessage(messages.get(CoreKeys.PLAYERSHOP_OFFERS_CLAIMED)
                                 .decoration(TextDecoration.ITALIC, false));
                             populate();
                         });
@@ -210,23 +214,18 @@ public final class PlayerShopMyOffersMenu extends BaseGui {
         }
         ItemMeta meta = icon.getItemMeta();
         String sym    = config.getCurrencySymbol();
-        meta.displayName(Component.text(listing.itemDisplayName(), GOLD)
-            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_OFFERS_ITEM_NAME, TokenBag.of().put("item", listing.itemDisplayName())));
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.empty());
-        lore.add(Component.text("  Type: ", GRAY)
-            .append(Component.text(listing.listingType() == Type.SELL ? "Sell Offer" : "Buy Order",
-                listing.listingType() == Type.SELL ? RED : GREEN))
-            .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Price: " + FormatUtil.formatMoney(listing.pricePerUnit(), sym) + " each", GRAY)
-            .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Filled: " + listing.quantityFilled() + " / " + listing.quantityTotal(), GRAY)
-            .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Expires in " + GuiUtil.timeUntil(listing.expiresAt()), GRAY)
-            .decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(listing.listingType() == Type.SELL
+            ? CoreKeys.PLAYERSHOP_OFFERS_TYPE_SELL
+            : CoreKeys.PLAYERSHOP_OFFERS_TYPE_BUY));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_OFFERS_PRICE, TokenBag.of().put("price", FormatUtil.formatMoney(listing.pricePerUnit(), sym))));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_OFFERS_FILLED, TokenBag.of().put("filled", listing.quantityFilled()).put("total", listing.quantityTotal())));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_OFFERS_EXPIRES, TokenBag.of().put("time", GuiUtil.timeUntil(listing.expiresAt()))));
         lore.add(Component.empty());
-        lore.add(Component.text("  Click to cancel listing", RED).decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(CoreKeys.PLAYERSHOP_OFFERS_CLICK_CANCEL));
         meta.lore(lore);
         icon.setItemMeta(meta);
         return icon;
@@ -243,17 +242,15 @@ public final class PlayerShopMyOffersMenu extends BaseGui {
         ItemMeta meta = icon.getItemMeta();
         String sym    = config.getCurrencySymbol();
         boolean bought = listing.listingType() == Type.BUY;
-        meta.displayName(Component.text(listing.itemDisplayName(), GREEN)
-            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_OFFERS_DONE_NAME, TokenBag.of().put("item", listing.itemDisplayName())));
 
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  " + (bought ? "Order filled — all bought" : "Listing closed — items returned"), GREEN)
-                .decoration(TextDecoration.ITALIC, false),
-            Component.text("  Price: " + FormatUtil.formatMoney(listing.pricePerUnit(), sym) + " each", GRAY)
-                .decoration(TextDecoration.ITALIC, false),
+            messages.lore(bought ? CoreKeys.PLAYERSHOP_OFFERS_ORDER_FILLED
+                                     : CoreKeys.PLAYERSHOP_OFFERS_LISTING_CLOSED),
+            messages.lore(CoreKeys.PLAYERSHOP_OFFERS_PRICE, TokenBag.of().put("price", FormatUtil.formatMoney(listing.pricePerUnit(), sym))),
             Component.empty(),
-            Component.text("  ▶ Click to claim your items", GREEN).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_OFFERS_CLICK_CLAIM)
         ));
         // Enchant glint differentiates a completed order from an active one.
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
@@ -266,15 +263,14 @@ public final class PlayerShopMyOffersMenu extends BaseGui {
         boolean isSell = viewing == Type.SELL;
         ItemStack item = new ItemStack(isSell ? Material.RED_CONCRETE : Material.LIME_CONCRETE);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text(
-            isSell ? "Sell Offers" : "Buy Orders",
-            isSell ? RED : GREEN).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(messages.lore(isSell ? CoreKeys.PLAYERSHOP_OFFERS_TOGGLE_SELL
+                                                    : CoreKeys.PLAYERSHOP_OFFERS_TOGGLE_BUY));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Showing your " + (isSell ? "sell offers" : "buy orders"), GRAY)
-                .decoration(TextDecoration.ITALIC, false),
+            messages.lore(isSell ? CoreKeys.PLAYERSHOP_OFFERS_SHOWING_SELL
+                                       : CoreKeys.PLAYERSHOP_OFFERS_SHOWING_BUY),
             Component.empty(),
-            Component.text("  Click to switch", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_OFFERS_CLICK_SWITCH)
         ));
         item.setItemMeta(meta);
         return item;
@@ -283,11 +279,11 @@ public final class PlayerShopMyOffersMenu extends BaseGui {
     private ItemStack makeAllOffersIcon() {
         ItemStack item = new ItemStack(Material.COMPASS);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("All Offers", GOLD)
+        meta.displayName(Component.text(messages.raw(CoreKeys.PLAYERSHOP_OFFERS_ALL), GOLD)
             .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Back to all players' offers.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_OFFERS_ALL_LORE)
         ));
         item.setItemMeta(meta);
         return item;
@@ -296,11 +292,11 @@ public final class PlayerShopMyOffersMenu extends BaseGui {
     private ItemStack makeClaimButton() {
         ItemStack item = new ItemStack(Material.ENDER_CHEST);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Claim Items", GOLD)
+        meta.displayName(Component.text(messages.raw(CoreKeys.PLAYERSHOP_OFFERS_CLAIM_ITEMS), GOLD)
             .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Open your item claim chest.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_OFFERS_CLAIM_ITEMS_LORE)
         ));
         item.setItemMeta(meta);
         return item;
@@ -309,11 +305,11 @@ public final class PlayerShopMyOffersMenu extends BaseGui {
     private ItemStack makeNewOfferIcon() {
         ItemStack item = new ItemStack(Material.NETHER_STAR);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Create New Offer", GOLD)
+        meta.displayName(Component.text(messages.raw(CoreKeys.PLAYERSHOP_OFFERS_NEW), GOLD)
             .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  Create a sell listing or buy order.", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(CoreKeys.PLAYERSHOP_OFFERS_NEW_LORE)
         ));
         item.setItemMeta(meta);
         return item;

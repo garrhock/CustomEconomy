@@ -1,5 +1,9 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
 import dev.smpeconomy.CustomEconomy;
 import dev.smpeconomy.config.ConfigManager;
 import dev.smpeconomy.service.MarketService;
@@ -46,8 +50,8 @@ public final class ShopCategoryMenu extends BaseGui {
 
     public ShopCategoryMenu(ShopSection section, ConfigManager config,
                              ShopService shopService, MarketService marketService) {
-        super(27, Component.text("Shop — " + section.getDisplayName(), GRAY)
-                .decoration(TextDecoration.BOLD, true));
+        super(27, CoreKeys.SHOP_CATEGORY_TITLE,
+                TokenBag.of().put("category", section.getDisplayName()));
         this.section       = section;
         this.config        = config;
         this.shopService   = shopService;
@@ -134,30 +138,19 @@ public final class ShopCategoryMenu extends BaseGui {
         List<Component> lore = new ArrayList<>();
         lore.add(Component.empty());
         if (entry.quantity() > 1) {
-            lore.add(Component.text("  Qty per click: ×" + entry.quantity(), GRAY)
-                    .decoration(TextDecoration.ITALIC, false));
+            lore.add(messages.lore(CoreKeys.SHOP_CATEGORY_QTY_PER_CLICK, TokenBag.of().put("quantity", entry.quantity())));
         }
 
         double totalDyn = dynPrice * entry.quantity();
-        Component priceLine = Component.text("  Price: ", GRAY)
-                .append(Component.text(FormatUtil.formatMoney(totalDyn, sym), GREEN))
-                .decoration(TextDecoration.ITALIC, false);
-
         String trend = marketService.getFactorDisplay(entry.material().name());
-        if (!trend.equals("±0%")) {
-            TextColor trendColor = trend.startsWith("+") ? RED : AQUA;
-            priceLine = priceLine.append(Component.text("  " + trend, trendColor)
-                    .decoration(TextDecoration.ITALIC, false));
-        }
-        lore.add(priceLine);
+        String trendText = trend.equals("±0%") ? "" : messages.raw(trend.startsWith("+") ? CoreKeys.SHOP_CATEGORY_TREND_UP
+                                      : CoreKeys.SHOP_CATEGORY_TREND_DOWN, TokenBag.of().put("trend", trend));
+        lore.add(messages.lore(CoreKeys.SHOP_CATEGORY_PRICE, TokenBag.of().put("price", FormatUtil.formatMoney(totalDyn, sym)).put("trend", trendText)));
 
         lore.add(Component.empty());
-        lore.add(Component.text("  Left Click:   ×" + entry.quantity(), GRAY)
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Right Click:  ×" + (entry.quantity() * 4), GRAY)
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("  Shift+Click:  ×" + (entry.quantity() * 16), GRAY)
-                .decoration(TextDecoration.ITALIC, false));
+        lore.add(messages.lore(CoreKeys.SHOP_CATEGORY_LEFT_CLICK, TokenBag.of().put("quantity", entry.quantity())));
+        lore.add(messages.lore(CoreKeys.SHOP_CATEGORY_RIGHT_CLICK, TokenBag.of().put("quantity", entry.quantity() * 4)));
+        lore.add(messages.lore(CoreKeys.SHOP_CATEGORY_SHIFT_CLICK, TokenBag.of().put("quantity", entry.quantity() * 16)));
         meta.lore(lore);
         icon.setItemMeta(meta);
         return icon;

@@ -1,5 +1,11 @@
 package dev.smpeconomy.gui;
 
+import dev.smpeconomy.message.TokenBag;
+
+import dev.smpeconomy.message.CoreKeys;
+
+import dev.smpeconomy.CustomEconomy;
+
 import dev.smpeconomy.database.repository.PlayerShopRepository.SortOrder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -47,7 +53,7 @@ public final class PlayerShopFilterMenu extends BaseGui {
     private final Runnable onBack;
 
     public PlayerShopFilterMenu(SortOrder current, Consumer<SortOrder> onSelect, Runnable onBack) {
-        super(27, Component.text("Sort & Filter", GRAY).decoration(TextDecoration.BOLD, true));
+        super(27, CoreKeys.PLAYERSHOP_FILTER_TITLE);
         this.current  = current;
         this.onSelect = onSelect;
         this.onBack   = onBack;
@@ -83,15 +89,14 @@ public final class PlayerShopFilterMenu extends BaseGui {
     private ItemStack makeOptionIcon(SortOption opt, boolean active) {
         ItemStack icon = new ItemStack(opt.icon());
         ItemMeta meta  = icon.getItemMeta();
-        TextColor nameColor = active ? GREEN : GOLD;
-        meta.displayName(Component.text(opt.label(), nameColor).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(active ? CoreKeys.PLAYERSHOP_FILTER_OPTION_ACTIVE
+                       : CoreKeys.PLAYERSHOP_FILTER_OPTION_INACTIVE, TokenBag.of().put("label", opt.label())));
         meta.lore(List.of(
             Component.empty(),
-            Component.text("  " + opt.description(), GRAY).decoration(TextDecoration.ITALIC, false),
+            messages.lore(CoreKeys.PLAYERSHOP_FILTER_DESCRIPTION, TokenBag.of().put("description", opt.description())),
             Component.empty(),
-            active
-                ? Component.text("  ✔ Currently active", GREEN).decoration(TextDecoration.ITALIC, false)
-                : Component.text("  Click to apply", GRAY).decoration(TextDecoration.ITALIC, false)
+            messages.lore(active ? CoreKeys.PLAYERSHOP_FILTER_CURRENTLY_ACTIVE
+                                 : CoreKeys.PLAYERSHOP_FILTER_CLICK_TO_APPLY)
         ));
         if (active) {
             meta.addEnchant(Enchantment.UNBREAKING, 1, true);
@@ -104,7 +109,7 @@ public final class PlayerShopFilterMenu extends BaseGui {
     private ItemStack makeBack() {
         ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         ItemMeta meta  = item.getItemMeta();
-        meta.displayName(Component.text("Back", RED).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(messages.lore(CoreKeys.PLAYERSHOP_FILTER_BACK));
         item.setItemMeta(meta);
         return item;
     }

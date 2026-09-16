@@ -1,8 +1,11 @@
 package dev.smpeconomy.shards.listener;
 
+import dev.smpeconomy.message.TokenBag;
+
 import dev.smpeconomy.shards.service.ShardsService;
 import dev.smpeconomy.shards.util.EarnFeedback;
-import dev.smpeconomy.shards.util.Msg;
+import dev.smpeconomy.message.ShardKeys;
+import dev.smpeconomy.message.Messages;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,13 +23,13 @@ public final class ShardListeners implements Listener {
 
     private final JavaPlugin plugin;
     private final ShardsService service;
-    private final Msg msg;
+    private final Messages msg;
     private final EarnFeedback feedback;
 
     /** killer|victim pair → epoch millis the cooldown expires. */
     private final Map<String, Long> killCooldowns = new ConcurrentHashMap<>();
 
-    public ShardListeners(JavaPlugin plugin, ShardsService service, Msg msg, EarnFeedback feedback) {
+    public ShardListeners(JavaPlugin plugin, ShardsService service, Messages msg, EarnFeedback feedback) {
         this.plugin = plugin;
         this.service = service;
         this.msg = msg;
@@ -60,7 +63,7 @@ public final class ShardListeners implements Listener {
             long now = System.currentTimeMillis();
             Long expires = killCooldowns.get(pair);
             if (expires != null && expires > now) {
-                msg.sendActionBar(killer, "actionbar-cooldown", Map.of("victim", victim.getName()));
+                msg.sendActionBar(killer, ShardKeys.ACTIONBAR_COOLDOWN, TokenBag.of().put("victim", victim.getName()));
                 return;
             }
             killCooldowns.put(pair, now + cooldownMs);
@@ -68,9 +71,7 @@ public final class ShardListeners implements Listener {
         }
         UUID killerId = killer.getUniqueId();
         service.deposit(killerId, amount);
-        msg.sendActionBar(killer, "actionbar-kill", Map.of(
-                "amount", String.valueOf(amount),
-                "victim", victim.getName()));
+        msg.sendActionBar(killer, ShardKeys.ACTIONBAR_KILL, TokenBag.of().put("amount", String.valueOf(amount)).put("victim", victim.getName()));
         feedback.play(killer);
     }
 }
