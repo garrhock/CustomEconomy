@@ -90,7 +90,7 @@ public final class Messages {
             if (locale.equals(defaultLocale)) {
                 mergeJarDefaults(yaml, file);
             }
-            catalogs.put(locale, MessageCatalog.of(locale, flatten(yaml)));
+            catalogs.put(locale, MessageCatalog.of(locale, toPlainMap(yaml)));
         }
 
         MessageCatalog fallback = catalogs.get(defaultLocale);
@@ -134,12 +134,15 @@ public final class Messages {
         }
     }
 
-    private static Map<String, Object> flatten(YamlConfiguration yaml) {
+    // Hand MessageCatalog a nested map, not dotted keys. getValues(true) would flatten
+    // plural blocks into separate one/other entries and the block would be lost.
+    static Map<String, Object> toPlainMap(ConfigurationSection section) {
         Map<String, Object> out = new LinkedHashMap<>();
-        for (Map.Entry<String, Object> entry : yaml.getValues(true).entrySet()) {
-            if (!(entry.getValue() instanceof ConfigurationSection)) {
-                out.put(entry.getKey(), entry.getValue());
-            }
+        for (Map.Entry<String, Object> entry : section.getValues(false).entrySet()) {
+            Object value = entry.getValue();
+            out.put(entry.getKey(), value instanceof ConfigurationSection child
+                    ? toPlainMap(child)
+                    : value);
         }
         return out;
     }
