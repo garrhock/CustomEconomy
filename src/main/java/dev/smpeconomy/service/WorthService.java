@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Core price-lookup service.
@@ -58,14 +59,29 @@ public final class WorthService {
      * Returns -1 if the item is not sellable.
      */
     public double getSellPrice(ItemStack item, Player player) {
-        Optional<ItemWorth> opt = getItemWorth(item);
-        if (opt.isEmpty()) return -1;
+        return getSellPrice(ItemUtil.getKey(item), player == null ? null : player.getUniqueId());
+    }
 
-        ItemWorth worth = opt.get();
+    /**
+     * Same price as {@link #getSellPrice(ItemStack, Player)}, addressed by
+     * price-table key instead of a live ItemStack.
+     *
+     * Safe off the main thread: the worth map is replaced atomically, and both
+     * the multiplier cache and the market factors are concurrent maps. The
+     * tooltip listener uses this so it never has to touch Bukkit from netty.
+     *
+     * Returns -1 if the item is not sellable.
+     */
+    public double getSellPrice(String key, UUID uuid) {
+        if (key == null) return -1;
+
+        ItemWorth worth = config.getItemWorthMap().get(key.toUpperCase(Locale.ROOT));
+        if (worth == null) return -1;
+
         double price = worth.getBasePrice();
 
-        if (multiplierService != null && player != null) {
-            price *= multiplierService.getMultiplier(player.getUniqueId(), worth.getCategory());
+        if (multiplierService != null && uuid != null) {
+            price *= multiplierService.getMultiplier(uuid, worth.getCategory());
         }
 
         if (marketService != null) {

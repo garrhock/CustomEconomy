@@ -46,6 +46,40 @@ sell:
   skip-hotbar: false
 
 # ─────────────────────────────────────────────
+#  Worth Tooltips
+# ─────────────────────────────────────────────
+# Appends a worth line to item tooltips in inventories. The line is added to
+# the packet on its way to the client, so it never touches the stored item.
+# Requires the packetevents plugin; without it this section is inert.
+worth-tooltip:
+  enabled: true
+  # MiniMessage. Tokens: {price} per unit, {stack} whole stack,
+  # {amount} stack size, {currency} the symbol from economy.currency-symbol
+  format: "<gray>Worth: <green>{currency}{stack}</green></gray>"
+  # Show a line for items with no price instead of leaving the tooltip alone.
+  show-unsellable: false
+  unsellable-format: "<gray>Worth: <red>Not for sale</red></gray>"
+  # true → $1.23M, false → $1,234,567.89
+  compact-numbers: false
+  # Ticks of quiet before worth lines are redrawn after you touch the inventory.
+  # Redrawing resends the container, which bumps its state id and makes the
+  # client drop the click it is still predicting — so doing it immediately
+  # breaks dragging a stack onto another stack. 20 ticks = 1 second.
+  # -1 disables redrawing entirely (lines then only update on reopen).
+  refresh-delay-ticks: 20
+  # Container types to leave alone. These GUIs either rewrite the item
+  # themselves or show a result slot where an injected line reads as noise.
+  # Names are Bukkit InventoryType constants.
+  ignored-inventory-types:
+    - ANVIL
+    - GRINDSTONE
+    - SMITHING
+    - STONECUTTER
+    - LOOM
+    - CARTOGRAPHY
+    - ENCHANTING
+
+# ─────────────────────────────────────────────
 #  Multiplier System  (Phase 2)
 # ─────────────────────────────────────────────
 multipliers:

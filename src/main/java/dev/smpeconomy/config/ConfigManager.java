@@ -6,6 +6,7 @@ import dev.smpeconomy.model.ItemCategory;
 import dev.smpeconomy.model.ItemWorth;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,6 +14,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -67,6 +70,15 @@ public final class ConfigManager {
     private int     marketMinParticipants;
     private boolean marketCircuitBreakerEnabled;
     private double  marketMaxDailyDrop;
+
+    // Parsed from config.yml — worth tooltip
+    private boolean worthTooltipEnabled;
+    private String  worthTooltipFormat;
+    private String  worthTooltipUnsellableFormat;
+    private boolean worthTooltipShowUnsellable;
+    private boolean worthTooltipCompact;
+    private long    worthTooltipRefreshDelayTicks;
+    private volatile Set<InventoryType> worthTooltipIgnoredTypes = Set.of();
 
     // Parsed from items.yml — replaced atomically on reload
     private volatile Map<String, ItemWorth> itemWorthMap = Map.of();
@@ -138,6 +150,30 @@ public final class ConfigManager {
         marketMinParticipants       = cfg.getInt("market.adaptive-depth.min-participants", 10);
         marketCircuitBreakerEnabled = cfg.getBoolean("market.circuit-breaker.enabled", false);
         marketMaxDailyDrop          = cfg.getDouble("market.circuit-breaker.max-daily-drop", 0.15);
+
+        worthTooltipEnabled          = cfg.getBoolean("worth-tooltip.enabled", true);
+        worthTooltipFormat           = cfg.getString("worth-tooltip.format",
+                                           "<gray>Worth: <green>{currency}{stack}</green></gray>");
+        worthTooltipShowUnsellable   = cfg.getBoolean("worth-tooltip.show-unsellable", false);
+        worthTooltipUnsellableFormat = cfg.getString("worth-tooltip.unsellable-format",
+                                           "<gray>Worth: <red>Not for sale</red></gray>");
+        worthTooltipCompact          = cfg.getBoolean("worth-tooltip.compact-numbers", false);
+        worthTooltipRefreshDelayTicks = cfg.getLong("worth-tooltip.refresh-delay-ticks", 20L);
+        worthTooltipIgnoredTypes     = parseInventoryTypes(
+                                           cfg.getStringList("worth-tooltip.ignored-inventory-types"));
+    }
+
+    /** Unknown names are logged and dropped rather than failing the whole load. */
+    private Set<InventoryType> parseInventoryTypes(List<String> names) {
+        EnumSet<InventoryType> set = EnumSet.noneOf(InventoryType.class);
+        for (String name : names) {
+            try {
+                set.add(InventoryType.valueOf(name.trim().toUpperCase(Locale.ROOT)));
+            } catch (IllegalArgumentException ex) {
+                log.warning("Unknown inventory type in worth-tooltip.ignored-inventory-types: " + name);
+            }
+        }
+        return Collections.unmodifiableSet(set);
     }
 
     private void parseItems() {
@@ -293,6 +329,14 @@ public final class ConfigManager {
     public String  getMysqlPassword()    { return mysqlPassword; }
     public int     getMysqlPoolSize()    { return mysqlPoolSize; }
     public long    getTxBatchIntervalMs(){ return txBatchIntervalMs; }
+
+    public boolean isWorthTooltipEnabled()        { return worthTooltipEnabled; }
+    public String  getWorthTooltipFormat()        { return worthTooltipFormat; }
+    public String  getWorthTooltipUnsellableFormat() { return worthTooltipUnsellableFormat; }
+    public boolean isWorthTooltipShowUnsellable() { return worthTooltipShowUnsellable; }
+    public boolean isWorthTooltipCompact()        { return worthTooltipCompact; }
+    public long    getWorthTooltipRefreshDelayTicks() { return worthTooltipRefreshDelayTicks; }
+    public Set<InventoryType> getWorthTooltipIgnoredTypes() { return worthTooltipIgnoredTypes; }
 
     public String  getCurrencySymbol()     { return currencySymbol; }
     public String  getCurrencyName()       { return currencyName; }

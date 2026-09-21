@@ -32,6 +32,8 @@ import dev.smpeconomy.service.SellService;
 import dev.smpeconomy.service.ShopService;
 import dev.smpeconomy.service.WorthService;
 import dev.smpeconomy.shards.ShardsModule;
+import dev.smpeconomy.tooltip.WorthTooltipService;
+import com.github.retrooper.packetevents.PacketEvents;
 import net.donutsmp.spawners.DonutSpawners;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.event.EventHandler;
@@ -66,6 +68,7 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
     private DonutSpawners spawnerModule;
     private CustomEconomyAPI api;
     private ChatInputService chatInputService;
+    private WorthTooltipService worthTooltipService;
 
     private BukkitTask txFlushTask;
     private BukkitTask progressionSaveTask;
@@ -176,8 +179,11 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
         // ── Market price tick (async) ─────────────────────────────────────────
         if (configManager.isMarketEnabled()) {
             long tickTicks = configManager.getMarketTickIntervalSeconds() * 20L;
-            marketTickTask = getServer().getScheduler().runTaskTimerAsynchronously(
-                this, marketService::runUpdate, tickTicks, tickTicks);
+            marketTickTask = getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+                marketService.runUpdate();
+                // Prices just moved; refresh whatever players are looking at.
+                if (worthTooltipService != null) worthTooltipService.refreshAll();
+            }, tickTicks, tickTicks);
             getSLF4JLogger().info("Dynamic market pricing enabled. Tick interval: "
                 + configManager.getMarketTickIntervalSeconds() + "s");
         }
@@ -185,6 +191,17 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
         // ── Player shop expiry cleanup (async DB, Vault refunds hop to main) ──
         playerShopExpiryTask = getServer().getScheduler().runTaskTimerAsynchronously(
             this, playerShopService::runExpiryCleanup, 6000L, 6000L);
+
+        // ── Worth tooltips (needs the packetevents plugin) ───────────────────
+        if (getServer().getPluginManager().isPluginEnabled("packetevents")) {
+            worthTooltipService = new WorthTooltipService(this, configManager, worthService);
+            PacketEvents.getAPI().getEventManager().registerListener(worthTooltipService);
+            getServer().getPluginManager().registerEvents(worthTooltipService, this);
+            getSLF4JLogger().info("Worth tooltips enabled.");
+        } else if (configManager.isWorthTooltipEnabled()) {
+            getSLF4JLogger().warn("worth-tooltip.enabled is true but the packetevents plugin "
+                + "is not installed — item tooltips will not show prices.");
+        }
 
         ShopExploitValidator.validate(worthService, configManager.getShopSections(), getLogger());
         getSLF4JLogger().info("CustomEconomy enabled. Items loaded: " + worthService.getItemCount());
@@ -200,6 +217,16 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
         // Shards flush before the pool closes — they share it.
         if (shardsModule != null)          shardsModule.disable();
         if (spawnerModule != null)         spawnerModule.disable();
+
+        if (worthTooltipService != null) {
+            worthTooltipService.shutdown();
+            try {
+                PacketEvents.getAPI().getEventManager().unregisterListener(worthTooltipService);
+            } catch (RuntimeException ex) {
+                // packetevents may already have torn its API down on shutdown
+                getSLF4JLogger().debug("Could not unregister worth tooltip listener: {}", ex.toString());
+            }
+        }
 
         if (transactionRepository != null) transactionRepository.flushSync();
         if (multiplierService != null)     multiplierService.saveAll();
@@ -238,6 +265,7 @@ public final class CustomEconomy extends JavaPlugin implements Listener {
     public PlayerShopService getPlayerShopService()     { return playerShopService; }
     public MarketService getMarketService()             { return marketService; }
     public ChatInputService getChatInputService()       { return chatInputService; }
+    public WorthTooltipService getWorthTooltipService() { return worthTooltipService; }
     public CustomEconomyAPI getAPI()                    { return api; }
     public Messages getMessages()                       { return messages; }
 }

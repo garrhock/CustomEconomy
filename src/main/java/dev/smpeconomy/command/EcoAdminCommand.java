@@ -64,6 +64,11 @@ public final class EcoAdminCommand {
                         // rates and messages apply now; [restart] keys only when tasks reschedule
                         dev.smpeconomy.CustomEconomy.getInstance().getSpawnerModule().reloadConfig();
                     }
+                    var tooltips = dev.smpeconomy.CustomEconomy.getInstance().getWorthTooltipService();
+                    if (tooltips != null) {
+                        // new prices and a possibly new format — resend every open inventory
+                        tooltips.refreshAll();
+                    }
                     int issues = ShopExploitValidator.validate(worthService, config.getShopSections(), plugin.getLogger());
                     String msg = "CustomEconomy reloaded. Items: " + worthService.getItemCount()
                         + (issues > 0 ? " — WARNING: " + issues + " shop price exploit(s) detected, check console." : "");

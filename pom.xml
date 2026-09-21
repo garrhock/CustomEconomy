@@ -20,6 +20,10 @@
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
+            <id>codemc</id>
+            <url>https://repo.codemc.io/repository/maven-releases/</url>
+        </repository>
+        <repository>
             <id>jitpack</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -38,7 +42,16 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>26.1.2.build.63-stable</version>
+            <version>26.2.build.126-stable</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- packetevents — provided by the standalone plugin, never shaded.
+             WorthDisplay shaded its own copy and broke on every NMS bump. -->
+        <dependency>
+            <groupId>com.github.retrooper</groupId>
+            <artifactId>packetevents-spigot</artifactId>
+            <version>2.13.0</version>
             <scope>provided</scope>
         </dependency>
 

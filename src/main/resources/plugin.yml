@@ -14,6 +14,7 @@ softdepend:
   - EconomyShopGUI
   - QuickShop-Hikari
   - ItemsAdder
+  - packetevents
 
 # Money commands (/sell, /worth, /worths, /shop, /playershop, /multi, /ecoadmin)
 # register through Paper's Brigadier lifecycle in CustomEconomy#onEnable. The
